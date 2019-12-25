@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexa-2D", "Hexa-2D\Hexa-2D.csproj", "{482891B9-CC25-41F7-AA5C-CCBC73A1C638}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexa-Engine", "Hexa-2D-Engine\Hexa-Engine.csproj", "{526B3C1D-BB27-49F4-BE71-1F792F2122FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{482891B9-CC25-41F7-AA5C-CCBC73A1C638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{482891B9-CC25-41F7-AA5C-CCBC73A1C638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{482891B9-CC25-41F7-AA5C-CCBC73A1C638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{482891B9-CC25-41F7-AA5C-CCBC73A1C638}.Release|Any CPU.Build.0 = Release|Any CPU
+		{526B3C1D-BB27-49F4-BE71-1F792F2122FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{526B3C1D-BB27-49F4-BE71-1F792F2122FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{526B3C1D-BB27-49F4-BE71-1F792F2122FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{526B3C1D-BB27-49F4-BE71-1F792F2122FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF64C57F-740E-446A-BD95-747B89409674}
+	EndGlobalSection
+EndGlobal
