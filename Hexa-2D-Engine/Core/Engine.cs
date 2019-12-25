@@ -7,9 +7,8 @@ using SharpDX.Direct2D1;
 
 namespace HexaEngine.Core
 {
-    public class Engine
+    public partial class Engine
     {
-
         public void Dispose()
         {
             PhysicsEngine.Dispose();
@@ -17,28 +16,14 @@ namespace HexaEngine.Core
             Brushpalette.Dispose();
         }
 
-        public Camera Camera { get; set; }
-
-        public ObjectSystem Objects { get; set; }
-        public RenderTarget RenderTarget { get; internal set; }
-
-        public Brushpalette Brushpalette = new Brushpalette();
-
-        public PhysicsEngine PhysicsEngine { get; set; }
-
-        public void PreInitial()
-        {
-            PhysicsEngine = new PhysicsEngine(this);
-        }
-
         public void Initial(RenderTarget renderTarget)
         {
             RenderTarget = renderTarget;
             Camera = new Camera(renderTarget);
+            PhysicsEngine = new PhysicsEngine(this);
             Objects = new ObjectSystem(this);
             Brushpalette.BrushBlack = new SolidColorBrush(renderTarget, Color.Black);
             Brushpalette.BrushRed = new SolidColorBrush(renderTarget, Color.Red);
         }
-
     }
 }

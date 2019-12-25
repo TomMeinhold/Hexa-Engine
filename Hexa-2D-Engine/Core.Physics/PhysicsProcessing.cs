@@ -30,7 +30,7 @@ namespace HexaEngine.Core.Physics
                     
 
                     //Gravity support only Y for now
-                    if (LockXYZ[0] == false)
+                    if (LockXYZ[1] == false)
                     {
                         RawVector3 v1 = s.Gravity;
                         RawVector3 v2 = s.Acceleration;
@@ -71,7 +71,7 @@ namespace HexaEngine.Core.Physics
                     }
 
                     //Acceleration
-                    if (LockXYZ[0] == true)
+                    if (LockXYZ[1] == true)
                     {
                         RawVector3 v2 = s.Acceleration;
                         if (v2.Y < 0)
@@ -115,26 +115,81 @@ namespace HexaEngine.Core.Physics
                             {
                                 RawVector3 x2 = s.Acceleration;
                                 RawVector3 v1 = s.Position;
-                                v1.Y += x2.Y;
-                                v1.X += x2.X;
                                 RawVector3 v2 = a.Position;
                                 RectangleF r1 = s.Dimentions;
                                 RectangleF r2 = a.Dimentions;
+                                v1.Y += x2.Y;
+                                v1.X += x2.X;
                                 r1.Location = new RawVector2(v1.X, v1.Y);
                                 r2.Location = new RawVector2(v2.X, v2.Y);
                                 RectangleF r3 = RectangleF.Intersect(r1, r2);
-                                if (r3.Height != 0)
+                                bool[] vs = Collisions(r2, r1);
+                                if (vs[0]) // Top
                                 {
                                     if (s.Moveable)
                                     {
-                                        v1.Y += r3.Height;
-                                        x2.Y = 0;
+                                        if (x2.Y > 0)
+                                        {
+                                            x2.Y = 0;
+                                            v1.Y -= r3.Height;
+                                        }
                                         s.DirectionBlocked[0] = true;
                                     }
                                 }
                                 else
                                 {
                                     s.DirectionBlocked[0] = false;
+                                }
+
+                                if (vs[1]) // Bottom
+                                {
+                                    if (s.Moveable)
+                                    {
+                                        if (x2.Y < 0)
+                                        {
+                                            x2.Y = 0;
+                                            v1.Y += r3.Height;
+                                        }
+                                        s.DirectionBlocked[1] = true;
+                                    }
+                                }
+                                else
+                                {
+                                    s.DirectionBlocked[1] = false;
+                                }
+
+                                if (vs[2]) // Right
+                                {
+                                    if (s.Moveable)
+                                    {
+                                        if (x2.X < 0)
+                                        {
+                                            x2.X = 0;
+                                            v1.X += r3.Width;
+                                        }
+                                        s.DirectionBlocked[2] = true;
+                                    }
+                                }
+                                else
+                                {
+                                    s.DirectionBlocked[2] = false;
+                                }
+                                
+                                if (vs[3]) // Left
+                                {
+                                    if (s.Moveable)
+                                    {
+                                        if (x2.X > 0)
+                                        {
+                                            x2.X = 0;
+                                            v1.X -= r3.Width;
+                                        }
+                                        s.DirectionBlocked[3] = true;
+                                    }
+                                }
+                                else
+                                {
+                                    s.DirectionBlocked[3] = false;
                                 }
                                 // Set cam to object if focus
                                 if (s.CameraFocus)
@@ -152,6 +207,28 @@ namespace HexaEngine.Core.Physics
                     i++;
                 }
             }
+        }
+
+        public bool[] Collisions(RectangleF hero, RectangleF rect)
+        {
+            var intersection = RectangleF.Intersect(hero, rect);
+            if (intersection.IsEmpty)
+            {
+                return new[] { false, false, false, false };
+            }
+
+            bool hitSomethingAbove = hero.Top == intersection.Top;
+            bool hitSomethingBelow = hero.Bottom == intersection.Bottom;
+            bool hitSomethingOnTheRight = hero.Right == intersection.Right;
+            bool hitSomethingOnTheLeft = hero.Left == intersection.Left;
+
+            return new bool[]
+            {
+                hitSomethingAbove,
+                hitSomethingBelow,
+                hitSomethingOnTheRight,
+                hitSomethingOnTheLeft,
+            };
         }
     }
 }

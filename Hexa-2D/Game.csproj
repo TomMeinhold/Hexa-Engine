@@ -13,8 +13,8 @@
     <ProjectGuid>{482891B9-CC25-41F7-AA5C-CCBC73A1C638}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HexaMain</RootNamespace>
-    <AssemblyName>Hexa-2D</AssemblyName>
+    <RootNamespace>Game</RootNamespace>
+    <AssemblyName>Game</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -58,7 +58,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>HexaMain.Program</StartupObject>
+    <StartupObject>Game.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -166,9 +166,13 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hexa-2D-Engine\Hexa-Engine.csproj">
+    <ProjectReference Include="..\Game - Assets\Game - Assets.csproj">
+      <Project>{09d19a8c-12a3-4d03-8a1a-f9331baab6a0}</Project>
+      <Name>Game - Assets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hexa-2D-Engine\Hexa - Engine.csproj">
       <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
-      <Name>Hexa-Engine</Name>
+      <Name>Hexa - Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

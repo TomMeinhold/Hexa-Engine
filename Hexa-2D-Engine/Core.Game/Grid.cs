@@ -44,10 +44,10 @@ namespace HexaEngine.Core.Game
             {
                 RawVector2[] list = new RawVector2[]
             {
-                Engine.PhysicsEngine.InsertRelativePosition(new RawVector2() { X = 0, Y = Height / 2 }),
-                Engine.PhysicsEngine.InsertRelativePosition(new RawVector2() { X = Width, Y = Height / 2 }),
-                Engine.PhysicsEngine.InsertRelativePosition(new RawVector2() { X = Width / 2, Y = 0 }),
-                Engine.PhysicsEngine.InsertRelativePosition(new RawVector2() { X = Width / 2, Y = Height })
+                InsertCameraData.InsertRelativePosition(Engine.Camera, new RawVector2() { X = 0, Y = Height / 2 }),
+                InsertCameraData.InsertRelativePosition(Engine.Camera, new RawVector2() { X = Width, Y = Height / 2 }),
+                InsertCameraData.InsertRelativePosition(Engine.Camera, new RawVector2() { X = Width / 2, Y = 0 }),
+                InsertCameraData.InsertRelativePosition(Engine.Camera, new RawVector2() { X = Width / 2, Y = Height })
             };
                 Buffer.AddBuffer(list);
             }

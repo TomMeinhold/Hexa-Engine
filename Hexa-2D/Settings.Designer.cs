@@ -1,4 +1,4 @@
-﻿namespace HexaMain
+﻿namespace Game
 {
     partial class Settings
     {

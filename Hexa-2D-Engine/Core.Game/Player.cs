@@ -24,7 +24,7 @@ namespace HexaEngine.Core.Game
             Position = position;
             Collision = true;
             Moveable = true;
-            Gravity = new RawVector3(0, 1, 0);
+            Gravity = new RawVector3(0, 0.5F, 0);
             CameraFocus = true;
             Thread = new Thread(Worker);
             Thread.Start();
@@ -55,7 +55,7 @@ namespace HexaEngine.Core.Game
                     X = Position.X,
                     Y = Position.Y * -1
                 };
-                vector = Engine.PhysicsEngine.InsertRelativePositionObject(vector);
+                vector = InsertCameraData.InsertRelativePositionObject(Engine, vector);
                 RawVector2[] raws = new RawVector2[] { vector };
                 Buffer.AddBuffer(raws);
             }

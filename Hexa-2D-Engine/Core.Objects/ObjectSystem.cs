@@ -19,10 +19,14 @@ namespace HexaEngine.Core.Objects
             Grid = new Grid(engineCore);
             Player = new Player(engineCore, ConvertBitmap.Convert(engineCore.RenderTarget, Resource.Resource.player), new RawVector3() { X = 0, Y = 0, Z = 0 });
             Wall = new Wall(engineCore, ConvertBitmap.Convert(engineCore.RenderTarget, Resource.Resource.wall), new RawVector3() { X = 0, Y = -100, Z = 0 });
-            Wall2 = new Wall(engineCore, ConvertBitmap.Convert(engineCore.RenderTarget, Resource.Resource.wall), new RawVector3() { X = -500, Y = -150, Z = 0 });
+            Wall2 = new Wall(engineCore, ConvertBitmap.Convert(engineCore.RenderTarget, Resource.Resource.wall), new RawVector3() { X = 66, Y = -36, Z = 0 });
+            Wall3 = new Wall(engineCore, ConvertBitmap.Convert(engineCore.RenderTarget, Resource.Resource.wall), new RawVector3() { X = -66, Y = -36, Z = 0 });
+            Wall4 = new Wall(engineCore, ConvertBitmap.Convert(engineCore.RenderTarget, Resource.Resource.wall), new RawVector3() { X = 0, Y = 128, Z = 0 });
             ObjectList.Add(Player);
             ObjectList.Add(Wall);
             ObjectList.Add(Wall2);
+            ObjectList.Add(Wall3);
+            ObjectList.Add(Wall4);
         }
 
         public ArrayList ObjectList { get; } = new ArrayList();
@@ -30,23 +34,25 @@ namespace HexaEngine.Core.Objects
         public void Dispose()
         {
             Grid.Dispose();
-            Player.Dispose();
-            Wall.Dispose();
-            Wall2.Dispose();
+            foreach (dynamic s in ObjectList)
+            {
+                s.Dispose();
+            }
         }
 
         readonly Grid Grid;
 
         public Player Player;
 
-        public Wall Wall, Wall2;
+        public Wall Wall, Wall2, Wall3, Wall4;
 
         public void RenderObjects()
         {
             Grid.Draw();
-            Player.Draw();
-            Wall.Draw();
-            Wall2.Draw();
+            foreach (dynamic s in ObjectList)
+            {
+                s.Draw();
+            }
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using SharpDX;
+﻿using HexaEngine.Core;
+using SharpDX;
 using SharpDX.DXGI;
+using SharpDX.RawInput;
 using SharpDX.Windows;
 using System.Windows.Forms;
-using SharpDX.RawInput;
-using SharpDX.Multimedia;
-using HexaEngine.Core;
 
-namespace HexaMain
+namespace Game
 {
     public partial class MainWindow : RenderForm
     {
@@ -14,18 +13,14 @@ namespace HexaMain
 
         public MainWindow()
         {
-            SharpDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.GenericMouse, DeviceFlags.None);
-            SharpDX.RawInput.Device.MouseInput += (sender, args) => MouseEvent(sender, args);
 
-            SharpDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.GenericKeyboard, DeviceFlags.None);
-            SharpDX.RawInput.Device.KeyboardInput += (sender, args) => KeyboardEvent(sender, args);
-            Engine.PreInitial();
             IsFullscreen = Properties.Settings.Default.Fullscreen;
-            InitializeComponent();
             ClientSize = new System.Drawing.Size(Properties.Settings.Default.Width, Properties.Settings.Default.Height);
+            InitializeComponent();
             InitializeDirectX();
+            Engine.RawInput.InitializeDirectRawInput();
             Engine.Initial(D2DRenderTarget);
-            Initial();
+            InitializeInputEventHandler();
             MainLoop();
         }
 
@@ -79,11 +74,9 @@ namespace HexaMain
                     Properties.Settings.Default.Fullscreen = true;
                     Properties.Settings.Default.Save();
                 }
-                
+
             }
         }
-
-        private Point firstpoint;
 
         bool Wp, Ap, Sp, Dp;
 
@@ -170,28 +163,6 @@ namespace HexaMain
         private void MouseEvent(object sender, MouseInputEventArgs args)
         {
 
-        }
-
-        private void Initial()
-        {
-            MouseDown += (ss, ee) =>
-            {
-                if (ee.Button == MouseButtons.Left)
-                {
-                    firstpoint = new Point(MousePosition.X, MousePosition.Y);
-                }
-            };
-            MouseMove += (ss, ee) =>
-            {
-                if (ee.Button == MouseButtons.Left)
-                {
-                    Point tmp = new Point(MousePosition.X, MousePosition.Y);
-                    Point res = new Point(firstpoint.X - tmp.X, firstpoint.Y - tmp.Y);
-                    Engine.Camera.X += -1 * res.X;
-                    Engine.Camera.Y += -1 * res.Y;
-                    firstpoint = tmp;
-                }
-            };
         }
     }
 }

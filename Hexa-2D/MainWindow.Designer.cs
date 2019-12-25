@@ -7,7 +7,7 @@ using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.DXGI.Factory;
 
-namespace HexaMain
+namespace Game
 {
     partial class MainWindow
     {
@@ -31,6 +31,12 @@ namespace HexaMain
 
         public bool LockModifys = true;
 
+
+        private void InitializeInputEventHandler()
+        {
+            SharpDX.RawInput.Device.MouseInput += (sender, args) => MouseEvent(sender, args);
+            SharpDX.RawInput.Device.KeyboardInput += (sender, args) => KeyboardEvent(sender, args);
+        }
 
         private void InitializeDirectX()
         {
