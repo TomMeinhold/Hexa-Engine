@@ -1,14 +1,7 @@
 ﻿using HexaEngine.Core.Common;
-using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace HexaEngine.Core.Game
 {

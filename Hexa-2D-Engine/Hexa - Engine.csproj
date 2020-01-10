@@ -33,6 +33,9 @@
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
     </Reference>
@@ -42,6 +45,9 @@
     <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Direct3D11.Effects, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.Effects.4.2.0\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
@@ -50,6 +56,9 @@
     </Reference>
     <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.XAudio2.4.2.0\lib\net45\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,30 +72,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core.Audio\AudioSystem.cs" />
+    <Compile Include="Core.Common\BaseObjectState.cs" />
+    <Compile Include="Core.Objects\ObjectSystemState.cs" />
+    <Compile Include="Core.Common\Timer.cs" />
+    <Compile Include="Core.Debug\Debug.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core.Debug\Debug.Designer.cs">
+      <DependentUpon>Debug.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core.Debug\DebugWindow.cs" />
     <Compile Include="Core.Input\Keyboard.cs" />
     <Compile Include="Core.Input\Mouse.cs" />
     <Compile Include="Core.Input\RawInput.cs" />
     <Compile Include="Core.Objects\ObjectSystem.cs" />
-    <Compile Include="Core.Game\Wall.cs" />
     <Compile Include="Core.Common\Brushpalette.cs" />
     <Compile Include="Core.Common\Buffer.cs" />
     <Compile Include="Core.Game\Grid.cs" />
     <Compile Include="Core.Particle\ParticleSystem.cs" />
+    <Compile Include="Core.Physics\PhysicsAcceleration.cs" />
+    <Compile Include="Core.Physics\PhysicsCollision.cs" />
+    <Compile Include="Core.Physics\PhysicsDamper.cs" />
+    <Compile Include="Core.Physics\PhysicsDynamicCollision.cs" />
     <Compile Include="Core.Physics\PhysicsEngine.cs" />
     <Compile Include="Core.Common\InsertCameraData.cs" />
+    <Compile Include="Core.Physics\PhysicsEngineState.cs" />
+    <Compile Include="Core.Physics\PhysicsPosition.cs" />
     <Compile Include="Core.Physics\PhysicsProcessing.cs" />
     <Compile Include="Core.Common\BaseObject.cs" />
-    <Compile Include="Core.Game\Camera.cs" />
+    <Compile Include="Core.Game\CameraBase.cs" />
     <Compile Include="Core.Common\ConvertBitmap.cs" />
-    <Compile Include="Core.Game\Player.cs" />
+    <Compile Include="Core.Game\PlayerBase.cs" />
+    <Compile Include="Core.Physics\PhysicsSpeed.cs" />
+    <Compile Include="Core.Physics\PhysicsStaticCollision.cs" />
+    <Compile Include="Core.Shaders\Shader.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineDefinitions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resource\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
@@ -94,19 +117,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resource\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="Core.Debug\Debug.resx">
+      <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\player.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\wall.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core.Audio\" />
+    <Content Include="Core.Common\engine-logo.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

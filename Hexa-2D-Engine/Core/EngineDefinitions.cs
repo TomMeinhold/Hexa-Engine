@@ -1,4 +1,6 @@
-﻿using HexaEngine.Core.Common;
+﻿using HexaEngine.Core.Audio;
+using HexaEngine.Core.Common;
+using HexaEngine.Core.Debug;
 using HexaEngine.Core.Game;
 using HexaEngine.Core.Input;
 using HexaEngine.Core.Objects;
@@ -9,9 +11,9 @@ namespace HexaEngine.Core
 {
     public partial class Engine
     {
-        public Camera Camera { get; set; }
+        public CameraBase Camera { get; set; }
 
-        public ObjectSystem Objects { get; set; }
+        public ObjectSystem ObjectSystem { get; set; }
 
         public RenderTarget RenderTarget { get; internal set; }
 
@@ -19,6 +21,12 @@ namespace HexaEngine.Core
 
         public RawInput RawInput = new RawInput();
 
+        public AudioSystem AudioSystem = new AudioSystem();
+
         public PhysicsEngine PhysicsEngine { get; set; }
+
+        public DebugWindow DebugWindow { get; set; }
+
+        public DeviceContext DeviceContext;
     }
 }

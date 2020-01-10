@@ -1,15 +1,20 @@
 ﻿using HexaEngine.Core;
 using SharpDX;
+using SharpDX.Direct2D1;
+using SharpDX.Direct2D1.Effects;
 using SharpDX.DXGI;
 using SharpDX.RawInput;
 using SharpDX.Windows;
+using System.Threading;
 using System.Windows.Forms;
+using Timer = HexaEngine.Core.Common.Timer;
 
 namespace Game
 {
     public partial class MainWindow : RenderForm
     {
         readonly Engine Engine = new Engine();
+        readonly Timer Timer = new Timer(500, true);
 
         public MainWindow()
         {
@@ -21,6 +26,8 @@ namespace Game
             Engine.RawInput.InitializeDirectRawInput();
             Engine.Initial(D2DRenderTarget);
             InitializeInputEventHandler();
+            GameAssets.Assets.LoadAssets(Engine);
+            Timer.TimerTick += TimerWorker;
             MainLoop();
         }
 
@@ -31,12 +38,18 @@ namespace Game
             {
                 if (!LockRenderTarget)
                 {
+
                     LockModifys = true;
+
                     D2DRenderTarget.BeginDraw();
                     D2DRenderTarget.Clear(Color.White);
-                    Engine.Objects.RenderObjects();
+                    Engine.ObjectSystem.RenderObjects();
                     D2DRenderTarget.EndDraw();
+
                     SwapChain.Present(0, PresentFlags.None);
+
+
+
                     LockModifys = false;
                 }
             });
@@ -45,6 +58,7 @@ namespace Game
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.Save();
+            Timer.Dispose();
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
@@ -59,6 +73,10 @@ namespace Game
                 IsFullscreen = Properties.Settings.Default.Fullscreen;
                 ReloadDirectX();
                 LockRenderTarget = false;
+            }
+            if (e.KeyCode == Keys.F4)
+            {
+                Engine.DebugWindow.Show();
             }
             if (e.KeyCode == Keys.F11)
             {
@@ -79,6 +97,14 @@ namespace Game
         }
 
         bool Wp, Ap, Sp, Dp;
+
+        bool w;
+
+        private void TimerWorker(object sender, Timer.TimerEventArgs e)
+        {
+            if (w) { w = !w; }
+            while (!w) { Thread.Sleep(1); }
+        }
 
         private void KeyboardEvent(object sender, KeyboardInputEventArgs args)
         {
@@ -116,47 +142,51 @@ namespace Game
             }
             if (Ap && Wp)
             {
-                Engine.Objects.Player.Acceleration.X -= 5;
-                Engine.Objects.Player.Acceleration.Y -= 5;
+                Engine.ObjectSystem.Player.MovementAcceleration.X = -5;
+                Engine.ObjectSystem.Player.MovementAcceleration.Y = -5;
             }
             else
             {
-                if (Ap) { Engine.Objects.Player.Acceleration.X -= 10; }
+                if (Ap) { Engine.ObjectSystem.Player.MovementAcceleration.X = -5; }
             }
             if (Wp && Dp)
             {
-                Engine.Objects.Player.Acceleration.Y -= 5;
-                Engine.Objects.Player.Acceleration.X += 5;
+                Engine.ObjectSystem.Player.MovementAcceleration.Y = -5;
+                Engine.ObjectSystem.Player.MovementAcceleration.X = 5;
             }
             else
             {
-                if (Wp) { Engine.Objects.Player.Acceleration.Y += 10; }
+                if (Wp) { Engine.ObjectSystem.Player.MovementAcceleration.Y = 5; }
             }
             if (Dp && Sp)
             {
-                Engine.Objects.Player.Acceleration.X += 5;
-                Engine.Objects.Player.Acceleration.Y += 5;
+                Engine.ObjectSystem.Player.MovementAcceleration.X = 5;
+                Engine.ObjectSystem.Player.MovementAcceleration.Y = 5;
             }
             else
             {
-                if (Dp) { Engine.Objects.Player.Acceleration.X += 10; }
+                if (Dp) { Engine.ObjectSystem.Player.MovementAcceleration.X = 5; }
             }
             if (Sp && Ap)
             {
-                Engine.Objects.Player.Acceleration.Y += 5;
-                Engine.Objects.Player.Acceleration.X -= 5;
+                Engine.ObjectSystem.Player.MovementAcceleration.Y = 5;
+                Engine.ObjectSystem.Player.MovementAcceleration.X = -5;
             }
             else
             {
-                if (Sp) { Engine.Objects.Player.Acceleration.Y -= 10; }
+                if (Sp) { Engine.ObjectSystem.Player.MovementAcceleration.Y = -5; }
             }
             if (args.Key == Keys.Space && args.ScanCodeFlags == ScanCodeFlags.Make)
             {
-                Engine.Objects.Player.Acceleration.Y = 15;
+                if (!w)
+                {
+                    Engine.ObjectSystem.Player.MovementAcceleration.Y = 5;
+                    w = true;
+                }
             }
             if (args.Key == Keys.R && args.ScanCodeFlags == ScanCodeFlags.Make)
             {
-                Engine.Objects.Player.Respawn();
+                Engine.ObjectSystem.Player.Respawn();
             }
         }
 

@@ -12,16 +12,17 @@ namespace HexaEngine.Core
         public void Dispose()
         {
             PhysicsEngine.Dispose();
-            Objects.Dispose();
+            ObjectSystem.Dispose();
             Brushpalette.Dispose();
         }
 
         public void Initial(RenderTarget renderTarget)
         {
             RenderTarget = renderTarget;
-            Camera = new Camera(renderTarget);
+            Camera = new CameraBase(renderTarget);
             PhysicsEngine = new PhysicsEngine(this);
-            Objects = new ObjectSystem(this);
+            ObjectSystem = new ObjectSystem(this);
+            DebugWindow = new Debug.DebugWindow(this);
             Brushpalette.BrushBlack = new SolidColorBrush(renderTarget, Color.Black);
             Brushpalette.BrushRed = new SolidColorBrush(renderTarget, Color.Red);
         }
