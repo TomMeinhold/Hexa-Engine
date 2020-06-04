@@ -4,12 +4,13 @@ namespace HexaEngine.Core.Game
 {
     public class CameraBase
     {
-        public CameraBase(RenderTarget target)
+        public CameraBase(Engine engine)
         {
-            RenderTarget = target;
+            Engine = engine;
         }
 
-        public RenderTarget RenderTarget { get; set; }
+        public Engine Engine { get; set; }
+        public float InitialZoom { get; internal set; }
 
         public float X = 0;
 

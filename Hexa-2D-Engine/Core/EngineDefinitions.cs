@@ -1,32 +1,32 @@
 ﻿using HexaEngine.Core.Audio;
 using HexaEngine.Core.Common;
-using HexaEngine.Core.Debug;
-using HexaEngine.Core.Game;
 using HexaEngine.Core.Input;
-using HexaEngine.Core.Objects;
 using HexaEngine.Core.Physics;
-using SharpDX.Direct2D1;
+using HexaEngine.Core.Render;
+using HexaEngine.Core.Scenes;
 
 namespace HexaEngine.Core
 {
     public partial class Engine
     {
-        public CameraBase Camera { get; set; }
+        internal long ThreadSyncTiming;
 
-        public ObjectSystem ObjectSystem { get; set; }
+        public Camera Camera { get; set; }
 
-        public RenderTarget RenderTarget { get; internal set; }
+        public Brushpalette Brushpalette { get; set; } = new Brushpalette();
 
-        public Brushpalette Brushpalette = new Brushpalette();
+        public InputSystem InputSystem { get; set; }
 
-        public RawInput RawInput = new RawInput();
+        public EngineTransform Transform { get; set; }
 
-        public AudioSystem AudioSystem = new AudioSystem();
+        public EngineSettings Settings { get; set; }
+
+        public AudioSystem AudioSystem { get; set; } = new AudioSystem();
+
+        public SceneManager SceneManager { get; set; } = new SceneManager();
 
         public PhysicsEngine PhysicsEngine { get; set; }
 
-        public DebugWindow DebugWindow { get; set; }
-
-        public DeviceContext DeviceContext;
+        public RenderSystem RenderSystem { get; set; }
     }
 }
