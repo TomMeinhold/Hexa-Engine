@@ -149,7 +149,7 @@
       <Project>{09d19a8c-12a3-4d03-8a1a-f9331baab6a0}</Project>
       <Name>Game - Assets</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Hexa-2D-Engine\Hexa - Engine.csproj">
+    <ProjectReference Include="..\Hexa-Engine\Hexa - Engine.csproj">
       <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
       <Name>Hexa - Engine</Name>
     </ProjectReference>

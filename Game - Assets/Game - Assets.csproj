@@ -88,12 +88,6 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hexa-2D-Engine\Hexa - Engine.csproj">
-      <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
-      <Name>Hexa - Engine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -129,6 +123,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\planet.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hexa-Engine\Hexa - Engine.csproj">
+      <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
+      <Name>Hexa - Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
