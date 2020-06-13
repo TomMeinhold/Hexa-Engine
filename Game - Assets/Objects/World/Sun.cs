@@ -1,15 +1,16 @@
 ﻿using HexaEngine.Core;
 using HexaEngine.Core.Extentions;
+using HexaEngine.Core.Input;
 using HexaEngine.Core.Input.Component;
 using HexaEngine.Core.Input.Interfaces;
 using HexaEngine.Core.Objects.BaseTypes;
+using HexaEngine.Core.Objects.Components;
 using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Physics.Collision;
 using HexaEngine.Core.Physics.Interfaces;
 using HexaEngine.Core.Render.Interfaces;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct2D1.Effects;
 using SharpDX.Mathematics.Interop;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -18,8 +19,6 @@ namespace GameAssets
 {
     public class Sun : BaseObject, IInputKeyboard, IInputMouse, IBaseObject, IDrawable, IPhysicsObject, IRayCasting
     {
-        private Bitmap1 GodRayMap;
-
         public float Mass { get; set; } = 100;
 
         public Vector3 Velocity { get; set; }
@@ -38,13 +37,9 @@ namespace GameAssets
 
         public float RayRange { get; set; } = 500;
 
-        public Color GlowColor { get; set; } = System.Drawing.Color.FromArgb(255, 255, 255, 255).Convert();
-
         public float StartAngle { get; set; } = 0;
 
         public float EndAngle { get; set; } = 360;
-
-        private float Blur { get; set; } = 10;
 
         public bool Static { get; set; }
 
@@ -54,118 +49,38 @@ namespace GameAssets
             Bitmap = bitmap;
             Size = bitmap.Size;
             SetPosition(position);
-            engine.InputSystem.InputKeyboards.Add(this);
-            engine.InputSystem.InputMice.Add(this);
-            State = BaseObjectState.Initialized;
+            MassCenter = BoundingBox.Center - Position;
+            InputSystem.MouseUpdate += MouseInput;
+            InputSystem.KeyboardUpdate += KeyboardInput;
+            RayCastingModule = new RayCastingModule(this);
         }
 
-        public void KeyboardInput(KeyboardState state, KeyboardUpdate update)
+        public void KeyboardInput(object sender, KeyboardUpdatePackage package)
         {
-            if (update.Key == Keys.A && update.IsPressed)
+            if (package.KeyboardUpdate.Key == Keys.B && package.KeyboardUpdate.IsPressed)
             {
-                this.Force = new Vector3(-0.01F, 0, 0);
-            }
-
-            if (update.Key == Keys.A && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.W && update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0.01F, 0);
-            }
-
-            if (update.Key == Keys.W && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.S && update.IsPressed)
-            {
-                this.Force = new Vector3(0, -0.01F, 0);
-            }
-
-            if (update.Key == Keys.S && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.D && update.IsPressed)
-            {
-                this.Force = new Vector3(0.01F, 0, 0);
-            }
-
-            if (update.Key == Keys.D && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.B && update.IsPressed)
-            {
-                if (Blur > 0)
+                if (RayCastingModule.Blur.StandardDeviation > 0)
                 {
-                    Blur = 0;
+                    RayCastingModule.Blur.StandardDeviation = 0;
                 }
                 else
                 {
-                    Blur = 10;
+                    RayCastingModule.Blur.StandardDeviation = 10;
                 }
             }
 
-            if (update.Key == Keys.R && update.IsPressed)
+            if (package.KeyboardUpdate.Key == Keys.R && package.KeyboardUpdate.IsPressed)
             {
                 Rotate = !Rotate;
             }
 
-            if (update.Key == Keys.L && update.IsPressed)
+            if (package.KeyboardUpdate.Key == Keys.L && package.KeyboardUpdate.IsPressed)
             {
                 if (MouseHover)
                 {
-                    LightingEnabled = !LightingEnabled;
+                    RaysEnabled = !RaysEnabled;
                 }
             }
-        }
-
-        public void Render(DeviceContext deviceContext)
-        {
-            deviceContext.Transform = (Matrix3x2)Matrix.Identity;
-            if (GodRayMap is null)
-            {
-                GodRayMap = Engine.RenderSystem.RessouceManager.GetNewBitmap();
-            }
-
-            deviceContext.Target = GodRayMap;
-            deviceContext.Clear(Color.Transparent);
-            using var brush = new SolidColorBrush(deviceContext, GlowColor);
-            if (!(Rays is null) && LightingEnabled)
-            {
-                lock (Rays)
-                {
-                    foreach (Ray ray in Rays)
-                    {
-                        deviceContext.DrawLine(ray.Position.Downgrade(), ray.Direction.Downgrade(), brush);
-                    }
-                }
-            }
-
-            using GaussianBlur blur = new GaussianBlur(deviceContext)
-            {
-                StandardDeviation = Blur
-            };
-            blur.SetInput(0, GodRayMap, true);
-
-            deviceContext.Target = Engine.RenderSystem.RessouceManager.RayBitmap;
-            deviceContext.DrawImage(blur, InterpolationMode.HighQualityCubic, CompositeMode.Plus);
-            deviceContext.Target = Engine.RenderSystem.RessouceManager.ObjectsBitmap;
-            deviceContext.Transform = (Matrix3x2)Matrix.Translation(Position.X, Position.Y * -1, Position.Z);
-
-            deviceContext.DrawBitmap(Bitmap, 1, BitmapInterpolationMode.Linear);
-            deviceContext.DrawText($"{Force.X}, {((IPhysicsObject)this).Acceleration.X}, {((IPhysicsObject)this).Acceleration.Y}, {Velocity.X}", Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 0, 100, 50), brush);
-            deviceContext.DrawLine(new Vector2(this.BoundingBox.Center.X + 10 - Position.X, this.BoundingBox.Center.Y - Position.Y), new Vector2(this.BoundingBox.Center.X - 10 - Position.X, this.BoundingBox.Center.Y - Position.Y), brush);
-            deviceContext.DrawLine(new Vector2(this.BoundingBox.Center.X - Position.X, this.BoundingBox.Center.Y + 10 - Position.Y), new Vector2(this.BoundingBox.Center.X - Position.X, this.BoundingBox.Center.Y - 10 - Position.Y), brush);
-            deviceContext.DrawRectangle(this.BoundingBox.BoundingBoxToRectNoPos(), brush);
-            deviceContext.Transform = (Matrix3x2)Matrix.Identity;
         }
 
         public bool MouseHover { get; set; }
@@ -174,23 +89,33 @@ namespace GameAssets
 
         public bool Rotate { get; set; }
 
-        public bool LightingEnabled { get; set; } = true;
+        public Vector3 MassCenter { get; set; }
 
-        public void MouseInput(MouseState state, MouseUpdate update)
+        public Vector3 RotationVelocity { get; set; }
+
+        public Vector3 RotationAcceleration { get; set; }
+
+        public bool RaysEnabled { get; set; } = true;
+
+        public Color4 GlowColor { get; set; } = System.Drawing.Color.FromArgb(255, 255, 255, 255).Convert();
+
+        public RayCastingModule RayCastingModule { get; set; }
+
+        public void MouseInput(object sender, MouseUpdatePackage package)
         {
-            if (BoundingBox.ContainsVector(state.LocationRaw))
+            if (BoundingBox.ContainsVector(new Vector3(package.MouseState.LocationRaw.X, package.MouseState.LocationRaw.Y - Size.Height, package.MouseState.LocationRaw.Z)))
             {
                 if (MouseDown)
                 {
                     if (Rotate)
                     {
-                        this.StartAngle = (this.StartAngle + update.Location.X) % 360;
-                        this.EndAngle = (this.EndAngle + update.Location.X) % 360;
+                        this.StartAngle = (this.StartAngle + package.MouseUpdate.Location.X) % 360;
+                        this.EndAngle = (this.EndAngle + package.MouseUpdate.Location.X) % 360;
                     }
                     else
                     {
                         Vector3 oldPos = Position;
-                        oldPos += update.Location;
+                        oldPos += package.MouseUpdate.Location;
                         SetPosition(oldPos);
                     }
                 }
@@ -202,9 +127,9 @@ namespace GameAssets
                 MouseHover = false;
             }
 
-            if (update.MouseButton == MouseButtonUpdate.Left)
+            if (package.MouseUpdate.MouseButton == MouseButtonUpdate.Left)
             {
-                MouseDown = update.IsPressed;
+                MouseDown = package.MouseUpdate.IsPressed;
             }
         }
     }

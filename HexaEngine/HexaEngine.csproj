@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{526B3C1D-BB27-49F4-BE71-1F792F2122FC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>HexaEngine</RootNamespace>
+    <AssemblyName>HexaEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Amplifier, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Amplifier.NET.0.5.0\lib\netstandard2.0\Amplifier.dll</HintPath>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.7.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.7.9\lib\netstandard2.0\Humanizer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11.Effects, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.Effects.4.2.0\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.XAudio2.4.2.0\lib\net45\SharpDX.XAudio2.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.7.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata, Version=1.4.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.8.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core.Audio\AudioSystem.cs" />
+    <Compile Include="Core.Common\Camera.cs" />
+    <Compile Include="Core.Extentions\BoundBoxExtentions.cs" />
+    <Compile Include="Core.Input\Component\KeyboardState.cs" />
+    <Compile Include="Core.Input\Component\KeyboardUpdate.cs" />
+    <Compile Include="Core.Input\Component\KeyboardUpdatePackage.cs" />
+    <Compile Include="Core.Input\Component\MouseButtonUpdate.cs" />
+    <Compile Include="Core.Input\Component\MouseState.cs" />
+    <Compile Include="Core.Input\Component\MouseUpdate.cs" />
+    <Compile Include="Core.Input\Component\MouseUpdatePackage.cs" />
+    <Compile Include="Core.Input\Extentions\SystemWindowsFormsExtentions.cs" />
+    <Compile Include="Core.Input\InputProcessing.cs" />
+    <Compile Include="Core.Input\InputSystem.cs" />
+    <Compile Include="Core.Input\Interfaces\IInputKeyboard.cs" />
+    <Compile Include="Core.Input\Interfaces\IInputMouse.cs" />
+    <Compile Include="Core.Mathmatics\Buffer\MathBuffer.cs" />
+    <Compile Include="Core.Mathmatics\CosBuffer.cs" />
+    <Compile Include="Core.Mathmatics\Matrix.cs" />
+    <Compile Include="Core.Mathmatics\SinBuffer.cs" />
+    <Compile Include="Core.Objects\Components\RayCastingModule.cs" />
+    <Compile Include="Core.Physics\Collision\SoftBody.cs" />
+    <Compile Include="Core.Physics\Interfaces\IPhysicsObjectGrid.cs" />
+    <Compile Include="Core.Physics\Rays\RayBuffer.cs" />
+    <Compile Include="Core.Render\HexaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core.UI\BaseTypes\Button.cs" />
+    <Compile Include="Core.UI\BaseTypes\Screen.cs" />
+    <Compile Include="Core.UI\UserInterfaceManager.cs" />
+    <Compile Include="Core.UI\Interfaces\IUserInterface.cs" />
+    <Compile Include="Core.Objects\BaseTypes\BaseObjectState.cs" />
+    <Compile Include="Core.Extentions\ArrayExtentions.cs" />
+    <Compile Include="Core.Extentions\ColorExtentions.cs" />
+    <Compile Include="Core.Extentions\DeviceContextExtention.cs" />
+    <Compile Include="Core.Extentions\FloatExtention.cs" />
+    <Compile Include="Core.Extentions\MouseButtonExtentions.cs" />
+    <Compile Include="Core.Extentions\RawColor4Extention.cs" />
+    <Compile Include="Core.Extentions\RawVectorExtention.cs" />
+    <Compile Include="Core.Extentions\StringExtention.cs" />
+    <Compile Include="Core.Objects\Components\ObjectPostProcessManager.cs" />
+    <Compile Include="Core.Objects\Interfaces\IBaseObject.cs" />
+    <Compile Include="Core.Physics\Interfaces\IRayTransparent.cs" />
+    <Compile Include="Core.Physics\Rays\RayMath.cs" />
+    <Compile Include="Core.Physics\Rays\RayTraceModules\Lens.cs" />
+    <Compile Include="Core.Render\Interfaces\IPostProcessObject.cs" />
+    <Compile Include="Core.Common\Timer.cs" />
+    <Compile Include="Core.Common\Brushpalette.cs" />
+    <Compile Include="Core.Particle\ParticleSystem.cs" />
+    <Compile Include="Core.Physics\Acceleration\Acceleration.cs" />
+    <Compile Include="Core.Physics\Collision\Collisions.cs" />
+    <Compile Include="Core.Physics\Components\PhysicsSolver.cs" />
+    <Compile Include="Core.Physics\Collision\BlockedDirection.cs" />
+    <Compile Include="Core.Physics\Gravity\Constants.cs" />
+    <Compile Include="Core.Physics\Gravity\Gravitation.cs" />
+    <Compile Include="Core.Physics\Interfaces\IPhysicsObject.cs" />
+    <Compile Include="Core.Physics\Interfaces\IRayCasting.cs" />
+    <Compile Include="Core.Physics\Interfaces\IRayLens.cs" />
+    <Compile Include="Core.Physics\Interfaces\IRayMirror.cs" />
+    <Compile Include="Core.Physics\PhysicsEngine.cs" />
+    <Compile Include="Core.Objects\BaseTypes\BaseObject.cs" />
+    <Compile Include="Core.Common\ConvertBitmap.cs" />
+    <Compile Include="Core.Physics\Rays\Driection4.cs" />
+    <Compile Include="Core.Physics\Rays\Direction.cs" />
+    <Compile Include="Core.Physics\Rays\DirectionMethods.cs" />
+    <Compile Include="Core.Physics\Rays\RayTrace.cs" />
+    <Compile Include="Core.Physics\Rays\SubDirection.cs" />
+    <Compile Include="Core.Physics\Velocity\Velocity.cs" />
+    <Compile Include="Core.Render\Components\DeviceManager.cs" />
+    <Compile Include="Core.Render\Components\DirectWriteManagement.cs" />
+    <Compile Include="Core.Render\Components\ObjectRessourceManager.cs" />
+    <Compile Include="Core.Render\Components\PostProcessingManager.cs" />
+    <Compile Include="Core.Render\Components\RessouceManager.cs" />
+    <Compile Include="Core.Render\Interfaces\IDrawable.cs" />
+    <Compile Include="Core.Render\RenderLoop.cs" />
+    <Compile Include="Core.Render\RenderSystem.cs" />
+    <Compile Include="Core.Scenes\Scene.cs" />
+    <Compile Include="Core.Scenes\SceneManager.cs" />
+    <Compile Include="Core.Shaders\Shader.cs" />
+    <Compile Include="Core\Engine.cs" />
+    <Compile Include="Core\EngineDefinitions.cs" />
+    <Compile Include="Core\EngineSettings.cs" />
+    <Compile Include="Core\EngineTransform.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Core.Common\engine-logo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core.Particle\Components\" />
+    <Folder Include="Core.Render\Modules\" />
+    <Folder Include="Core.Scripts\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

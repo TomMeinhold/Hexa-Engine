@@ -4,11 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{09D19A8C-12A3-4D03-8A1A-F9331BAAB6A0}</ProjectGuid>
+    <ProjectGuid>{8BCDE095-9E22-48A2-A122-D8DF52ABBD19}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>GameAssets</RootNamespace>
-    <AssemblyName>Game - Assets</AssemblyName>
-    <LangVersion>8.0</LangVersion>
+    <RootNamespace>HexaEngine</RootNamespace>
+    <AssemblyName>HexaEngine-3D</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -49,17 +48,14 @@
     <Reference Include="SharpDX.Direct3D11.Effects, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Direct3D11.Effects.4.2.0\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Direct3D12, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D12.4.2.0\lib\net45\SharpDX.Direct3D12.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.XAudio2, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.XAudio2.4.2.0\lib\net45\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,61 +69,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets.cs" />
-    <Compile Include="Objects\World\Planet.cs" />
-    <Compile Include="Objects\World\Sun.cs" />
-    <Compile Include="Objects\World\Wall.cs" />
-    <Compile Include="Objects\World\WallReflective.cs" />
+    <Compile Include="Core\Engine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
+    <Compile Include="Core.Render\Components\DeviceManager.cs" />
+    <Compile Include="Core.Render\Components\DirectWriteManagement.cs" />
+    <Compile Include="Core.Render\Components\ObjectRessourceManager.cs" />
+    <Compile Include="Core.Render\Components\PostProcessingManager.cs" />
+    <Compile Include="Core.Render\Components\RessouceManager.cs" />
+    <Compile Include="Core.Render\Interfaces\IDrawable.cs" />
+    <Compile Include="Core.Render\RenderLoop.cs" />
+    <Compile Include="Core.Render\RenderSystem.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <Folder Include="Core.Render\Modules\" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resource.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\player.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\wall.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\large_wall.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\high_wall.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\engine-logo.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Unbenannt.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\sun.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\mirror.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\planet.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HexaEngine\HexaEngine.csproj">
-      <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
-      <Name>HexaEngine</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
