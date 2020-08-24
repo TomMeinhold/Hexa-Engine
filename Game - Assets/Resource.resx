@@ -133,8 +133,14 @@
   <data name="mirror" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\mirror.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="particle1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\particle1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="planet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\planet.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="planet1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\planet1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="player" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\player.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

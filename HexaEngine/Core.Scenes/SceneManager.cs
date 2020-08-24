@@ -3,12 +3,62 @@ using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Render.Interfaces;
 using SharpDX.Direct2D1;
 using System;
+using System.Collections.Generic;
 
 namespace HexaEngine.Core.Scenes
 {
     public class SceneManager
     {
-        public Scene SelectedScene { get; set; }
+        private Scene selectedScene;
+
+        public SceneManager(Engine engine)
+        {
+            Engine = engine ?? throw new ArgumentNullException(nameof(engine));
+        }
+
+        public Dictionary<Type, Scene> Instances { get; } = new Dictionary<Type, Scene>();
+
+        public Engine Engine { get; }
+
+        public Scene SelectedScene
+        {
+            get => selectedScene;
+            set
+            {
+                if (selectedScene != null)
+                {
+                    foreach (object obj in selectedScene.Objects)
+                    {
+                        if (obj is BaseObject baseObject)
+                        {
+                            baseObject.Enabled = false;
+                        }
+                    }
+                }
+
+                foreach (object obj in value.Objects)
+                {
+                    if (obj is BaseObject baseObject)
+                    {
+                        baseObject.Enabled = true;
+                    }
+                }
+
+                selectedScene = value;
+            }
+        }
+
+        public void SetSceneByType(Type type, bool createNew = false)
+        {
+            if (!createNew && Instances.ContainsKey(type))
+            {
+                SelectedScene = Instances[type];
+            }
+            else
+            {
+                Instances[type] = SelectedScene = (Scene)Activator.CreateInstance(type, new object[] { Engine });
+            }
+        }
 
         internal void RenderScene(DeviceContext d2DDeviceContext)
         {
@@ -26,6 +76,28 @@ namespace HexaEngine.Core.Scenes
                         if (baseObject is IDrawable drawable)
                         {
                             drawable.Render(d2DDeviceContext);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void RenderScene(SharpDX.Direct3D11.DeviceContext deviceContext)
+        {
+            if (SelectedScene == null)
+            {
+                return;
+            }
+
+            lock (SelectedScene)
+            {
+                lock (SelectedScene.Objects)
+                {
+                    foreach (IBaseObject baseObject in SelectedScene.Objects)
+                    {
+                        if (baseObject is IDrawable3D drawable)
+                        {
+                            drawable.Render3D(deviceContext);
                         }
                     }
                 }

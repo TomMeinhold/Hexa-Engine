@@ -1,13 +1,13 @@
 ﻿using HexaEngine.Core.Input;
 using HexaEngine.Core.Input.Component;
-using HexaEngine.Core.Input.Interfaces;
 using HexaEngine.Core.UI.Interfaces;
 using SharpDX.Direct2D1;
 using System;
+using System.Collections.Generic;
 
 namespace HexaEngine.Core.UI
 {
-    public class UserInterfaceManager : IInputKeyboard, IInputMouse
+    public class UserInterfaceManager
     {
         public UserInterfaceManager(Engine engine)
         {
@@ -18,7 +18,21 @@ namespace HexaEngine.Core.UI
 
         public IUserInterface ActiveUserInterface { get; set; }
 
+        public Dictionary<Type, IUserInterface> Instances { get; } = new Dictionary<Type, IUserInterface>();
+
         public Engine Engine { get; }
+
+        public void SetUIByType(Type type, bool createNew = false)
+        {
+            if (!createNew && Instances.ContainsKey(type))
+            {
+                ActiveUserInterface = Instances[type];
+            }
+            else
+            {
+                Instances[type] = ActiveUserInterface = (IUserInterface)Activator.CreateInstance(type, new object[] { Engine });
+            }
+        }
 
         public void KeyboardInput(object sender, KeyboardUpdatePackage package)
         {

@@ -1,63 +1,94 @@
 ﻿using HexaEngine.Core;
-using HexaEngine.Core.Extentions;
-using HexaEngine.Core.Input;
 using HexaEngine.Core.Input.Component;
-using HexaEngine.Core.Input.Interfaces;
+using HexaEngine.Core.Input.Modules;
 using HexaEngine.Core.Objects.BaseTypes;
 using HexaEngine.Core.Objects.Components;
 using HexaEngine.Core.Objects.Interfaces;
-using HexaEngine.Core.Physics.Collision;
 using HexaEngine.Core.Physics.Interfaces;
+using HexaEngine.Core.Physics.Structs;
 using HexaEngine.Core.Render.Interfaces;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
-namespace GameAssets
+namespace GameAssets.Objects.World
 {
-    public class Sun : BaseObject, IInputKeyboard, IInputMouse, IBaseObject, IDrawable, IPhysicsObject, IRayCasting
+    public class Sun : BaseObject, IBaseObject, IDrawable, IPhysicsObject, IRayCasting
     {
-        public float Mass { get; set; } = 100;
+        private bool rotateRaysMode;
 
-        public Vector3 Velocity { get; set; }
+        private RayCastDiscription rayCastDiscription;
 
-        public Vector3 Acceleration { get; set; }
+        public RayCastDiscription RayCastDiscription { get => rayCastDiscription; set => rayCastDiscription = value; }
 
-        public Vector3 Force { get; set; }
+        public MouseController mouseController;
 
-        public BlockedDirection Sides { get; set; }
+        public KeyboardController keyboardController;
 
-        public float ForceAbsorbtion { get; set; }
+        private Sun()
+        {
+            mouseController = new MouseController(this);
+            keyboardController = new KeyboardController(this, mouseController);
+            mouseController.MouseHover += MouseController_MouseHover;
+            keyboardController.KeyUp += KeyboardController_KeyUp;
+        }
 
-        public float RayDensity { get; set; } = 1;
-
-        public List<Ray> Rays { get; set; }
-
-        public float RayRange { get; set; } = 500;
-
-        public float StartAngle { get; set; } = 0;
-
-        public float EndAngle { get; set; } = 360;
-
-        public bool Static { get; set; }
-
-        public Sun(Engine engine, Bitmap1 bitmap, RawVector3 position)
+        public Sun(Engine engine, Bitmap1 bitmap, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription) : this()
         {
             Engine = engine;
             Bitmap = bitmap;
             Size = bitmap.Size;
+            physicsObjectDiscription.SetValues(this);
             SetPosition(position);
             MassCenter = BoundingBox.Center - Position;
-            InputSystem.MouseUpdate += MouseInput;
-            InputSystem.KeyboardUpdate += KeyboardInput;
-            RayCastingModule = new RayCastingModule(this);
+            OnCollision += Sun_OnCollision;
         }
 
-        public void KeyboardInput(object sender, KeyboardUpdatePackage package)
+        public Sun(Engine engine, Bitmap1 bitmap, PhysicsObjectDiscription physicsObjectDiscription) : this()
         {
-            if (package.KeyboardUpdate.Key == Keys.B && package.KeyboardUpdate.IsPressed)
+            Engine = engine;
+            Bitmap = bitmap;
+            Size = bitmap.Size;
+            physicsObjectDiscription.SetValues(this);
+            MassCenter = BoundingBox.Center - Position;
+            OnCollision += Sun_OnCollision;
+        }
+
+        public Sun(Engine engine, Bitmap1 bitmap, PhysicsObjectDiscription physicsObjectDiscription, RayCastDiscription rayCastDiscription) : this(engine, bitmap, physicsObjectDiscription)
+        {
+            RayCastingModule = new RayCastingModule(this);
+            this.RayCastDiscription = rayCastDiscription;
+        }
+
+        public Sun(Engine engine, Bitmap1 bitmap, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription, RayCastDiscription rayCastDiscription) : this(engine, bitmap, position, physicsObjectDiscription)
+        {
+            RayCastingModule = new RayCastingModule(this);
+            this.RayCastDiscription = rayCastDiscription;
+        }
+
+        public RayCastingModule RayCastingModule { get; set; }
+
+        private void MouseController_MouseHover(object sender, MouseUpdatePackage e)
+        {
+            if (mouseController.IsMouseDown)
+            {
+                if (rotateRaysMode)
+                {
+                    rayCastDiscription.StartAngle = (rayCastDiscription.StartAngle + e.MouseUpdate.Location.X) % 360;
+                    rayCastDiscription.EndAngle = (rayCastDiscription.EndAngle + e.MouseUpdate.Location.X) % 360;
+                }
+                else
+                {
+                    Vector3 oldPos = Position;
+                    oldPos += e.MouseUpdate.Location;
+                    SetPosition(oldPos);
+                }
+            }
+        }
+
+        private void KeyboardController_KeyUp(object sender, KeyboardUpdatePackage e)
+        {
+            if (e.KeyboardUpdate.Key == Keys.B)
             {
                 if (RayCastingModule.Blur.StandardDeviation > 0)
                 {
@@ -69,67 +100,27 @@ namespace GameAssets
                 }
             }
 
-            if (package.KeyboardUpdate.Key == Keys.R && package.KeyboardUpdate.IsPressed)
+            if (e.KeyboardUpdate.Key == Keys.R)
             {
-                Rotate = !Rotate;
+                rotateRaysMode = !rotateRaysMode;
             }
 
-            if (package.KeyboardUpdate.Key == Keys.L && package.KeyboardUpdate.IsPressed)
+            if (e.KeyboardUpdate.Key == Keys.L)
             {
-                if (MouseHover)
-                {
-                    RaysEnabled = !RaysEnabled;
-                }
+                rayCastDiscription.RaysEnabled = !rayCastDiscription.RaysEnabled;
+            }
+
+            if (e.KeyboardUpdate.Key == Keys.M)
+            {
+                Destroy();
             }
         }
 
-        public bool MouseHover { get; set; }
-
-        public bool MouseDown { get; set; }
-
-        public bool Rotate { get; set; }
-
-        public Vector3 MassCenter { get; set; }
-
-        public Vector3 RotationVelocity { get; set; }
-
-        public Vector3 RotationAcceleration { get; set; }
-
-        public bool RaysEnabled { get; set; } = true;
-
-        public Color4 GlowColor { get; set; } = System.Drawing.Color.FromArgb(255, 255, 255, 255).Convert();
-
-        public RayCastingModule RayCastingModule { get; set; }
-
-        public void MouseInput(object sender, MouseUpdatePackage package)
+        private void Sun_OnCollision(object sender, HexaEngine.Core.Physics.Collision.OnCollisionEventArgs e)
         {
-            if (BoundingBox.ContainsVector(new Vector3(package.MouseState.LocationRaw.X, package.MouseState.LocationRaw.Y - Size.Height, package.MouseState.LocationRaw.Z)))
+            if (e.Object is Planet planet)
             {
-                if (MouseDown)
-                {
-                    if (Rotate)
-                    {
-                        this.StartAngle = (this.StartAngle + package.MouseUpdate.Location.X) % 360;
-                        this.EndAngle = (this.EndAngle + package.MouseUpdate.Location.X) % 360;
-                    }
-                    else
-                    {
-                        Vector3 oldPos = Position;
-                        oldPos += package.MouseUpdate.Location;
-                        SetPosition(oldPos);
-                    }
-                }
-
-                MouseHover = true;
-            }
-            else
-            {
-                MouseHover = false;
-            }
-
-            if (package.MouseUpdate.MouseButton == MouseButtonUpdate.Left)
-            {
-                MouseDown = package.MouseUpdate.IsPressed;
+                Mass -= planet.Mass * (planet.Velocity.X + planet.Velocity.Y);
             }
         }
     }

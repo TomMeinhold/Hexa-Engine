@@ -1,17 +1,12 @@
-﻿using HexaEngine.Core.Objects.BaseTypes;
-using HexaEngine.Core.Physics.Gravity;
+﻿using HexaEngine.Core.Objects.Interfaces;
+using HexaEngine.Core.Physics.Components;
 using HexaEngine.Core.Physics.Interfaces;
-using HexaEngine.Core.Physics.Rays;
-using HexaEngine.Core.Physics.Collision;
-using SharpDX;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.Linq;
-using HexaEngine.Core.Physics.Components;
-using HexaEngine.Core.Objects.Interfaces;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HexaEngine.Core.Physics
 {
@@ -37,7 +32,15 @@ namespace HexaEngine.Core.Physics
 
         public bool IsDisposing { get; private set; }
 
+        public bool Paused { get; set; }
+
+        public bool DoCycle { get; set; }
+
         public TimeSpan ThreadTiming { get; set; }
+
+        public ScalingMode ScalingMode { get; set; } = ScalingMode.Meters;
+
+        public Dictionary<IPhysicsObject, PhysicsSolver> Instances { get; } = new Dictionary<IPhysicsObject, PhysicsSolver>();
 
         private void ThreadVoid()
         {
@@ -45,6 +48,11 @@ namespace HexaEngine.Core.Physics
             while (!IsDisposing)
             {
                 ThreadTiming = new TimeSpan(stopwatch.ElapsedTicks);
+                while (Paused && !IsDisposing && !DoCycle)
+                {
+                    Thread.Sleep(1);
+                }
+                DoCycle = false;
                 stopwatch.Restart();
                 List<IPhysicsObject> physicsObjects;
                 if (this.Engine.SceneManager.SelectedScene != null)
@@ -58,12 +66,18 @@ namespace HexaEngine.Core.Physics
                     {
                         Thread.Sleep(1);
                     }
-
                     foreach (IPhysicsObject physicsObject in physicsObjects)
                     {
-                        var physicsSolver = new PhysicsSolver(this, physicsObjects, physicsObject);
-                        physicsSolver.Process();
+                        if (!Instances.ContainsKey(physicsObject))
+                        {
+                            Instances[physicsObject] = new PhysicsSolver(this, physicsObjects, physicsObject);
+                        }
                     }
+
+                    Parallel.ForEach(physicsObjects, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, (physicsObject) =>
+                    {
+                        Instances[physicsObject].Process();
+                    });
                 }
             }
         }

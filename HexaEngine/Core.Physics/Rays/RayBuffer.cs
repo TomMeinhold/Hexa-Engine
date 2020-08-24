@@ -1,6 +1,6 @@
 ﻿using SharpDX;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HexaEngine.Core.Physics.Rays
 {
@@ -13,7 +13,7 @@ namespace HexaEngine.Core.Physics.Rays
             rays = new List<Ray>();
         }
 
-        public RayBuffer(List<Ray> rays)
+        public RayBuffer(ref List<Ray> rays)
         {
             if (rays is null)
             {
@@ -21,12 +21,13 @@ namespace HexaEngine.Core.Physics.Rays
             }
             else
             {
-                this.rays = rays.ToList();
+                this.rays = rays;
             }
         }
 
         public int Pointer { get; set; }
 
+        [Obsolete("Creates GC Pressure")]
         public void Add(Ray ray)
         {
             if (rays.Count < Pointer + 1)
@@ -39,6 +40,28 @@ namespace HexaEngine.Core.Physics.Rays
             }
 
             Pointer++;
+        }
+
+        public Ray AddRay(Vector3 pos, Vector3 direct)
+        {
+            if (rays.Count < Pointer + 1)
+            {
+                Ray ray = new Ray(pos, direct);
+                lock (rays)
+                {
+                    rays.Add(ray);
+                }
+
+                Pointer++;
+                return ray;
+            }
+            else
+            {
+                Ray ray = rays[Pointer];
+                ray.Position = pos;
+                ray.Direction = direct;
+                return ray;
+            }
         }
 
         public List<Ray> GetRays()

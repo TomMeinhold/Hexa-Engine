@@ -1,11 +1,9 @@
-﻿using HexaEngine.Core.Audio;
-using HexaEngine.Core.Common;
+﻿using HexaEngine.Core.Common;
 using HexaEngine.Core.Input;
 using HexaEngine.Core.Physics;
 using HexaEngine.Core.Render;
 using HexaEngine.Core.Scenes;
 using HexaEngine.Core.UI;
-using System;
 
 namespace HexaEngine.Core
 {
@@ -19,14 +17,11 @@ namespace HexaEngine.Core
 
         public InputSystem InputSystem { get; set; }
 
-        public EngineTransform Transform { get; set; }
+        public BitmapConverter BitmapConverter { get; set; }
 
         public EngineSettings Settings { get; set; }
 
-        [Obsolete]
-        public AudioSystem AudioSystem { get; set; } = new AudioSystem();
-
-        public SceneManager SceneManager { get; set; } = new SceneManager();
+        public SceneManager SceneManager { get; set; }
 
         public UserInterfaceManager UIManager { get; set; }
 

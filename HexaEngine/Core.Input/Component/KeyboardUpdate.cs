@@ -5,7 +5,6 @@
 namespace HexaEngine.Core.Input.Component
 {
     using System;
-    using System.Windows.Forms;
 
     public struct KeyboardUpdate : IEquatable<KeyboardUpdate>
     {

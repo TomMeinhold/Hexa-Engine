@@ -20,6 +20,7 @@ namespace HexaEngine.Core.Render.Components
             this.DefaultPixelFormat = this.DeviceManager.PixelFormat;
             this.Buffercount = this.DeviceManager.SwapChain.Description.BufferCount;
             this.D2DDeviceContext = new DeviceContext(manager.D2DDevice, DeviceContextOptions.EnableMultithreadedOptimizations);
+            this.D3DDeviceContext = new SharpDX.Direct3D11.DeviceContext(manager.Device);
             this.TargetBitmapProperties = new BitmapProperties1(this.DefaultPixelFormat, this.RenderForm.DeviceDpi, this.RenderForm.DeviceDpi, BitmapOptions.Target | BitmapOptions.CannotDraw);
             this.DefaultBitmapProperties = new BitmapProperties1(this.DefaultPixelFormat, this.RenderForm.DeviceDpi, this.RenderForm.DeviceDpi, BitmapOptions.Target);
             this.SwapChainBackbuffer = Surface.FromSwapChain(this.SwapChain, 0);
@@ -45,6 +46,8 @@ namespace HexaEngine.Core.Render.Components
 
         public List<Bitmap1> Bitmaps { get; } = new List<Bitmap1>();
 
+        public List<Bitmap1> Textures { get; } = new List<Bitmap1>();
+
         public Bitmap1 TargetBitmap { get; private set; }
 
         public Bitmap1 RayBitmap { get; private set; }
@@ -58,6 +61,8 @@ namespace HexaEngine.Core.Render.Components
         public Surface SwapChainBackbuffer { get; private set; }
 
         public DeviceContext D2DDeviceContext { get; private set; }
+
+        public SharpDX.Direct3D11.DeviceContext D3DDeviceContext { get; private set; }
 
         private BitmapProperties1 TargetBitmapProperties { get; set; }
 
@@ -88,6 +93,19 @@ namespace HexaEngine.Core.Render.Components
             return tmp;
         }
 
+        public Bitmap1 AddTexture(Bitmap1 bitmap)
+        {
+            Textures.Add(bitmap);
+            return bitmap;
+        }
+
+        public Bitmap1 LoadTexture(System.Drawing.Bitmap bitmap, bool hasAlpha = false)
+        {
+            var bitmap1 = Common.ConvertBitmap.Convert(D2DDeviceContext, bitmap, hasAlpha);
+            Textures.Add(bitmap1);
+            return bitmap1;
+        }
+
         public void Dispose()
         {
             this.Dispose(true);
@@ -105,6 +123,11 @@ namespace HexaEngine.Core.Render.Components
                     this.ObjectsBitmap.Dispose();
                     this.D2DDeviceContext.Dispose();
                     foreach (Bitmap1 bitmap in this.Bitmaps)
+                    {
+                        bitmap.Dispose();
+                    }
+
+                    foreach (Bitmap1 bitmap in this.Textures)
                     {
                         bitmap.Dispose();
                     }

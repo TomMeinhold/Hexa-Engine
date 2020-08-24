@@ -37,9 +37,9 @@ namespace HexaEngine.Core.Input
 
         public bool Active { get; set; }
 
-        public MouseState MouseState { get; } = new MouseState();
+        public static MouseState MouseState { get; } = new MouseState();
 
-        public KeyboardState KeyboardState { get; } = new KeyboardState();
+        public static KeyboardState KeyboardState { get; } = new KeyboardState();
 
         public static event EventHandler<KeyboardUpdatePackage> KeyboardUpdate;
 

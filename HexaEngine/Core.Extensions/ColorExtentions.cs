@@ -1,8 +1,8 @@
 ﻿// <copyright file="ColorExtentions.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+//     Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace HexaEngine.Core.Extentions
+namespace HexaEngine.Core.Extensions
 {
     using System;
 

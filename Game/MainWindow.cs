@@ -1,58 +1,52 @@
-﻿using HexaEngine.Core;
-using HexaEngine.Core.Input;
+﻿using GameAssets;
+using GameAssets.Scenes;
+using GameAssets.Screens;
+using HexaEngine.Core;
 using HexaEngine.Core.Input.Component;
-using HexaEngine.Core.Input.Interfaces;
+using HexaEngine.Core.Input.Modules;
 using HexaEngine.Core.Render;
 using HexaEngine.Core.Scenes;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Keys = HexaEngine.Core.Input.Component.Keys;
 
 namespace Game
 {
-    public partial class MainWindow : HexaForm, IInputKeyboard
+    public partial class MainWindow : HexaForm
     {
-        private readonly List<Scene> scenes;
+        private readonly KeyboardController keyboardController;
 
         public MainWindow()
         {
             InitializeComponent();
             Engine = new Engine(this);
-            InputSystem.KeyboardUpdate += KeyboardInput;
-            scenes = GameAssets.Assets.GetScenes(Engine);
-            Engine.SceneManager.SelectedScene = scenes[0];
-            ((HexaEngine.Core.UI.BaseTypes.Button)((HexaEngine.Core.UI.BaseTypes.Screen)Engine.UIManager.ActiveUserInterface).UserInterfaces[0]).Click += MainWindow_Click0;
-            ((HexaEngine.Core.UI.BaseTypes.Button)((HexaEngine.Core.UI.BaseTypes.Screen)Engine.UIManager.ActiveUserInterface).UserInterfaces[1]).Click += MainWindow_Click1;
-            ((HexaEngine.Core.UI.BaseTypes.Button)((HexaEngine.Core.UI.BaseTypes.Screen)Engine.UIManager.ActiveUserInterface).UserInterfaces[2]).Click += MainWindow_Click2;
+            keyboardController = new KeyboardController(this);
+            keyboardController.KeyUp += KeyboardController_KeyUp;
+            Engine.UIManager.SetUIByType(typeof(Screen1));
+            Engine.SceneManager.SetSceneByType(typeof(Scene1));
             Engine.RenderSystem.MainLoop();
         }
 
-        private void MainWindow_Click0(object sender, System.EventArgs e)
+        private void KeyboardController_KeyUp(object sender, KeyboardUpdatePackage e)
         {
-            Engine.SceneManager.SelectedScene = scenes[0];
-        }
-
-        private void MainWindow_Click1(object sender, System.EventArgs e)
-        {
-            Engine.SceneManager.SelectedScene = scenes[1];
-        }
-
-        private void MainWindow_Click2(object sender, System.EventArgs e)
-        {
-            Engine.SceneManager.SelectedScene = scenes[2];
-        }
-
-        public void KeyboardInput(object sender, KeyboardUpdatePackage package)
-        {
-            KeyboardUpdate update = package.KeyboardUpdate;
-
-            if (update.Key == Keys.F11 && !update.IsPressed)
+            if (e.KeyboardUpdate.Key == Keys.F1)
             {
                 Engine.RenderSystem.FlipFullscreen();
             }
 
-            if (update.Key == Keys.F3 && !update.IsPressed)
+            if (e.KeyboardUpdate.Key == Keys.F3)
             {
                 Engine.Settings.DebugMode = !Engine.Settings.DebugMode;
+            }
+
+            if (e.KeyboardUpdate.Key == Keys.P)
+            {
+                Engine.PhysicsEngine.Paused = !Engine.PhysicsEngine.Paused;
+            }
+
+            if (e.KeyboardUpdate.Key == Keys.O)
+            {
+                Engine.PhysicsEngine.DoCycle = !Engine.PhysicsEngine.DoCycle;
             }
         }
 

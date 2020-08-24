@@ -1,9 +1,4 @@
 ﻿using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HexaEngine.Core.Physics.Rays
 {
@@ -76,12 +71,12 @@ namespace HexaEngine.Core.Physics.Rays
             {
                 Direction.RightCenter => new Direction4[] { Direction4.Right },
                 Direction.LeftCenter => new Direction4[] { Direction4.Left },
-                Direction.TopRight => new Direction4[] { Direction4.Top, Direction4.Right },
-                Direction.TopLeft => new Direction4[] { Direction4.Top, Direction4.Left },
-                Direction.TopCenter => new Direction4[] { Direction4.Top },
-                Direction.BottomRight => new Direction4[] { Direction4.Bottom, Direction4.Right },
-                Direction.BottomLeft => new Direction4[] { Direction4.Bottom, Direction4.Left },
-                Direction.BottomCenter => new Direction4[] { Direction4.Bottom },
+                Direction.TopRight => new Direction4[] { Direction4.Up, Direction4.Right },
+                Direction.TopLeft => new Direction4[] { Direction4.Up, Direction4.Left },
+                Direction.TopCenter => new Direction4[] { Direction4.Up },
+                Direction.BottomRight => new Direction4[] { Direction4.Down, Direction4.Right },
+                Direction.BottomLeft => new Direction4[] { Direction4.Down, Direction4.Left },
+                Direction.BottomCenter => new Direction4[] { Direction4.Down },
                 Direction.Center => new Direction4[0],
                 _ => new Direction4[0],
             };

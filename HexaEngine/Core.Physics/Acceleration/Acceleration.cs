@@ -1,6 +1,5 @@
 ﻿using HexaEngine.Core.Physics.Interfaces;
 using SharpDX;
-using SharpDX.Mathematics.Interop;
 
 namespace HexaEngine.Core.Physics
 {
@@ -17,11 +16,18 @@ namespace HexaEngine.Core.Physics
             else
             {
                 // Calculates the acceleration. F = a * m
-                Acceleration.X += physicsObject.Force.X / physicsObject.Mass;
-                Acceleration.Y += physicsObject.Force.Y / physicsObject.Mass;
+                if (physicsObject.Mass != 0)
+                {
+                    Acceleration.X += physicsObject.Force.X / physicsObject.Mass;
+                    Acceleration.Y += physicsObject.Force.Y / physicsObject.Mass;
+                }
+                else
+                {
+                    Acceleration.X += physicsObject.Force.X;
+                    Acceleration.Y += physicsObject.Force.Y;
+                }
 
                 physicsObject.Acceleration = Acceleration;
-
                 physicsObject.Force = default;
             }
         }

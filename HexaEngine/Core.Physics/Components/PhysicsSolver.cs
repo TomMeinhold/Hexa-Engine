@@ -3,11 +3,7 @@ using HexaEngine.Core.Physics.Gravity;
 using HexaEngine.Core.Physics.Interfaces;
 using HexaEngine.Core.Physics.Rays;
 using SharpDX;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HexaEngine.Core.Physics.Components
 {
@@ -28,26 +24,29 @@ namespace HexaEngine.Core.Physics.Components
 
         public void Process()
         {
-            if (Target is IRayCasting rayCasting)
-            {
-                RayTrace.Process(rayCasting, Target, PhysicsObjects);
-            }
-
             if (Target.Static == false)
             {
+                Acceleration.ProcessObject(Target);
+
+                Velocity.ProcessObject(Target, engine);
+
                 foreach (IPhysicsObject physicsObject in PhysicsObjects)
                 {
                     if (Target == physicsObject)
                     {
                         continue;
                     }
-
-                    Gravitation.ProcessObject(Target, physicsObject);
+                    if (physicsObject.Mass != 0 && Target.Mass != 0)
+                    {
+                        Gravitation.Process(Target, physicsObject, engine);
+                    }
                     Collisions.Process(Target, physicsObject);
                 }
+            }
 
-                Acceleration.ProcessObject(Target);
-                Velocity.ProcessObject(Target, engine.ThreadTiming);
+            if (Target is IRayCasting rayCasting)
+            {
+                RayTrace.Process(rayCasting, Target, PhysicsObjects);
             }
         }
     }

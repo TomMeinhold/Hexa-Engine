@@ -1,6 +1,6 @@
-﻿using HexaEngine.Core.Extentions;
+﻿using HexaEngine.Core.Extensions;
+using HexaEngine.Core.Objects.Components;
 using HexaEngine.Core.Physics.Interfaces;
-using HexaEngine.Core.Physics.Rays.RayTraceModules;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -11,80 +11,69 @@ namespace HexaEngine.Core.Physics.Rays
     {
         public static void Process(IRayCasting casting, IPhysicsObject a, List<IPhysicsObject> physicsObjects)
         {
+            casting.RayCastingModule.ResetPointer();
+            var descCast = casting.RayCastDiscription;
             Vector3 center = a.BoundingBox.GetPositionCenter();
-            RayBuffer rayBuffer = new RayBuffer(casting.Rays);
-            for (float i = casting.StartAngle; i <= casting.EndAngle;)
+            for (float i = descCast.StartAngle; i <= descCast.EndAngle;)
             {
-                float x = (float)Math.Cos(Math.PI * i / 180) * casting.RayRange;
-                float y = (float)Math.Sin(Math.PI * i / 180) * casting.RayRange;
+                float x = (float)Math.Cos(Math.PI * i / 180) * descCast.RayRange;
+                float y = (float)Math.Sin(Math.PI * i / 180) * descCast.RayRange;
 
-                Ray ray = new Ray(center, new Vector3(center.X + x, center.Y + y, a.Position.Z));
-                TraceRay(ref ray, a, ref rayBuffer, ref physicsObjects);
+                Vector3 pos = center;
+                Vector3 dir = new Vector3(center.X + x, center.Y + y, a.Position.Z);
+                TraceRay(ref pos, ref dir, a, casting.RayCastingModule, ref physicsObjects);
+                casting.RayCastingModule.AddRay(pos, dir);
 
-                rayBuffer.Add(ray);
-
-                i += 1 / casting.RayDensity;
-            }
-
-            if (casting.Rays is null)
-            {
-                casting.Rays = rayBuffer.GetRays();
-            }
-            else
-            {
-                lock (casting.Rays)
-                {
-                    casting.Rays = rayBuffer.GetRays();
-                }
+                i += 1 / descCast.RayDensity;
             }
         }
 
-        public static void RayCollision(ref Ray ray, BoundingBox boundingBox, IRayMirror rayMirror, ref RayBuffer rayBuffer, ref List<IPhysicsObject> physicsObjects)
+        public static void RayCollision(ref Vector3 pos, ref Vector3 dir, BoundingBox boundingBox, IRayMirror rayMirror, ref RayCastingModule module, ref List<IPhysicsObject> physicsObjects)
         {
-            if (ray.Position.Z == boundingBox.Minimum.Z)
+            if (pos.Z == boundingBox.Minimum.Z)
             {
                 bool collision = false;
-                Direction direction = DirectionMethods.TraceDirection(ray.Position, boundingBox.Center);
+                Direction direction = DirectionMethods.TraceDirection(pos, boundingBox.Center);
                 foreach (Direction4 direction4 in direction.SplitDirection())
                 {
                     switch (direction4)
                     {
-                        case Direction4.Top:
-                            (bool interTC, Vector3 vectorTC) = RayMath.LineSegementsIntersect(ray, boundingBox.Maximum, new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z));
+                        case Direction4.Up:
+                            (bool interTC, Vector3 vectorTC) = RayMath.LineSegementsIntersect(pos, dir, boundingBox.Maximum, new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z));
                             if (interTC)
                             {
-                                ray.Direction.X = vectorTC.X;
-                                ray.Direction.Y = vectorTC.Y;
+                                dir.X = vectorTC.X;
+                                dir.Y = vectorTC.Y;
                                 collision = true;
                             }
                             break;
 
                         case Direction4.Right:
-                            (bool interRC, Vector3 vectorRC) = RayMath.LineSegementsIntersect(ray, boundingBox.Maximum, new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z));
+                            (bool interRC, Vector3 vectorRC) = RayMath.LineSegementsIntersect(pos, dir, boundingBox.Maximum, new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z));
                             if (interRC)
                             {
-                                ray.Direction.X = vectorRC.X;
-                                ray.Direction.Y = vectorRC.Y;
+                                dir.X = vectorRC.X;
+                                dir.Y = vectorRC.Y;
                                 collision = true;
                             }
                             break;
 
-                        case Direction4.Bottom:
-                            (bool interBC, Vector3 vectorBC) = RayMath.LineSegementsIntersect(ray, boundingBox.Minimum, new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z));
+                        case Direction4.Down:
+                            (bool interBC, Vector3 vectorBC) = RayMath.LineSegementsIntersect(pos, dir, boundingBox.Minimum, new Vector3(boundingBox.Maximum.X, boundingBox.Minimum.Y, boundingBox.Maximum.Z));
                             if (interBC)
                             {
-                                ray.Direction.X = vectorBC.X;
-                                ray.Direction.Y = vectorBC.Y;
+                                dir.X = vectorBC.X;
+                                dir.Y = vectorBC.Y;
                                 collision = true;
                             }
                             break;
 
                         case Direction4.Left:
-                            (bool interLC, Vector3 vectorLC) = RayMath.LineSegementsIntersect(ray, boundingBox.Minimum, new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z));
+                            (bool interLC, Vector3 vectorLC) = RayMath.LineSegementsIntersect(pos, dir, boundingBox.Minimum, new Vector3(boundingBox.Minimum.X, boundingBox.Maximum.Y, boundingBox.Maximum.Z));
                             if (interLC)
                             {
-                                ray.Direction.X = vectorLC.X;
-                                ray.Direction.Y = vectorLC.Y;
+                                dir.X = vectorLC.X;
+                                dir.Y = vectorLC.Y;
                                 collision = true;
                             }
                             break;
@@ -92,13 +81,13 @@ namespace HexaEngine.Core.Physics.Rays
 
                     if (collision)
                     {
-                        MirrorRay(ref ray, ref rayBuffer, rayMirror, direction4, ref physicsObjects);
+                        MirrorRay(ref pos, ref dir, ref module, rayMirror, direction4, ref physicsObjects);
                     }
                 }
             }
         }
 
-        public static void MirrorRay(ref Ray ray, ref RayBuffer rayBuffer, IRayMirror rayMirror, Direction4 direction4, ref List<IPhysicsObject> physicsObjects)
+        public static void MirrorRay(ref Vector3 pos, ref Vector3 dir, ref RayCastingModule module, IRayMirror rayMirror, Direction4 direction4, ref List<IPhysicsObject> physicsObjects)
         {
             if (rayMirror is null)
             {
@@ -107,17 +96,16 @@ namespace HexaEngine.Core.Physics.Rays
 
             switch (direction4)
             {
-                case Direction4.Top:
+                case Direction4.Up:
                     if (rayMirror.Top)
                     {
-                        Vector3 direction = new Vector3(ray.Direction.X, ray.Direction.Y, ray.Direction.Z);
-                        Vector3 position = new Vector3(ray.Position.X, ray.Position.Y, ray.Position.Z);
+                        Vector3 direction = new Vector3(dir.X, dir.Y, dir.Z);
+                        Vector3 position = new Vector3(pos.X, pos.Y, pos.Z);
                         Vector3 transformedPosition = Vector3.TransformCoordinate(position, Matrix.Translation(direction * -1));
                         float factor = transformedPosition.X / rayMirror.ReflectionStrength;
                         Vector3 reflectedDirection = Vector3.TransformCoordinate(new Vector3(rayMirror.ReflectionStrength * -1, transformedPosition.Y / factor, transformedPosition.Z), Matrix.Translation(direction));
-                        Ray ray1 = new Ray(direction, reflectedDirection);
-                        TraceRay(ref ray1, rayMirror, ref rayBuffer, ref physicsObjects);
-                        rayBuffer.Add(ray1);
+                        TraceRay(ref direction, ref reflectedDirection, rayMirror, module, ref physicsObjects);
+                        module.AddRay(direction, reflectedDirection);
                     }
 
                     break;
@@ -125,43 +113,40 @@ namespace HexaEngine.Core.Physics.Rays
                 case Direction4.Right:
                     if (rayMirror.Right)
                     {
-                        Vector3 direction = new Vector3(ray.Direction.X, ray.Direction.Y, ray.Direction.Z);
-                        Vector3 position = new Vector3(ray.Position.X, ray.Position.Y, ray.Position.Z);
+                        Vector3 direction = new Vector3(dir.X, dir.Y, dir.Z);
+                        Vector3 position = new Vector3(pos.X, pos.Y, pos.Z);
                         Vector3 transformedPosition = Vector3.TransformCoordinate(position, Matrix.Translation(direction * -1));
                         float factor = transformedPosition.X / rayMirror.ReflectionStrength;
                         Vector3 reflectedDirection = Vector3.TransformCoordinate(new Vector3(rayMirror.ReflectionStrength, transformedPosition.Y / factor * -1, transformedPosition.Z), Matrix.Translation(direction));
-                        Ray ray1 = new Ray(direction, reflectedDirection);
-                        TraceRay(ref ray1, rayMirror, ref rayBuffer, ref physicsObjects);
-                        rayBuffer.Add(ray1);
+                        TraceRay(ref direction, ref reflectedDirection, rayMirror, module, ref physicsObjects);
+                        module.AddRay(direction, reflectedDirection);
                     }
 
                     break;
 
-                case Direction4.Bottom:
+                case Direction4.Down:
                     if (rayMirror.Bottom)
                     {
-                        Vector3 direction = new Vector3(ray.Direction.X, ray.Direction.Y, ray.Direction.Z);
-                        Vector3 position = new Vector3(ray.Position.X, ray.Position.Y, ray.Position.Z);
+                        Vector3 direction = new Vector3(dir.X, dir.Y, dir.Z);
+                        Vector3 position = new Vector3(pos.X, pos.Y, pos.Z);
                         Vector3 transformedPosition = Vector3.TransformCoordinate(position, Matrix.Translation(direction * -1));
                         float factor = transformedPosition.Y / rayMirror.ReflectionStrength;
                         Vector3 reflectedDirection = Vector3.TransformCoordinate(new Vector3(transformedPosition.X / factor * -1, rayMirror.ReflectionStrength, transformedPosition.Z), Matrix.Translation(direction));
-                        Ray ray1 = new Ray(direction, reflectedDirection);
-                        TraceRay(ref ray1, rayMirror, ref rayBuffer, ref physicsObjects);
-                        rayBuffer.Add(ray1);
+                        TraceRay(ref direction, ref reflectedDirection, rayMirror, module, ref physicsObjects);
+                        module.AddRay(direction, reflectedDirection);
                     }
                     break;
 
                 case Direction4.Left:
                     if (rayMirror.Left)
                     {
-                        Vector3 direction = new Vector3(ray.Direction.X, ray.Direction.Y, ray.Direction.Z);
-                        Vector3 position = new Vector3(ray.Position.X, ray.Position.Y, ray.Position.Z);
+                        Vector3 direction = new Vector3(dir.X, dir.Y, dir.Z);
+                        Vector3 position = new Vector3(pos.X, pos.Y, pos.Z);
                         Vector3 transformedPosition = Vector3.TransformCoordinate(position, Matrix.Translation(direction * -1));
                         float factor = transformedPosition.X / rayMirror.ReflectionStrength;
                         Vector3 reflectedDirection = Vector3.TransformCoordinate(new Vector3(rayMirror.ReflectionStrength * -1, transformedPosition.Y / factor, transformedPosition.Z), Matrix.Translation(direction));
-                        Ray ray1 = new Ray(direction, reflectedDirection);
-                        TraceRay(ref ray1, rayMirror, ref rayBuffer, ref physicsObjects);
-                        rayBuffer.Add(ray1);
+                        TraceRay(ref direction, ref reflectedDirection, rayMirror, module, ref physicsObjects);
+                        module.AddRay(direction, reflectedDirection);
                     }
 
                     break;
@@ -170,7 +155,7 @@ namespace HexaEngine.Core.Physics.Rays
 
         public static Vector3 GetPositionCenter(this BoundingBox bounding) => new Vector3(bounding.Minimum.X + Math.Abs(bounding.Width).Half(), bounding.Minimum.Y + Math.Abs(bounding.Height).Half(), bounding.Minimum.Z);
 
-        public static void TraceRay(ref Ray ray, object caster, ref RayBuffer rayBuffer, ref List<IPhysicsObject> physicsObjects)
+        public static void TraceRay(ref Vector3 pos, ref Vector3 dir, object caster, RayCastingModule module, ref List<IPhysicsObject> physicsObjects)
         {
             foreach (IPhysicsObject physicsObject in physicsObjects)
             {
@@ -180,11 +165,11 @@ namespace HexaEngine.Core.Physics.Rays
                 }
                 else if (physicsObject is IRayLens lens)
                 {
-                    Lens.Process(ref ray, lens.BoundingBox, ref rayBuffer, lens);
+                    //Lens.Process(ref pos, ref dir, lens.BoundingBox, ref rayBuffer, lens);
                 }
                 else
                 {
-                    RayCollision(ref ray, physicsObject.BoundingBox, physicsObject as IRayMirror, ref rayBuffer, ref physicsObjects);
+                    RayCollision(ref pos, ref dir, physicsObject.BoundingBox, physicsObject as IRayMirror, ref module, ref physicsObjects);
                 }
             }
         }

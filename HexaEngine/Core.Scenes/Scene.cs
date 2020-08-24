@@ -1,6 +1,4 @@
-﻿using HexaEngine.Core.Objects.BaseTypes;
-using HexaEngine.Core.Objects.Interfaces;
-using HexaEngine.Core.UI.BaseTypes;
+﻿using HexaEngine.Core.Objects.Interfaces;
 using System.Collections.Generic;
 
 namespace HexaEngine.Core.Scenes

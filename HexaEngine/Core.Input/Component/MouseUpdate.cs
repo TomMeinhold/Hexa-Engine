@@ -4,9 +4,8 @@
 
 namespace HexaEngine.Core.Input.Component
 {
-    using System;
-    using System.Windows.Input;
     using SharpDX.Mathematics.Interop;
+    using System;
 
     public struct MouseUpdate : IEquatable<MouseUpdate>
     {

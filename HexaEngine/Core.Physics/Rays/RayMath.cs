@@ -7,14 +7,19 @@ namespace HexaEngine.Core.Physics.Rays
     {
         public static bool IsZero(this float d)
         {
-            return Math.Abs(d) < 1e-10;
+            return Math.Abs(d) < float.Epsilon;
         }
 
-        public static float Cross(this Vector3 v1, Vector3 v2) => v1.X * v2.Y - v1.Y * v2.X;
+        public static float Cross(this Vector3 v1, Vector3 v2) => (v1.X * v2.Y) - (v1.Y * v2.X);
 
         public static (bool, Vector3) LineSegementsIntersect(Ray ray, Vector3 vector1, Vector3 vector2)
         {
             return (LineSegementsIntersect(ray.Position, ray.Direction, vector1, vector2, out Vector3 vector), vector);
+        }
+
+        public static (bool, Vector3) LineSegementsIntersect(Vector3 pos, Vector3 dis, Vector3 vector1, Vector3 vector2)
+        {
+            return (LineSegementsIntersect(pos, dis, vector1, vector2, out Vector3 vector), vector);
         }
 
         public static bool LineSegementsIntersect(Vector3 p, Vector3 p2, Vector3 q, Vector3 q2, out Vector3 intersection)
@@ -50,10 +55,10 @@ namespace HexaEngine.Core.Physics.Rays
 
             // 4. If r x s != 0 and 0 <= t <= 1 and 0 <= u <= 1 the two line segments meet at the point
             // p + t r = q + u s.
-            if (!rxs.IsZero() && (0 <= t && t <= 1) && (0 <= u && u <= 1))
+            if (!rxs.IsZero() && 0 <= t && t <= 1 && 0 <= u && u <= 1)
             {
                 // We can calculate the intersection point using either t or u.
-                intersection = p + t * r;
+                intersection = p + (t * r);
 
                 // An intersection was found.
                 return true;

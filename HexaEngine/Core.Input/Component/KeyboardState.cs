@@ -5,7 +5,6 @@
 namespace HexaEngine.Core.Input.Component
 {
     using System.Collections.Generic;
-    using System.Windows.Forms;
 
     public class KeyboardState
     {

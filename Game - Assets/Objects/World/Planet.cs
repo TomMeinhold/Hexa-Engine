@@ -1,132 +1,117 @@
 ﻿using HexaEngine.Core;
-using HexaEngine.Core.Extentions;
-using HexaEngine.Core.Input;
+using HexaEngine.Core.Extensions;
 using HexaEngine.Core.Input.Component;
-using HexaEngine.Core.Input.Interfaces;
-using HexaEngine.Core.Mathmatics;
+using HexaEngine.Core.Input.Modules;
 using HexaEngine.Core.Objects.BaseTypes;
 using HexaEngine.Core.Objects.Interfaces;
-using HexaEngine.Core.Physics.Collision;
+using HexaEngine.Core.Particle;
 using HexaEngine.Core.Physics.Interfaces;
+using HexaEngine.Core.Physics.Structs;
 using HexaEngine.Core.Render.Interfaces;
+using HexaEngine.Core.Timers;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
-using System;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace GameAssets.Objects.World
 {
-    public class Planet : BaseObject, IBaseObject, IDrawable, IPhysicsObject, IInputKeyboard
+    public class Planet : BaseObject, IBaseObject, IDrawable, IPhysicsObject
     {
-        public float Mass { get; set; } = 1;
+        private readonly List<Vector2> positions = new List<Vector2>();
 
-        public Vector3 Velocity { get; set; }
+        private readonly Timer timer = new Timer(new System.TimeSpan(0, 0, 0, 0, 16));
 
-        public Vector3 Acceleration { get; set; }
+        private readonly KeyboardController keyboardController;
 
-        public Vector3 Force { get; set; }
+        private readonly SplashEffect<Particle1> splashEffect;
 
-        public BlockedDirection Sides { get; set; }
+        private Planet(Engine engine)
+        {
+            keyboardController = new KeyboardController(this);
+            keyboardController.KeyUp += KeyboardController_KeyUp;
+            splashEffect = new SplashEffect<Particle1>(engine, this, 100, new System.TimeSpan(0, 0, 2));
+            OnCollision += Planet_OnCollision;
+            OnDestroy += Planet_OnDestroy;
+        }
 
-        public float ForceAbsorbtion { get; set; }
-
-        public bool Static { get; set; }
-
-        public Vector3 MassCenter { get; set; }
-
-        public Vector3 RotationVelocity { get; set; }
-
-        public Vector3 RotationAcceleration { get; set; }
-
-        public Planet(Engine engine, Bitmap1 bitmap, RawVector3 position)
+        public Planet(Engine engine, Bitmap1 bitmap, PhysicsObjectDiscription physicsObjectDiscription) : this(engine)
         {
             Engine = engine;
             Bitmap = bitmap;
             Size = bitmap.Size;
-            SetPosition(position);
+            physicsObjectDiscription.SetValues(this);
             MassCenter = BoundingBox.Center - Position;
-            InputSystem.KeyboardUpdate += KeyboardInput;
+            timer.TimerTick += Timer_TimerTick;
+            timer.Start();
         }
 
-        public void KeyboardInput(object sender, KeyboardUpdatePackage package)
+        public Planet(Engine engine, Bitmap1 bitmap, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription) : this(engine)
         {
-            KeyboardUpdate update = package.KeyboardUpdate;
-            if (update.Key == Keys.A && update.IsPressed)
-            {
-                this.Force = new Vector3(-0.01F, 0, 0);
-            }
+            Engine = engine;
+            Bitmap = bitmap;
+            Size = bitmap.Size;
+            physicsObjectDiscription.SetValues(this);
+            SetPosition(position);
+            MassCenter = BoundingBox.Center - Position;
+        }
 
-            if (update.Key == Keys.A && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.W && update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0.01F, 0);
-            }
-
-            if (update.Key == Keys.W && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.S && update.IsPressed)
-            {
-                this.Force = new Vector3(0, -0.01F, 0);
-            }
-
-            if (update.Key == Keys.S && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.D && update.IsPressed)
-            {
-                this.Force = new Vector3(0.01F, 0, 0);
-            }
-
-            if (update.Key == Keys.D && !update.IsPressed)
-            {
-                this.Force = new Vector3(0, 0, 0);
-            }
-
-            if (update.Key == Keys.U && update.IsPressed)
+        private void KeyboardController_KeyUp(object sender, KeyboardUpdatePackage e)
+        {
+            if (e.KeyboardUpdate.Key == Keys.U && e.KeyboardUpdate.IsPressed)
             {
                 Static = !Static;
             }
         }
 
-        public override void Render(DeviceContext deviceContext)
+        private void Timer_TimerTick(object sender, TimerTickEventArgs e)
         {
-            base.Render(deviceContext);
-            DrawDebugInfo(deviceContext);
+            lock (positions)
+            {
+                if (positions.Count < 500)
+                {
+                    positions.Add(BoundingBox.Center.Downgrade());
+                }
+                else
+                {
+                    positions.RemoveAt(0);
+                    positions.Add(BoundingBox.Center.Downgrade());
+                }
+            }
         }
 
-        private void DrawDebugInfo(DeviceContext deviceContext)
+        private void Planet_OnCollision(object sender, HexaEngine.Core.Physics.Collision.OnCollisionEventArgs e)
         {
-            using var brush = new SolidColorBrush(deviceContext, Color.Red);
-            string force = $"{Force.X}N, {Force.Y}N";
-            string acceleration = $"{Acceleration.X}m/s², {Acceleration.Y}m/s² {Acceleration.Z}m/s²";
-            string speed = $"{Velocity.X}m/s, {Velocity.Y}m/s {Velocity.Z}m/s";
-            string pos = $"{Position.X}m, {Position.Y}m {Position.Z}m";
-            string angleAcceleration = $"{RotationAcceleration.X}deg/s², {RotationAcceleration.Y}deg/s², {RotationAcceleration.Z}deg/s²";
-            string angleSpeed = $"{RotationVelocity.X}deg/s, {RotationVelocity.Y}deg/s, {RotationVelocity.Z}deg/s";
-            string angle = $"{Rotation.X}deg, {Rotation.Y}deg, {Rotation.Z}deg";
-            deviceContext.Transform = (Matrix3x2)Matrix.Identity;
-            deviceContext.DrawText(force, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 150, 300, 50), brush);
-            deviceContext.DrawText(acceleration, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 200, 300, 50), brush);
-            deviceContext.DrawText(speed, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 250, 300, 50), brush);
-            deviceContext.DrawText(angleAcceleration, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 300, 300, 50), brush);
-            deviceContext.DrawText(angleSpeed, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 350, 300, 50), brush);
-            deviceContext.DrawText(pos, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 400, 300, 50), brush);
-            deviceContext.DrawText(angle, Engine.RenderSystem.DirectWrite.DefaultTextFormat, new RectangleF(0, 450, 300, 50), brush);
-            deviceContext.Transform = (Matrix3x2)Matrix.Translation(Position);
-            deviceContext.DrawLine(new Vector2(this.MassCenter.X + 10, this.MassCenter.Y), new Vector2(this.MassCenter.X - 10, this.MassCenter.Y), brush);
-            deviceContext.DrawLine(new Vector2(this.MassCenter.X, this.MassCenter.Y + 10), new Vector2(this.MassCenter.X, this.MassCenter.Y - 10), brush);
-            deviceContext.DrawRectangle(this.BoundingBox.BoundingBoxToRectNoPos(), brush);
+            if (e.Object is Sun)
+            {
+                this.Destroy();
+            }
+        }
+
+        private void Planet_OnDestroy(object sender, System.EventArgs e)
+        {
+            splashEffect.Mass = Mass / 10;
+            splashEffect.CastParticles();
+        }
+
+        public override void Render(DeviceContext context)
+        {
+            base.Render(context);
+
+            using var brushA = new SolidColorBrush(context, Color.Red);
+            context.Transform = (Matrix3x2)Matrix.Identity;
+            if (positions.Count > 0)
+            {
+                lock (positions)
+                {
+                    var temp = positions[0];
+                    foreach (Vector2 vector2 in positions)
+                    {
+                        context.DrawLine(temp, vector2, brushA);
+                        temp = vector2;
+                    }
+                }
+            }
         }
     }
 }

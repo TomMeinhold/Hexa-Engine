@@ -1,6 +1,7 @@
 ﻿using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Physics.Collision;
 using SharpDX;
+using System;
 
 namespace HexaEngine.Core.Physics.Interfaces
 {
@@ -8,11 +9,15 @@ namespace HexaEngine.Core.Physics.Interfaces
     {
         public BoundingBox BoundingBox { get; set; }
 
+        public BoundingBox BoundingBoxBefore { get; set; }
+
         public float Mass { get; set; }
 
         public Vector3 MassCenter { get; set; }
 
         public bool Static { get; set; }
+
+        public Vector3 PositionBefore { get; set; }
 
         public Vector3 Velocity { get; set; }
 
@@ -27,6 +32,10 @@ namespace HexaEngine.Core.Physics.Interfaces
         public float ForceAbsorbtion { get; set; }
 
         public BlockedDirection Sides { get; set; }
+
+        public event EventHandler<OnCollisionEventArgs> OnCollision;
+
+        public void CallOnCollision(OnCollisionEventArgs onCollisionEventArgs);
 
         public void SetPosition(Vector3 vector3);
 

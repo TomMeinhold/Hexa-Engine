@@ -45,7 +45,7 @@ namespace HexaEngine.Core.Render.Components
             var descFullSc = new DXGI.SwapChainFullScreenDescription()
             {
                 RefreshRate = new DXGI.Rational(60, 1),
-                Scaling = DXGI.DisplayModeScaling.Centered,
+                Scaling = DXGI.DisplayModeScaling.Stretched,
                 Windowed = true,
             };
 

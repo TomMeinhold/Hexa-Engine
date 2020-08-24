@@ -1,4 +1,4 @@
-﻿using HexaEngine.Core.Extentions;
+﻿using HexaEngine.Core.Extensions;
 using HexaEngine.Core.Input.Component;
 using HexaEngine.Core.UI.Interfaces;
 using SharpDX;

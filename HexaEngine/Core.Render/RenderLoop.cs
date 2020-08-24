@@ -45,6 +45,7 @@ namespace HexaEngine.Core.Render
                     this.RessouceManager.D2DDeviceContext.Clear(Color.Transparent);
                     this.DrawRays();
                     this.Engine.SceneManager.RenderScene(this.RessouceManager.D2DDeviceContext);
+                    this.Engine.SceneManager.RenderScene(this.RessouceManager.D3DDeviceContext);
                     this.Engine.UIManager.RenderUI(this.RessouceManager.D2DDeviceContext);
                     this.RessouceManager.D2DDeviceContext.EndDraw();
 
