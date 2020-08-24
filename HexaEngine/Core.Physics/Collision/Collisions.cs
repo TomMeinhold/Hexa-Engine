@@ -73,10 +73,5 @@ namespace HexaEngine.Core.Physics.Collision
         {
             return a.Minimum.X <= b.Maximum.X && a.Maximum.X >= b.Minimum.X && a.Minimum.Y <= b.Maximum.Y && a.Maximum.Y >= b.Minimum.Y && a.Minimum.Z <= b.Maximum.Z && a.Maximum.Z >= b.Minimum.Z;
         }
-
-        public static bool TunnelIntersect(IPhysicsObject a, IPhysicsObject b)
-        {
-            return false;
-        }
     }
 }
