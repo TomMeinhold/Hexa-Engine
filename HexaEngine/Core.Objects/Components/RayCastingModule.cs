@@ -32,7 +32,7 @@ namespace HexaEngine.Core.Objects.Components
         {
             if (buffer is null)
             {
-                buffer = RayCasting.Engine.RenderSystem.RessouceManager.GetNewBitmap();
+                buffer = RayCasting.Engine.RessouceManager.GetNewBitmap();
             }
 
             if (Blur is null)
@@ -70,7 +70,7 @@ namespace HexaEngine.Core.Objects.Components
             }
 
             Blur.SetInput(0, buffer, true);
-            context.Target = RayCasting.Engine.RenderSystem.RessouceManager.RayBitmap;
+            context.Target = RayCasting.Engine.RenderSystem.DriectXManager.RayBitmap;
             context.DrawImage(Blur, InterpolationMode.HighQualityCubic, CompositeMode.Plus);
         }
 

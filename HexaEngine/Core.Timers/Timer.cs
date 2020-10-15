@@ -16,6 +16,8 @@ namespace HexaEngine.Core.Timers
 
         public bool stopping;
 
+        private readonly Random random = new Random();
+
         public Timer(TimeSpan delay, int cylces = 0)
         {
             this.delay = delay;
@@ -27,6 +29,12 @@ namespace HexaEngine.Core.Timers
         {
             Dispose(disposing: false);
         }
+
+        public bool RandomTimeSpan { get; set; }
+
+        public int RandomTimeMax { get; set; } = 1000;
+
+        public int RandomTimeMin { get; set; } = 0;
 
         public int Cycle { get; private set; }
 
@@ -47,7 +55,15 @@ namespace HexaEngine.Core.Timers
         {
             while (!stopping && (cylces > Cycle | cylces == 0))
             {
-                Thread.Sleep(delay);
+                if (RandomTimeSpan)
+                {
+                    Thread.Sleep(random.Next(RandomTimeMin, RandomTimeMax));
+                }
+                else
+                {
+                    Thread.Sleep(delay);
+                }
+
                 Cycle++;
                 TimerTick?.Invoke(this, new TimerTickEventArgs(Cycle));
             }

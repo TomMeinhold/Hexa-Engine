@@ -19,46 +19,49 @@ namespace HexaEngine.Core.Render
     {
         public ContextMenuStrip DefaultContextMenuStrip { get; internal set; }
 
+        public event EventHandler EnterMainLoop;
+
         public void MainLoop()
         {
+            EnterMainLoop?.Invoke(this, null);
             Stopwatch stopwatch = new Stopwatch();
 
             // Main loop
             RenderLoop.Run(this.Form, () =>
             {
                 stopwatch.Restart();
-                using var brush = new SolidColorBrush(this.RessouceManager.D2DDeviceContext, Color.Red);
+                using var brush = new SolidColorBrush(this.DriectXManager.D2DDeviceContext, Color.Red);
                 if (this.Drawing)
                 {
                     if (Engine.Settings.AntialiasMode)
                     {
-                        this.RessouceManager.D2DDeviceContext.AntialiasMode = AntialiasMode.PerPrimitive;
+                        this.DriectXManager.D2DDeviceContext.AntialiasMode = AntialiasMode.PerPrimitive;
                     }
                     else
                     {
-                        this.RessouceManager.D2DDeviceContext.AntialiasMode = AntialiasMode.Aliased;
+                        this.DriectXManager.D2DDeviceContext.AntialiasMode = AntialiasMode.Aliased;
                     }
 
-                    this.RessouceManager.D2DDeviceContext.Target = this.RessouceManager.ObjectsBitmap;
+                    this.DriectXManager.D2DDeviceContext.Target = this.DriectXManager.ObjectsBitmap;
 
-                    this.RessouceManager.D2DDeviceContext.BeginDraw();
-                    this.RessouceManager.D2DDeviceContext.Clear(Color.Transparent);
+                    this.DriectXManager.D2DDeviceContext.BeginDraw();
+                    this.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
                     this.DrawRays();
-                    this.Engine.SceneManager.RenderScene(this.RessouceManager.D2DDeviceContext);
-                    this.Engine.SceneManager.RenderScene(this.RessouceManager.D3DDeviceContext);
-                    this.Engine.UIManager.RenderUI(this.RessouceManager.D2DDeviceContext);
-                    this.RessouceManager.D2DDeviceContext.EndDraw();
+                    this.Engine.SceneManager.RenderScene(this.DriectXManager.D2DDeviceContext);
+                    this.Engine.SceneManager.RenderScene(this.DriectXManager.D3DDeviceContext);
+                    this.Engine.UIManager.RenderUI(this.DriectXManager.D2DDeviceContext);
+                    this.DriectXManager.D2DDeviceContext.EndDraw();
 
-                    this.PostProcessingManager.PostProcess(input: this.RessouceManager.ObjectsBitmap, output: this.RessouceManager.TargetBitmap, this.Engine.Camera.TranslationMatrix);
+                    this.PostProcessingManager.PostProcess(input: this.DriectXManager.ObjectsBitmap, output: this.DriectXManager.TargetBitmap, this.Engine.Camera.TranslationMatrix);
 
                     if (Engine.Settings.DebugMode)
                     {
-                        this.RessouceManager.D2DDeviceContext.BeginDraw();
-                        this.RessouceManager.D2DDeviceContext.DrawText($"Physics: {this.Engine.PhysicsEngine.ThreadTiming.TotalMilliseconds} ms", this.DirectWrite.DefaultTextFormat, new RectangleF(0, 100, 200, 100), brush);
-                        this.RessouceManager.D2DDeviceContext.EndDraw();
+                        this.DriectXManager.D2DDeviceContext.BeginDraw();
+                        this.DriectXManager.D2DDeviceContext.DrawText($"Physics: {this.Engine.PhysicsEngine.ThreadTiming.TotalMilliseconds} ms", this.DirectWrite.DefaultTextFormat, new RectangleF(0, 100, 200, 100), brush);
+                        this.DriectXManager.D2DDeviceContext.EndDraw();
                     }
 
-                    this.RessouceManager.SwapChain.Present(Engine.Settings.VSync, PresentFlags.None);
+                    this.DriectXManager.SwapChain.Present(Engine.Settings.VSync, PresentFlags.None);
                     this.Engine.ThreadSyncTiming = stopwatch.ElapsedTicks;
                 }
 
@@ -74,11 +77,11 @@ namespace HexaEngine.Core.Render
 
         private void DrawRays()
         {
-            this.RessouceManager.D2DDeviceContext.DrawImage(this.RessouceManager.RayBitmap);
-            this.RessouceManager.D2DDeviceContext.Target = this.RessouceManager.RayBitmap;
+            this.DriectXManager.D2DDeviceContext.DrawImage(this.DriectXManager.RayBitmap);
+            this.DriectXManager.D2DDeviceContext.Target = this.DriectXManager.RayBitmap;
 
-            this.RessouceManager.D2DDeviceContext.Clear(Color.Transparent);
-            this.RessouceManager.D2DDeviceContext.Target = this.RessouceManager.ObjectsBitmap;
+            this.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
+            this.DriectXManager.D2DDeviceContext.Target = this.DriectXManager.ObjectsBitmap;
         }
     }
 }

@@ -8,10 +8,13 @@
     <OutputType>Library</OutputType>
     <RootNamespace>HexaEngine</RootNamespace>
     <AssemblyName>HexaEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,12 +33,33 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Amplifier, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Amplifier.NET.1.0.8\lib\netstandard2.0\Amplifier.dll</HintPath>
+    <Reference Include="Cudafy.NET, Version=1.29.5576.13786, Culture=neutral, PublicKeyToken=63a4c9931616906b, processorArchitecture=MSIL">
+      <HintPath>..\packages\CUDAfy.NET.1.29.5576.13786\lib\net40\Cudafy.NET.dll</HintPath>
     </Reference>
-    <Reference Include="Humanizer, Version=2.8.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Humanizer.Core.2.8.26\lib\netstandard2.0\Humanizer.dll</HintPath>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -104,7 +128,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core.Audio\AudioSystem.cs" />
+    <Compile Include="Core.IO\Components\FileTable.cs" />
+    <Compile Include="Core.IO\Components\FileTableEntry.cs" />
+    <Compile Include="Core.IO\HexaEngineArchive.cs" />
+    <Compile Include="Core.Render\Components\DriectXManager.cs" />
+    <Compile Include="Core.Ressources\RessouceType.cs" />
+    <Compile Include="Core.Ressources\Sprite.cs" />
+    <Compile Include="Core.Ressources\Texture.cs" />
+    <Compile Include="Core.Sounds\SoundSystem.cs" />
+    <Compile Include="Core.Ressources\Sound.cs" />
     <Compile Include="Core.Common\Camera.cs" />
     <Compile Include="Core.Common\Color.cs" />
     <Compile Include="Core.Extensions\BoundBoxExtentions.cs" />
@@ -135,10 +167,14 @@
     <Compile Include="Core.Physics\ScalingMode.cs" />
     <Compile Include="Core.Physics\Structs\PhysicsObjectDiscription.cs" />
     <Compile Include="Core.Physics\Structs\RayCastDiscription.cs" />
+    <Compile Include="Core.Plugins\Plugin.cs" />
+    <Compile Include="Core.Plugins\PluginManager.cs" />
     <Compile Include="Core.Render\HexaForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core.Render\Interfaces\IDrawable3D.cs" />
+    <Compile Include="Core.Scripts\Script.cs" />
+    <Compile Include="Core.Scripts\ScriptCompiler.cs" />
     <Compile Include="Core.Timers\Timer.cs" />
     <Compile Include="Core.Timers\TimerFramework.cs" />
     <Compile Include="Core.Timers\TimerTickEventArgs.cs" />
@@ -184,7 +220,7 @@
     <Compile Include="Core.Render\Components\DirectWriteManagement.cs" />
     <Compile Include="Core.Render\Components\ObjectRessourceManager.cs" />
     <Compile Include="Core.Render\Components\PostProcessingManager.cs" />
-    <Compile Include="Core.Render\Components\RessouceManager.cs" />
+    <Compile Include="Core.Ressources\RessouceManager.cs" />
     <Compile Include="Core.Render\Interfaces\IDrawable.cs" />
     <Compile Include="Core.Render\RenderLoop.cs" />
     <Compile Include="Core.Render\RenderSystem.cs" />
@@ -193,6 +229,7 @@
     <Compile Include="Core.Shaders\Shader.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineDefinitions.cs" />
+    <Compile Include="Core\EngineEvents.cs" />
     <Compile Include="Core\EngineSettings.cs" />
     <Compile Include="Core\BitmapConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -206,9 +243,13 @@
   <ItemGroup>
     <Content Include="Core.Common\engine-logo.bmp" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core.Render\Modules\" />
-    <Folder Include="Core.Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+  </Target>
 </Project>

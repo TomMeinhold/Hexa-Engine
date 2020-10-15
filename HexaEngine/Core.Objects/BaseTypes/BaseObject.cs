@@ -4,6 +4,7 @@ using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Physics.Collision;
 using HexaEngine.Core.Physics.Interfaces;
 using HexaEngine.Core.Render.Interfaces;
+using HexaEngine.Core.Ressources;
 using SharpDX;
 using SharpDX.Direct2D1;
 using System;
@@ -14,7 +15,7 @@ namespace HexaEngine.Core.Objects.BaseTypes
     {
         private bool enabled;
 
-        public Bitmap1 Bitmap { get; set; }
+        public Sprite Sprite { get; set; }
 
         public Vector3 Position { get; private set; }
 
@@ -124,8 +125,8 @@ namespace HexaEngine.Core.Objects.BaseTypes
             }
 
             context.Transform = ObjectViewMatrix;
-            context.Target = Engine.RenderSystem.RessouceManager.ObjectsBitmap;
-            context.DrawBitmap(Bitmap, 1, BitmapInterpolationMode.Linear);
+            context.Target = Engine.RenderSystem.DriectXManager.ObjectsBitmap;
+            context.DrawBitmap(Sprite, 1, BitmapInterpolationMode.Linear);
             context.Transform = (Matrix3x2)Matrix.Identity;
             if (Engine.Settings.DebugMode)
             {

@@ -18,12 +18,12 @@ namespace HexaEngine.Core
 
         public Bitmap1 ConvertBitmap(System.Drawing.Bitmap bitmap, bool alhpa = false)
         {
-            return Common.ConvertBitmap.Convert(this.Engine.RenderSystem.RessouceManager.D2DDeviceContext, bitmap, alhpa);
+            return Common.ConvertBitmap.Convert(this.Engine.RenderSystem.DriectXManager.D2DDeviceContext, bitmap, alhpa);
         }
 
         public Texture2D ConvertBitmap(System.Drawing.Bitmap bitmap)
         {
-            return Common.ConvertBitmap.Convert(this.Engine.RenderSystem.RessouceManager.D3DDeviceContext, bitmap);
+            return Common.ConvertBitmap.Convert(this.Engine.RenderSystem.DriectXManager.D3DDeviceContext, bitmap);
         }
     }
 }

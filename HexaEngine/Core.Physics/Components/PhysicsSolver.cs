@@ -2,7 +2,6 @@
 using HexaEngine.Core.Physics.Gravity;
 using HexaEngine.Core.Physics.Interfaces;
 using HexaEngine.Core.Physics.Rays;
-using SharpDX;
 using System.Collections.Generic;
 
 namespace HexaEngine.Core.Physics.Components

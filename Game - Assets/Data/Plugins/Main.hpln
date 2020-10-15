@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <References />
+  <Scripts>
+    <string>Main</string>
+    <string>Scene1</string>
+    <string>Scene2</string>
+    <string>Scene3</string>
+    <string>Screen1</string>
+    <string>Planet</string>
+    <string>Sun</string>
+    <string>WallReflective</string>
+    <string>Wall</string>
+    <string>Particle1</string>
+  </Scripts>
+</Plugin>

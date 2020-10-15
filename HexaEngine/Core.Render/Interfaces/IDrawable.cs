@@ -1,11 +1,12 @@
 ﻿using HexaEngine.Core.Objects.Interfaces;
+using HexaEngine.Core.Ressources;
 using SharpDX.Direct2D1;
 
 namespace HexaEngine.Core.Render.Interfaces
 {
     public interface IDrawable : IBaseObject
     {
-        Bitmap1 Bitmap { get; set; }
+        Sprite Sprite { get; set; }
 
         void Render(DeviceContext context);
     }

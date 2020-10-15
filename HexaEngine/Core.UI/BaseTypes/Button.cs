@@ -25,7 +25,7 @@ namespace HexaEngine.Core.UI.BaseTypes
         public Button(Engine engine, Size2F size, Vector3 position)
         {
             Engine = engine;
-            Context = engine.RenderSystem.RessouceManager.D2DDeviceContext;
+            Context = engine.RenderSystem.DriectXManager.D2DDeviceContext;
             ForegroundBrush = new SolidColorBrush(Context, Color.Black);
             BackgroundBrush = new SolidColorBrush(Context, Color.White);
             BorderBrush = new SolidColorBrush(Context, Color.DarkGray);
@@ -116,11 +116,11 @@ namespace HexaEngine.Core.UI.BaseTypes
         {
             if (CacheMap is null)
             {
-                CacheMap = Engine.RenderSystem.RessouceManager.GetNewBitmap();
+                CacheMap = Engine.RessouceManager.GetNewBitmap();
             }
             else if (CacheMap.IsDisposed)
             {
-                CacheMap = Engine.RenderSystem.RessouceManager.GetNewBitmap();
+                CacheMap = Engine.RessouceManager.GetNewBitmap();
             }
 
             context.Transform = (Matrix3x2)Matrix.Translation(Position);

@@ -1,11 +1,10 @@
 ﻿using HexaEngine.Core.Physics.Rays;
+using SharpDX;
 
 namespace HexaEngine.Core.Physics.Interfaces
 {
     public interface IGravityField
     {
-        public Direction4 Direction { get; }
-
-        public float GravitationalForce { get; }
+        public Vector3 Mass { get; }
     }
 }

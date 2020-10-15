@@ -30,24 +30,24 @@ namespace HexaEngine.Core.Render.Components
 
             foreach (Effect effect in this.Effects)
             {
-                effect.SetInput(0, this.RenderSystem.RessouceManager.ObjectsBitmap, true);
+                effect.SetInput(0, this.RenderSystem.DriectXManager.ObjectsBitmap, true);
                 lastEffect?.SetInputEffect(0, effect);
                 lastEffect = effect;
             }
 
-            this.RenderSystem.RessouceManager.D2DDeviceContext.BeginDraw();
-            this.RenderSystem.RessouceManager.D2DDeviceContext.Target = output;
-            this.RenderSystem.RessouceManager.D2DDeviceContext.Clear(Color.Transparent);
+            this.RenderSystem.DriectXManager.D2DDeviceContext.BeginDraw();
+            this.RenderSystem.DriectXManager.D2DDeviceContext.Target = output;
+            this.RenderSystem.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
             if (lastEffect is null)
             {
-                this.RenderSystem.RessouceManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
+                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
             }
             else
             {
-                this.RenderSystem.RessouceManager.D2DDeviceContext.DrawImage(lastEffect);
+                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawImage(lastEffect);
             }
 
-            this.RenderSystem.RessouceManager.D2DDeviceContext.EndDraw();
+            this.RenderSystem.DriectXManager.D2DDeviceContext.EndDraw();
         }
 
         public void PostProcess(Bitmap1 input, Bitmap1 output, Matrix3x2 matrix)
@@ -56,28 +56,28 @@ namespace HexaEngine.Core.Render.Components
 
             foreach (Effect effect in this.Effects)
             {
-                effect.SetInput(0, this.RenderSystem.RessouceManager.ObjectsBitmap, true);
+                effect.SetInput(0, this.RenderSystem.DriectXManager.ObjectsBitmap, true);
                 lastEffect?.SetInputEffect(0, effect);
                 lastEffect = effect;
             }
 
-            this.RenderSystem.RessouceManager.D2DDeviceContext.BeginDraw();
-            this.RenderSystem.RessouceManager.D2DDeviceContext.Target = output;
-            this.RenderSystem.RessouceManager.D2DDeviceContext.Clear(Color.Transparent);
+            this.RenderSystem.DriectXManager.D2DDeviceContext.BeginDraw();
+            this.RenderSystem.DriectXManager.D2DDeviceContext.Target = output;
+            this.RenderSystem.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
             if (lastEffect is null)
             {
-                this.RenderSystem.RessouceManager.D2DDeviceContext.Transform = matrix;
-                this.RenderSystem.RessouceManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
-                this.RenderSystem.RessouceManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
+                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = matrix;
+                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
+                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
             }
             else
             {
-                this.RenderSystem.RessouceManager.D2DDeviceContext.Transform = matrix;
-                this.RenderSystem.RessouceManager.D2DDeviceContext.DrawImage(lastEffect);
-                this.RenderSystem.RessouceManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
+                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = matrix;
+                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawImage(lastEffect);
+                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
             }
 
-            this.RenderSystem.RessouceManager.D2DDeviceContext.EndDraw();
+            this.RenderSystem.DriectXManager.D2DDeviceContext.EndDraw();
         }
     }
 }

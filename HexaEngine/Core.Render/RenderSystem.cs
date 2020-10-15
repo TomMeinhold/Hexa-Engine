@@ -5,6 +5,7 @@
 namespace HexaEngine.Core.Render
 {
     using HexaEngine.Core.Render.Components;
+    using HexaEngine.Core.Ressources;
     using SharpDX.Direct2D1;
     using SharpDX.DXGI;
     using SharpDX.Windows;
@@ -37,7 +38,7 @@ namespace HexaEngine.Core.Render
 
         public DeviceManager DeviceManager { get; set; }
 
-        public RessouceManager RessouceManager { get; set; }
+        public DriectXManager DriectXManager { get; set; }
 
         public DirectWriteManagement DirectWrite { get; set; } = new DirectWriteManagement();
 
@@ -58,13 +59,13 @@ namespace HexaEngine.Core.Render
             var featureLevels = new FeatureLevel[] { FeatureLevel.Level_12_1, FeatureLevel.Level_12_0, FeatureLevel.Level_11_1, FeatureLevel.Level_11_0, FeatureLevel.Level_10_1, FeatureLevel.Level_10_0 };
             var pixelFormat = new PixelFormat(Format.R8G8B8A8_UNorm, AlphaMode.Premultiplied);
             this.DeviceManager = new DeviceManager(this.Form, featureLevels, 3, pixelFormat);
-            this.RessouceManager = new RessouceManager(this.DeviceManager);
+            this.DriectXManager = new DriectXManager(this.DeviceManager);
             this.PostProcessingManager = new PostProcessingManager(this);
         }
 
         public void Resize()
         {
-            this.RessouceManager.Resize(this.Engine.Settings.Width, this.Engine.Settings.Height);
+            this.DriectXManager.Resize(this.Engine.Settings.Width, this.Engine.Settings.Height);
         }
 
         public void FlipFullscreen()
@@ -103,7 +104,7 @@ namespace HexaEngine.Core.Render
                 if (disposing)
                 {
                     this.DeviceManager.Dispose();
-                    this.RessouceManager.Dispose();
+                    this.DriectXManager.Dispose();
                     this.DirectWrite.Dispose();
                 }
 

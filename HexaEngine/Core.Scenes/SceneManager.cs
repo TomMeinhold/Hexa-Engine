@@ -20,6 +20,8 @@ namespace HexaEngine.Core.Scenes
 
         public Engine Engine { get; }
 
+        public event EventHandler<Scene> SceneChanged;
+
         public Scene SelectedScene
         {
             get => selectedScene;
@@ -45,6 +47,7 @@ namespace HexaEngine.Core.Scenes
                 }
 
                 selectedScene = value;
+                SceneChanged?.Invoke(this, value);
             }
         }
 

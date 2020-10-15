@@ -1,12 +1,7 @@
-﻿using GameAssets;
-using GameAssets.Scenes;
-using GameAssets.Screens;
-using HexaEngine.Core;
+﻿using HexaEngine.Core;
 using HexaEngine.Core.Input.Component;
 using HexaEngine.Core.Input.Modules;
 using HexaEngine.Core.Render;
-using HexaEngine.Core.Scenes;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Keys = HexaEngine.Core.Input.Component.Keys;
 
@@ -22,8 +17,6 @@ namespace Game
             Engine = new Engine(this);
             keyboardController = new KeyboardController(this);
             keyboardController.KeyUp += KeyboardController_KeyUp;
-            Engine.UIManager.SetUIByType(typeof(Screen1));
-            Engine.SceneManager.SetSceneByType(typeof(Scene1));
             Engine.RenderSystem.MainLoop();
         }
 

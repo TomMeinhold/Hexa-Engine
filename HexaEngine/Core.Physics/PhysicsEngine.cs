@@ -50,6 +50,7 @@ namespace HexaEngine.Core.Physics
                 ThreadTiming = new TimeSpan(stopwatch.ElapsedTicks);
                 while (Paused && !IsDisposing && !DoCycle)
                 {
+                    stopwatch.Reset();
                     Thread.Sleep(1);
                 }
                 DoCycle = false;

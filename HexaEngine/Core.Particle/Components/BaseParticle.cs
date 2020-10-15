@@ -1,7 +1,7 @@
 ﻿using HexaEngine.Core.Objects.BaseTypes;
 using HexaEngine.Core.Physics.Structs;
+using HexaEngine.Core.Ressources;
 using HexaEngine.Core.Timers;
-using SharpDX.Direct2D1;
 using System;
 
 namespace HexaEngine.Core.Particle.Components
@@ -10,11 +10,11 @@ namespace HexaEngine.Core.Particle.Components
     {
         private readonly Timer timer;
 
-        public BaseParticle(Engine engine, Bitmap1 bitmap, TimeSpan liveTime, PhysicsObjectDiscription physicsObjectDiscription)
+        public BaseParticle(Engine engine, Sprite sprite, TimeSpan liveTime, PhysicsObjectDiscription physicsObjectDiscription)
         {
             Engine = engine;
-            Bitmap = bitmap;
-            Size = bitmap.Size;
+            Sprite = sprite;
+            Size = sprite.Size;
             physicsObjectDiscription.SetValues(this);
             MassCenter = BoundingBox.Center - Position;
             timer = new Timer(liveTime, 1);
