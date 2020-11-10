@@ -1,8 +1,6 @@
-﻿using Cudafy;
-using Cudafy.Host;
-using Cudafy.Translator;
-using HexaEngine.Core.Common;
+﻿using HexaEngine.Core.Common;
 using HexaEngine.Core.Input;
+using HexaEngine.Core.Network;
 using HexaEngine.Core.Physics;
 using HexaEngine.Core.Plugins;
 using HexaEngine.Core.Render;
@@ -21,23 +19,36 @@ namespace HexaEngine.Core
     {
         public Engine(RenderForm renderForm)
         {
+            Instances[AppDomain.CurrentDomain.Id] = this;
             Settings = new EngineSettings
             {
                 Width = renderForm.Width,
                 Height = renderForm.Height
             };
-            BitmapConverter = new BitmapConverter(this);
+            BitmapConverter = new BitmapConverter();
             InputSystem = new InputSystem(renderForm);
-            Camera = new Camera(this);
-            SceneManager = new SceneManager(this);
-            SoundSystem = new SoundSystem(this);
-            UIManager = new UserInterfaceManager(this);
-            RenderSystem = new RenderSystem(this, renderForm);
-            RessouceManager = new RessouceManager(this);
-            Compiler = new ScriptCompiler(this);
-            PluginManager = new PluginManager(this);
-            PhysicsEngine = new PhysicsEngine(this);
+            Camera = new Camera();
+            SceneManager = new SceneManager();
+            SoundSystem = new SoundSystem();
+            UIManager = new UserInterfaceManager();
+            RenderSystem = new RenderSystem(renderForm);
+            RessouceManager = new RessourceManager();
+            Compiler = new ScriptCompiler();
+            PluginManager = new PluginManager();
+            PhysicsEngine = new PhysicsEngine();
+            Server = new Server();
             LoadRessources?.Invoke(this, this);
+        }
+
+        public Engine()
+        {
+            Instances[AppDomain.CurrentDomain.Id] = this;
+            SceneManager = new SceneManager();
+            Compiler = new ScriptCompiler();
+            PluginManager = new PluginManager();
+            PhysicsEngine = new PhysicsEngine();
+            Server = new Server();
+            StartServer?.Invoke(this, this);
         }
 
         public void Dispose()

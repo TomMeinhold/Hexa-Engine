@@ -28,56 +28,56 @@ namespace HexaEngine.Core.Render.Components
         {
             Effect lastEffect = null;
 
-            foreach (Effect effect in this.Effects)
+            foreach (Effect effect in Effects)
             {
-                effect.SetInput(0, this.RenderSystem.DriectXManager.ObjectsBitmap, true);
+                effect.SetInput(0, RenderSystem.DriectXManager.ObjectsBitmap, true);
                 lastEffect?.SetInputEffect(0, effect);
                 lastEffect = effect;
             }
 
-            this.RenderSystem.DriectXManager.D2DDeviceContext.BeginDraw();
-            this.RenderSystem.DriectXManager.D2DDeviceContext.Target = output;
-            this.RenderSystem.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
+            RenderSystem.DriectXManager.D2DDeviceContext.BeginDraw();
+            RenderSystem.DriectXManager.D2DDeviceContext.Target = output;
+            RenderSystem.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
             if (lastEffect is null)
             {
-                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
+                RenderSystem.DriectXManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
             }
             else
             {
-                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawImage(lastEffect);
+                RenderSystem.DriectXManager.D2DDeviceContext.DrawImage(lastEffect);
             }
 
-            this.RenderSystem.DriectXManager.D2DDeviceContext.EndDraw();
+            RenderSystem.DriectXManager.D2DDeviceContext.EndDraw();
         }
 
         public void PostProcess(Bitmap1 input, Bitmap1 output, Matrix3x2 matrix)
         {
             Effect lastEffect = null;
 
-            foreach (Effect effect in this.Effects)
+            foreach (Effect effect in Effects)
             {
-                effect.SetInput(0, this.RenderSystem.DriectXManager.ObjectsBitmap, true);
+                effect.SetInput(0, RenderSystem.DriectXManager.ObjectsBitmap, true);
                 lastEffect?.SetInputEffect(0, effect);
                 lastEffect = effect;
             }
 
-            this.RenderSystem.DriectXManager.D2DDeviceContext.BeginDraw();
-            this.RenderSystem.DriectXManager.D2DDeviceContext.Target = output;
-            this.RenderSystem.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
+            RenderSystem.DriectXManager.D2DDeviceContext.BeginDraw();
+            RenderSystem.DriectXManager.D2DDeviceContext.Target = output;
+            RenderSystem.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
             if (lastEffect is null)
             {
-                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = matrix;
-                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
-                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
+                RenderSystem.DriectXManager.D2DDeviceContext.Transform = matrix;
+                RenderSystem.DriectXManager.D2DDeviceContext.DrawBitmap(input, 1, BitmapInterpolationMode.Linear);
+                RenderSystem.DriectXManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
             }
             else
             {
-                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = matrix;
-                this.RenderSystem.DriectXManager.D2DDeviceContext.DrawImage(lastEffect);
-                this.RenderSystem.DriectXManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
+                RenderSystem.DriectXManager.D2DDeviceContext.Transform = matrix;
+                RenderSystem.DriectXManager.D2DDeviceContext.DrawImage(lastEffect);
+                RenderSystem.DriectXManager.D2DDeviceContext.Transform = (Matrix3x2)Matrix.Identity;
             }
 
-            this.RenderSystem.DriectXManager.D2DDeviceContext.EndDraw();
+            RenderSystem.DriectXManager.D2DDeviceContext.EndDraw();
         }
     }
 }

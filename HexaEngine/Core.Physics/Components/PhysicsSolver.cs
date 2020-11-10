@@ -8,11 +8,11 @@ namespace HexaEngine.Core.Physics.Components
 {
     public class PhysicsSolver
     {
-        private readonly PhysicsEngine engine;
+        private readonly PhysicsEngine physicsEngine;
 
-        public PhysicsSolver(PhysicsEngine engine, List<IPhysicsObject> physicsObjects, IPhysicsObject target)
+        public PhysicsSolver(PhysicsEngine physicsEngine, List<IPhysicsObject> physicsObjects, IPhysicsObject target)
         {
-            this.engine = engine;
+            this.physicsEngine = physicsEngine;
             PhysicsObjects = physicsObjects;
             Target = target;
         }
@@ -27,7 +27,7 @@ namespace HexaEngine.Core.Physics.Components
             {
                 Acceleration.ProcessObject(Target);
 
-                Velocity.ProcessObject(Target, engine);
+                Velocity.ProcessObject(Target, physicsEngine);
 
                 foreach (IPhysicsObject physicsObject in PhysicsObjects)
                 {
@@ -37,8 +37,9 @@ namespace HexaEngine.Core.Physics.Components
                     }
                     if (physicsObject.Mass != 0 && Target.Mass != 0)
                     {
-                        Gravitation.Process(Target, physicsObject, engine);
+                        Gravitation.Process(Target, physicsObject, physicsEngine);
                     }
+
                     Collisions.Process(Target, physicsObject);
                 }
             }

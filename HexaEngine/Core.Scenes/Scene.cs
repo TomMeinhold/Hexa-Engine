@@ -7,6 +7,14 @@ namespace HexaEngine.Core.Scenes
     {
         internal List<IBaseObject> Objects { get; } = new List<IBaseObject>();
 
+        public virtual void LoadRessources()
+        {
+        }
+
+        public virtual void UnloadRessources()
+        {
+        }
+
         public void Add(IBaseObject baseObject)
         {
             lock (Objects)

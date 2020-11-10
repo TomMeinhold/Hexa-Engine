@@ -15,30 +15,30 @@ namespace HexaEngine.Core.Render.Components
     {
         public DeviceManager(Win.RenderForm form, D3D.FeatureLevel[] featureLevels, int buffercount, D2D1.PixelFormat pixelFormat)
         {
-            this.Form = form ?? throw new ArgumentNullException(nameof(form));
-            this.Buffercount = buffercount;
-            this.PixelFormat = pixelFormat;
+            Form = form ?? throw new ArgumentNullException(nameof(form));
+            Buffercount = buffercount;
+            PixelFormat = pixelFormat;
 
-            this.Device = new D3D11.Device(D3D.DriverType.Hardware, D3D11.DeviceCreationFlags.BgraSupport, featureLevels);
-            this.Device1 = this.Device.QueryInterfaceOrNull<D3D11.Device1>() ?? throw new NotSupportedException();
-            this.FeatureLevel = this.Device.FeatureLevel;
+            Device = new D3D11.Device(D3D.DriverType.Hardware, D3D11.DeviceCreationFlags.BgraSupport, featureLevels);
+            Device1 = Device.QueryInterfaceOrNull<D3D11.Device1>() ?? throw new NotSupportedException();
+            FeatureLevel = Device.FeatureLevel;
 
-            using var dxgi = this.Device1.QueryInterface<DXGI.Device2>();
+            using var dxgi = Device1.QueryInterface<DXGI.Device2>();
             using var adapter = dxgi.Adapter;
             using var factory = adapter.GetParent<DXGI.Factory2>();
-            this.D2DDevice = new D2D1.Device(dxgi);
+            D2DDevice = new D2D1.Device(dxgi);
 
             var desc1 = new DXGI.SwapChainDescription1()
             {
                 SampleDescription = new DXGI.SampleDescription(1, 0),
-                Width = this.Form.ClientSize.Width,
-                Height = this.Form.ClientSize.Height,
+                Width = Form.ClientSize.Width,
+                Height = Form.ClientSize.Height,
                 SwapEffect = DXGI.SwapEffect.Discard,
                 Usage = DXGI.Usage.RenderTargetOutput,
                 Flags = DXGI.SwapChainFlags.AllowModeSwitch,
                 Scaling = DXGI.Scaling.Stretch,
-                Format = this.PixelFormat.Format,
-                BufferCount = this.Buffercount,
+                Format = PixelFormat.Format,
+                BufferCount = Buffercount,
                 Stereo = false,
             };
 
@@ -49,12 +49,12 @@ namespace HexaEngine.Core.Render.Components
                 Windowed = true,
             };
 
-            this.SwapChain = new DXGI.SwapChain1(factory, this.Device1, this.Form.Handle, ref desc1, descFullSc, null);
+            SwapChain = new DXGI.SwapChain1(factory, Device1, Form.Handle, ref desc1, descFullSc, null);
         }
 
         ~DeviceManager()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public bool IsDisposed { get; private set; } = false;
@@ -77,23 +77,23 @@ namespace HexaEngine.Core.Render.Components
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.IsDisposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
-                    this.Device.Dispose();
-                    this.Device1.Dispose();
-                    this.D2DDevice.Dispose();
-                    this.SwapChain.Dispose();
+                    Device.Dispose();
+                    Device1.Dispose();
+                    D2DDevice.Dispose();
+                    SwapChain.Dispose();
                 }
 
-                this.IsDisposed = true;
+                IsDisposed = true;
             }
         }
     }

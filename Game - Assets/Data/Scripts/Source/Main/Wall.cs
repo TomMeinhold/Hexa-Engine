@@ -1,5 +1,4 @@
-﻿using HexaEngine.Core;
-using HexaEngine.Core.Objects.BaseTypes;
+﻿using HexaEngine.Core.Objects.BaseTypes;
 using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Physics.Interfaces;
 using HexaEngine.Core.Physics.Structs;
@@ -11,9 +10,8 @@ namespace Main
 {
     public class Wall : BaseObject, IBaseObject, IDrawable, IPhysicsObject
     {
-        public Wall(Engine engine, Sprite sprite, Vector3 position, PhysicsObjectDiscription physicsObjectDiscription)
+        public Wall(Sprite sprite, Vector3 position, PhysicsObjectDiscription physicsObjectDiscription)
         {
-            Engine = engine;
             Sprite = sprite;
             Size = Sprite.Size;
             physicsObjectDiscription.SetValues(this);

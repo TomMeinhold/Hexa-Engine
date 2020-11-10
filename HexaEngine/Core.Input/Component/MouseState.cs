@@ -17,43 +17,43 @@ namespace HexaEngine.Core.Input.Component
 
         public bool MouseButtonIsPressed(MouseButtonUpdate keys)
         {
-            if (this.MouseButtons.ContainsKey(keys))
+            if (MouseButtons.ContainsKey(keys))
             {
-                return this.MouseButtons[keys];
+                return MouseButtons[keys];
             }
             else
             {
-                this.MouseButtons[keys] = false;
-                return this.MouseButtons[keys];
+                MouseButtons[keys] = false;
+                return MouseButtons[keys];
             }
         }
 
         public bool MouseButtonIsReleased(MouseButtonUpdate keys)
         {
-            if (this.MouseButtons.ContainsKey(keys))
+            if (MouseButtons.ContainsKey(keys))
             {
-                return !this.MouseButtons[keys];
+                return !MouseButtons[keys];
             }
             else
             {
-                this.MouseButtons[keys] = false;
-                return !this.MouseButtons[keys];
+                MouseButtons[keys] = false;
+                return !MouseButtons[keys];
             }
         }
 
         public void UpdateButton(MouseUpdate update)
         {
-            this.MouseButtons[update.MouseButton] = update.IsPressed;
+            MouseButtons[update.MouseButton] = update.IsPressed;
         }
 
         public void UpdateLocation(MouseUpdate update)
         {
-            this.Location = update.Location;
+            Location = update.Location;
         }
 
         public void UpdateRawLocation(Vector3 update)
         {
-            this.LocationRaw = update;
+            LocationRaw = update;
         }
     }
 }

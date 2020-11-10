@@ -11,14 +11,11 @@ namespace HexaEngine.Core.Scenes
     {
         private Scene selectedScene;
 
-        public SceneManager(Engine engine)
+        public SceneManager()
         {
-            Engine = engine ?? throw new ArgumentNullException(nameof(engine));
         }
 
         public Dictionary<Type, Scene> Instances { get; } = new Dictionary<Type, Scene>();
-
-        public Engine Engine { get; }
 
         public event EventHandler<Scene> SceneChanged;
 
@@ -46,7 +43,22 @@ namespace HexaEngine.Core.Scenes
                     }
                 }
 
-                selectedScene = value;
+                var before = selectedScene;
+                if (SelectedScene != null)
+                {
+                    lock (SelectedScene)
+                    {
+                        value.LoadRessources();
+                        selectedScene = value;
+                        before.UnloadRessources();
+                    }
+                }
+                else
+                {
+                    value.LoadRessources();
+                    selectedScene = value;
+                }
+
                 SceneChanged?.Invoke(this, value);
             }
         }
@@ -59,7 +71,7 @@ namespace HexaEngine.Core.Scenes
             }
             else
             {
-                Instances[type] = SelectedScene = (Scene)Activator.CreateInstance(type, new object[] { Engine });
+                Instances[type] = SelectedScene = (Scene)Activator.CreateInstance(type);
             }
         }
 

@@ -13,17 +13,6 @@ namespace HexaEngine.Core.Plugins
         {
         }
 
-        public static Plugin Load(Engine engine, FileInfo file)
-        {
-            using var fs = file.OpenRead();
-            XmlSerializer serializer = new XmlSerializer(typeof(Plugin));
-            Plugin plugin = (Plugin)serializer.Deserialize(fs);
-            plugin.File = file;
-            plugin.Engine = engine;
-            fs.Close();
-            return plugin;
-        }
-
         public static Plugin Load(FileInfo file)
         {
             using var fs = file.OpenRead();
@@ -44,7 +33,7 @@ namespace HexaEngine.Core.Plugins
 
         public void Compile()
         {
-            Engine.Compiler.Compile(this);
+            Engine.Current.Compiler.Compile(this);
         }
 
         public void Execute()
@@ -64,7 +53,7 @@ namespace HexaEngine.Core.Plugins
                 {
                     if (p.ParameterType == typeof(Engine))
                     {
-                        main.Invoke(null, new object[] { Engine });
+                        main.Invoke(null, null);
                     }
                 }
             }
@@ -85,9 +74,6 @@ namespace HexaEngine.Core.Plugins
 
         [XmlIgnore]
         public Assembly Assembly { get; set; }
-
-        [XmlIgnore]
-        public Engine Engine { get; set; }
 
         [XmlIgnore]
         public string Name { get => File.Name.Replace(".hpln", ""); }

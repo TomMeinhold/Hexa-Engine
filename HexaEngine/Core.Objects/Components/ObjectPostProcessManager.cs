@@ -24,7 +24,7 @@ namespace HexaEngine.Core.Objects.Components
         public void PostProcess(DeviceContext deviceContext, Bitmap1 input, Bitmap1 output)
         {
             Effect lastEffect = null;
-            foreach (Effect effect in this.Effects)
+            foreach (Effect effect in Effects)
             {
                 if (effect is null)
                 {
@@ -65,7 +65,7 @@ namespace HexaEngine.Core.Objects.Components
             {
                 if (disposing)
                 {
-                    foreach (Effect effect in this.Effects)
+                    foreach (Effect effect in Effects)
                     {
                         effect.Dispose();
                     }

@@ -5,7 +5,6 @@
 namespace HexaEngine.Core.Render
 {
     using HexaEngine.Core.Render.Components;
-    using HexaEngine.Core.Ressources;
     using SharpDX.Direct2D1;
     using SharpDX.DXGI;
     using SharpDX.Windows;
@@ -21,19 +20,18 @@ namespace HexaEngine.Core.Render
     {
         private bool disposedValue = false; // Dient zur Erkennung redundanter Aufrufe.
 
-        public RenderSystem(Engine engine, RenderForm form)
+        public RenderSystem(RenderForm form)
         {
-            this.Form = form ?? throw new ArgumentNullException(nameof(form));
-            this.DefaultContextMenuStrip = form.ContextMenuStrip;
-            this.Engine = engine;
-            this.InitializeDirectX();
+            Form = form ?? throw new ArgumentNullException(nameof(form));
+            DefaultContextMenuStrip = form.ContextMenuStrip;
+            InitializeDirectX();
         }
 
         ~RenderSystem()
         {
             // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing)
             // weiter unten ein.
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public DeviceManager DeviceManager { get; set; }
@@ -48,8 +46,6 @@ namespace HexaEngine.Core.Render
 
         public RenderForm Form { get; }
 
-        public Engine Engine { get; set; }
-
         public bool ReloadDirectX { get; private set; }
 
         private EventWaitHandle WaitHandle { get; } = new EventWaitHandle(false, EventResetMode.AutoReset);
@@ -58,14 +54,14 @@ namespace HexaEngine.Core.Render
         {
             var featureLevels = new FeatureLevel[] { FeatureLevel.Level_12_1, FeatureLevel.Level_12_0, FeatureLevel.Level_11_1, FeatureLevel.Level_11_0, FeatureLevel.Level_10_1, FeatureLevel.Level_10_0 };
             var pixelFormat = new PixelFormat(Format.R8G8B8A8_UNorm, AlphaMode.Premultiplied);
-            this.DeviceManager = new DeviceManager(this.Form, featureLevels, 3, pixelFormat);
-            this.DriectXManager = new DriectXManager(this.DeviceManager);
-            this.PostProcessingManager = new PostProcessingManager(this);
+            DeviceManager = new DeviceManager(Form, featureLevels, 3, pixelFormat);
+            DriectXManager = new DriectXManager(DeviceManager);
+            PostProcessingManager = new PostProcessingManager(this);
         }
 
         public void Resize()
         {
-            this.DriectXManager.Resize(this.Engine.Settings.Width, this.Engine.Settings.Height);
+            DriectXManager.Resize(Engine.Current.Settings.Width, Engine.Current.Settings.Height);
         }
 
         public void FlipFullscreen()
@@ -82,8 +78,8 @@ namespace HexaEngine.Core.Render
 
         public EventWaitHandle QueryReload()
         {
-            this.ReloadDirectX = true;
-            return this.WaitHandle;
+            ReloadDirectX = true;
+            return WaitHandle;
         }
 
         /// <summary>
@@ -93,22 +89,22 @@ namespace HexaEngine.Core.Render
         {
             // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing)
             // weiter oben ein.
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposedValue)
+            if (!disposedValue)
             {
                 if (disposing)
                 {
-                    this.DeviceManager.Dispose();
-                    this.DriectXManager.Dispose();
-                    this.DirectWrite.Dispose();
+                    DeviceManager.Dispose();
+                    DriectXManager.Dispose();
+                    DirectWrite.Dispose();
                 }
 
-                this.disposedValue = true;
+                disposedValue = true;
             }
         }
     }

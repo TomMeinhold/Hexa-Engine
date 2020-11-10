@@ -11,11 +11,8 @@ namespace HexaEngine.Core.Sounds
 
         public MasteringVoice MasteringVoice;
 
-        public Engine Engine { get; }
-
-        public SoundSystem(Engine engine)
+        public SoundSystem()
         {
-            Engine = engine;
             XAudio2 = new XAudio2();
             XAudio2.StartEngine();
             MasteringVoice = new MasteringVoice(XAudio2);
@@ -23,17 +20,17 @@ namespace HexaEngine.Core.Sounds
 
         public void Play(string name)
         {
-            RessouceManager.Sounds.FirstOrDefault(x => x.Name == name).Play(XAudio2);
+            RessourceManager.Sounds.FirstOrDefault(x => x.Name == name).Play(XAudio2);
         }
 
         public void PlayDelayed(string name, TimeSpan delay)
         {
-            RessouceManager.Sounds.FirstOrDefault(x => x.Name == name).PlayDelayed(XAudio2, delay);
+            RessourceManager.Sounds.FirstOrDefault(x => x.Name == name).PlayDelayed(XAudio2, delay);
         }
 
         public void SetRepeat(string name, bool repeat)
         {
-            RessouceManager.Sounds.FindAll(x => x.Name == name).ForEach(x => x.Repeat = repeat);
+            RessourceManager.Sounds.FindAll(x => x.Name == name).ForEach(x => x.Repeat = repeat);
         }
 
         public void Dispose()

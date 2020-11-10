@@ -1,5 +1,6 @@
 ﻿using HexaEngine.Core.Extensions;
 using HexaEngine.Core.Mathmatics;
+using HexaEngine.Core.Objects.EventArguments;
 using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Physics.Collision;
 using HexaEngine.Core.Physics.Interfaces;
@@ -22,8 +23,6 @@ namespace HexaEngine.Core.Objects.BaseTypes
         public Vector3 Rotation { get; private set; }
 
         public Vector3 Scale { get; private set; }
-
-        public Engine Engine { set; get; }
 
         public Size2F Size { get; set; }
 
@@ -76,6 +75,7 @@ namespace HexaEngine.Core.Objects.BaseTypes
 
         public Vector3 PositionBefore { get; set; }
         public BoundingBox BoundingBoxBefore { get; set; }
+        public bool Colliding { get; set; }
 
         public event EventHandler<OnCollisionEventArgs> OnCollision;
 
@@ -84,6 +84,8 @@ namespace HexaEngine.Core.Objects.BaseTypes
         public event EventHandler Disable;
 
         public event EventHandler OnDestroy;
+
+        public event EventHandler<PreDestroyEventArgs> PreOnDestroy;
 
         public virtual void SetPosition(Vector3 vector)
         {
@@ -125,10 +127,10 @@ namespace HexaEngine.Core.Objects.BaseTypes
             }
 
             context.Transform = ObjectViewMatrix;
-            context.Target = Engine.RenderSystem.DriectXManager.ObjectsBitmap;
+            context.Target = Engine.Current.RenderSystem.DriectXManager.ObjectsBitmap;
             context.DrawBitmap(Sprite, 1, BitmapInterpolationMode.Linear);
             context.Transform = (Matrix3x2)Matrix.Identity;
-            if (Engine.Settings.DebugMode)
+            if (Engine.Current.Settings.DebugMode)
             {
                 DrawPhysicsDebugInfo(context);
             }
@@ -141,16 +143,16 @@ namespace HexaEngine.Core.Objects.BaseTypes
             using var brushF = new SolidColorBrush(deviceContext, Color.DarkGreen);
             deviceContext.Transform = (Matrix3x2)Matrix.Translation(Position);
 
-            var ep = new Ellipse(this.MassCenter.Downgrade(), this.Mass % Size.Width * 2, this.Mass % Size.Width * 2);
+            var ep = new Ellipse(MassCenter.Downgrade(), Mass % Size.Width * 2, Mass % Size.Width * 2);
             deviceContext.FillEllipse(ep, brushF);
 
-            deviceContext.DrawLine(new Vector2(this.MassCenter.X + 10, this.MassCenter.Y), new Vector2(this.MassCenter.X - 10, this.MassCenter.Y), brushA);
-            deviceContext.DrawLine(new Vector2(this.MassCenter.X, this.MassCenter.Y + 10), new Vector2(this.MassCenter.X, this.MassCenter.Y - 10), brushA);
+            deviceContext.DrawLine(new Vector2(MassCenter.X + 10, MassCenter.Y), new Vector2(MassCenter.X - 10, MassCenter.Y), brushA);
+            deviceContext.DrawLine(new Vector2(MassCenter.X, MassCenter.Y + 10), new Vector2(MassCenter.X, MassCenter.Y - 10), brushA);
 
-            deviceContext.DrawLine(new Vector2(this.MassCenter.X, this.MassCenter.Y), new Vector2(this.MassCenter.X + Acceleration.X, this.MassCenter.Y + Acceleration.Y), brushA);
-            deviceContext.DrawLine(new Vector2(this.MassCenter.X, this.MassCenter.Y), new Vector2(this.MassCenter.X + Velocity.X, this.MassCenter.Y + Velocity.Y), brushV);
+            deviceContext.DrawLine(new Vector2(MassCenter.X, MassCenter.Y), new Vector2(MassCenter.X + Acceleration.X, MassCenter.Y + Acceleration.Y), brushA);
+            deviceContext.DrawLine(new Vector2(MassCenter.X, MassCenter.Y), new Vector2(MassCenter.X + Velocity.X, MassCenter.Y + Velocity.Y), brushV);
 
-            deviceContext.DrawRectangle(this.BoundingBox.BoundingBoxToRectNoPos(), brushA);
+            deviceContext.DrawRectangle(BoundingBox.BoundingBoxToRectNoPos(), brushA);
         }
 
         public void CallOnCollision(OnCollisionEventArgs onCollisionEventArgs)
@@ -160,8 +162,13 @@ namespace HexaEngine.Core.Objects.BaseTypes
 
         public virtual void Destroy()
         {
-            OnDestroy?.Invoke(this, null);
-            Engine.SceneManager.SelectedScene.Remove(this);
+            var arg = new PreDestroyEventArgs();
+            PreOnDestroy?.Invoke(this, arg);
+            if (!arg.Cancel)
+            {
+                OnDestroy?.Invoke(this, null);
+                Engine.Current.SceneManager.SelectedScene.Remove(this);
+            }
         }
     }
 }

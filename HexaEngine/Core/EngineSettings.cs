@@ -27,8 +27,8 @@ namespace HexaEngine.Core
         /// </summary>
         public float DrawPrecision { get; set; }
 
-        public bool AntialiasMode { get; internal set; }
+        public bool AntialiasMode { get; set; }
 
-        public int VSync { get; internal set; }
+        public int VSync { get; set; } = 1;
     }
 }

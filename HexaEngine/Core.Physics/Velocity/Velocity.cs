@@ -5,9 +5,9 @@ namespace HexaEngine.Core.Physics
 {
     public static class Velocity
     {
-        public static void ProcessObject(IPhysicsObject physicsObject, PhysicsEngine engine)
+        public static void ProcessObject(IPhysicsObject physicsObject, PhysicsEngine physicsEngine)
         {
-            var time = engine.ThreadTiming;
+            var time = physicsEngine.ThreadTiming;
 
             // Velocity.
             Vector3 velocity = physicsObject.Velocity;

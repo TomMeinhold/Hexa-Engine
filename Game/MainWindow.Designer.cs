@@ -1,5 +1,7 @@
 ﻿
 
+using HexaEngine.Core;
+
 namespace Game
 {
     partial class MainWindow
@@ -17,7 +19,7 @@ namespace Game
         
         protected override void Dispose(bool disposing)
         {
-            Engine.Dispose();
+            Engine.Current.Dispose();
             if (disposing && (components != null))
             {
                 components.Dispose();

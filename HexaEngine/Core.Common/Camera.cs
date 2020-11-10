@@ -6,14 +6,12 @@ namespace HexaEngine.Core.Common
 {
     using SharpDX;
     using SharpDX.Mathematics.Interop;
-    using System;
 
     public class Camera
     {
-        public Camera(Engine engine)
+        public Camera()
         {
-            this.Z = this.InitialZoom;
-            this.Engine = engine ?? throw new ArgumentNullException(nameof(engine));
+            Z = InitialZoom;
             UpdateTranslationMatrix();
         }
 
@@ -39,62 +37,60 @@ namespace HexaEngine.Core.Common
 
         public bool IsLocked { get; set; } = false;
 
-        public Engine Engine { get; }
-
         public void UpdateVisibility()
         {
-            float yCenter = this.Engine.Settings.Height / 2;
-            float xCenter = this.Engine.Settings.Width / 2;
-            if (this.Y * this.Z > yCenter)
+            float yCenter = Engine.Current.Settings.Height / 2;
+            float xCenter = Engine.Current.Settings.Width / 2;
+            if (Y * Z > yCenter)
             {
-                this.Down = false;
+                Down = false;
             }
             else
             {
-                this.Down = true;
+                Down = true;
             }
 
-            if (this.Y * this.Z * -1 > yCenter - 20)
+            if (Y * Z * -1 > yCenter - 20)
             {
-                this.Up = false;
+                Up = false;
             }
             else
             {
-                this.Up = true;
+                Up = true;
             }
 
-            if (this.X * this.Z > xCenter)
+            if (X * Z > xCenter)
             {
-                this.Right = false;
+                Right = false;
             }
             else
             {
-                this.Right = true;
+                Right = true;
             }
 
-            if (this.X * this.Z * -1 > xCenter)
+            if (X * Z * -1 > xCenter)
             {
-                this.Left = false;
+                Left = false;
             }
             else
             {
-                this.Left = true;
+                Left = true;
             }
         }
 
         public void SetPosition(RawVector3 rawVector3)
         {
-            this.X = rawVector3.X;
-            this.Y = rawVector3.Y;
-            this.Z = rawVector3.Z;
+            X = rawVector3.X;
+            Y = rawVector3.Y;
+            Z = rawVector3.Z;
             UpdateVisibility();
             UpdateTranslationMatrix();
         }
 
         public void SetPosition(RawVector2 rawVector2)
         {
-            this.X = rawVector2.X;
-            this.Y = rawVector2.Y;
+            X = rawVector2.X;
+            Y = rawVector2.Y;
             UpdateVisibility();
             UpdateTranslationMatrix();
         }
@@ -105,7 +101,7 @@ namespace HexaEngine.Core.Common
             x *= z;
             Y *= z;
 
-            this.TranslationMatrix = Matrix.Translation(new RawVector3(x, y, z));
+            TranslationMatrix = Matrix.Translation(new RawVector3(x, y, z));
         }
     }
 }

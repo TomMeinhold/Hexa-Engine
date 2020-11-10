@@ -9,9 +9,8 @@ namespace HexaEngine.Core.UI
 {
     public class UserInterfaceManager
     {
-        public UserInterfaceManager(Engine engine)
+        public UserInterfaceManager()
         {
-            Engine = engine ?? throw new ArgumentNullException(nameof(engine));
             InputSystem.MouseUpdate += MouseInput;
             InputSystem.KeyboardUpdate += KeyboardInput;
         }
@@ -19,8 +18,6 @@ namespace HexaEngine.Core.UI
         public IUserInterface ActiveUserInterface { get; set; }
 
         public Dictionary<Type, IUserInterface> Instances { get; } = new Dictionary<Type, IUserInterface>();
-
-        public Engine Engine { get; }
 
         public void SetUIByType(Type type, bool createNew = false)
         {
@@ -30,7 +27,7 @@ namespace HexaEngine.Core.UI
             }
             else
             {
-                Instances[type] = ActiveUserInterface = (IUserInterface)Activator.CreateInstance(type, new object[] { Engine });
+                Instances[type] = ActiveUserInterface = (IUserInterface)Activator.CreateInstance(type);
             }
         }
 

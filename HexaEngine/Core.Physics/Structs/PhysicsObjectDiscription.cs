@@ -5,6 +5,8 @@ namespace HexaEngine.Core.Physics.Structs
 {
     public class PhysicsObjectDiscription
     {
+        public bool Colliding { get; set; }
+
         public float Mass { get; set; }
 
         public bool Static { get; set; }
@@ -23,6 +25,7 @@ namespace HexaEngine.Core.Physics.Structs
 
         public void SetValues(IPhysicsObject physicsObject)
         {
+            physicsObject.Colliding = Colliding;
             physicsObject.Mass = Mass;
             physicsObject.Static = Static;
             physicsObject.Velocity = Velocity;

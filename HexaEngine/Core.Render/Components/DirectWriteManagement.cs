@@ -12,13 +12,13 @@ namespace HexaEngine.Core.Render.Components
     {
         public DirectWriteManagement()
         {
-            this.Factory = new Factory();
-            this.DefaultTextFormat = new TextFormat(this.Factory, "Arial", 12);
+            Factory = new Factory();
+            DefaultTextFormat = new TextFormat(Factory, "Arial", 12);
         }
 
         ~DirectWriteManagement()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public bool IsDisposed { get; private set; } = false;
@@ -29,27 +29,32 @@ namespace HexaEngine.Core.Render.Components
 
         public List<TextFormat> TextFormats { get; } = new List<TextFormat>();
 
+        public TextLayout GetTextLayout(string Message, TextFormat textFormat, float width)
+        {
+            return new TextLayout(Factory, Message, textFormat, width, textFormat.FontSize);
+        }
+
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.IsDisposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
-                    this.Factory.Dispose();
-                    this.DefaultTextFormat.Dispose();
-                    foreach (TextFormat format in this.TextFormats)
+                    Factory.Dispose();
+                    DefaultTextFormat.Dispose();
+                    foreach (TextFormat format in TextFormats)
                     {
                         format.Dispose();
                     }
                 }
 
-                this.IsDisposed = true;
+                IsDisposed = true;
             }
         }
     }

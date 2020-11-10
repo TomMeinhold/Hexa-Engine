@@ -5,12 +5,11 @@ namespace HexaEngine.Core.Plugins
 {
     public class PluginManager
     {
-        public PluginManager(Engine engine)
+        public PluginManager()
         {
-            Engine = engine;
             foreach (FileInfo file in Engine.PluginsPath.GetFiles("*.hpln"))
             {
-                Plugins.Add(Plugin.Load(Engine, file));
+                Plugins.Add(Plugin.Load(file));
             }
 
             foreach (Plugin plugin in Plugins)
@@ -23,8 +22,6 @@ namespace HexaEngine.Core.Plugins
                 plugin.Execute();
             }
         }
-
-        public Engine Engine { get; }
 
         public List<Plugin> Plugins { get; } = new List<Plugin>();
     }

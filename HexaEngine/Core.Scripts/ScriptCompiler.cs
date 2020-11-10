@@ -12,16 +12,13 @@ namespace HexaEngine.Core.Scripts
 {
     public class ScriptCompiler
     {
-        public ScriptCompiler(Engine engine)
+        public ScriptCompiler()
         {
-            Engine = engine;
         }
 
         public static CSharpCodeProvider CSharpCodeProvider { get; set; } = new CSharpCodeProvider();
 
         public static CompilerParameters Parameters { get; set; } = new CompilerParameters();
-
-        public Engine Engine { get; }
 
         public void Compile(Plugin plugin)
         {
@@ -32,7 +29,7 @@ namespace HexaEngine.Core.Scripts
 
             FileInfo cacheFile = new FileInfo(Engine.ScriptCache.FullName + "\\" + plugin.Name + ".dll");
 
-            if (cacheFile.Exists && Engine.UseScriptCache)
+            if (cacheFile.Exists && Engine.Current.UseScriptCache)
             {
                 plugin.Assembly = Assembly.LoadFrom(cacheFile.FullName);
             }

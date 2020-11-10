@@ -21,7 +21,7 @@ namespace HexaEngine.Core.Timers
         public Timer(TimeSpan delay, int cylces = 0)
         {
             this.delay = delay;
-            this.timerWorker = new Task(TimerVoid);
+            timerWorker = new Task(TimerVoid);
             this.cylces = cylces;
         }
 

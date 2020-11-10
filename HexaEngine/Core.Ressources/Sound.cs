@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HexaEngine.Core.Ressources
 {
-    public class Sound : IDisposable
+    public class Sound
     {
         private bool disposedValue;
 
@@ -50,7 +50,22 @@ namespace HexaEngine.Core.Ressources
         public static void Load(string file)
         {
             Sound sound = new Sound(new FileInfo(Engine.SoundsPath.FullName + "\\" + file));
-            RessouceManager.Sounds.Add(sound);
+            RessourceManager.Sounds.Add(sound);
+        }
+
+        public static Sound LoadUnmanaged(string file)
+        {
+            return new Sound(new FileInfo(Engine.SoundsPath.FullName + "\\" + file));
+        }
+
+        public static Sound Get(string file)
+        {
+            return RessourceManager.GetSound(file);
+        }
+
+        public void Unload()
+        {
+            RessourceManager.Unload(Name, RessourceType.Sound);
         }
 
         public void Play(XAudio2 xAudio2)

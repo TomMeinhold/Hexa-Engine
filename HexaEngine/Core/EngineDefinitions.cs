@@ -9,12 +9,15 @@ using HexaEngine.Core.Scripts;
 using HexaEngine.Core.UI;
 using System.IO;
 using HexaEngine.Core.Ressources;
+using HexaEngine.Core.Network;
 
 namespace HexaEngine.Core
 {
     public partial class Engine
     {
         internal long ThreadSyncTiming;
+
+        public Server Server { get; set; }
 
         public Camera Camera { get; set; }
 
@@ -36,7 +39,7 @@ namespace HexaEngine.Core
 
         public RenderSystem RenderSystem { get; set; }
 
-        public RessouceManager RessouceManager { get; set; }
+        public RessourceManager RessouceManager { get; set; }
 
         public ScriptCompiler Compiler { get; set; }
 

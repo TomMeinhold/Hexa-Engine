@@ -16,15 +16,14 @@ namespace HexaEngine.Core.Extensions
             return (vector1.Y == vector2.Y) && (vector1.X == vector2.X);
         }
 
-        public static RawVector2 Normalize(this RawVector2 vector1, Engine engine)
+        public static RawVector2 Normalize(this RawVector2 vector1)
         {
-            _ = engine ?? throw new ArgumentNullException(nameof(engine));
             RawVector2 outp = vector1;
             if (float.IsNaN(outp.X) | float.IsInfinity(outp.X))
             {
                 if (outp.X > 0)
                 {
-                    outp.X = engine.Settings.Width;
+                    outp.X = Engine.Current.Settings.Width;
                 }
             }
 

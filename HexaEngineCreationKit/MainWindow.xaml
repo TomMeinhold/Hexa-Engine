@@ -7,17 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="#FF303030">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel x:Name="References" Grid.Row="1" />
-        <StackPanel x:Name="Scripts" Grid.Column="1" Grid.Row="1" />
-        <Button Content="Save" HorizontalAlignment="Left" Margin="0" Click="Button_Save_Click" />
-        <Button Content="Load" Grid.Column="1" HorizontalAlignment="Left" Click="Button_Load_Click" />
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>

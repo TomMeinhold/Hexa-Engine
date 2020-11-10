@@ -8,11 +8,10 @@ namespace HexaEngine.Core.Particle.Components
 {
     public class BaseParticle : BaseObject
     {
-        private readonly Timer timer;
+        public readonly Timer timer;
 
-        public BaseParticle(Engine engine, Sprite sprite, TimeSpan liveTime, PhysicsObjectDiscription physicsObjectDiscription)
+        public BaseParticle(Sprite sprite, TimeSpan liveTime, PhysicsObjectDiscription physicsObjectDiscription)
         {
-            Engine = engine;
             Sprite = sprite;
             Size = sprite.Size;
             physicsObjectDiscription.SetValues(this);

@@ -95,5 +95,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HexaEngine\HexaEngine.csproj">
+      <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
+      <Name>HexaEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

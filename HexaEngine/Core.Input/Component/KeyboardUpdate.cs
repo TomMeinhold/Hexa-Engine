@@ -10,8 +10,8 @@ namespace HexaEngine.Core.Input.Component
     {
         public KeyboardUpdate(bool isPressed, Keys key)
         {
-            this.IsPressed = isPressed;
-            this.Key = key;
+            IsPressed = isPressed;
+            Key = key;
         }
 
         public bool IsPressed { get; set; }
@@ -32,7 +32,7 @@ namespace HexaEngine.Core.Input.Component
         {
             if (obj is KeyboardUpdate update)
             {
-                return update.Key == this.Key && update.IsPressed == this.IsPressed;
+                return update.Key == Key && update.IsPressed == IsPressed;
             }
 
             return false;
@@ -40,12 +40,12 @@ namespace HexaEngine.Core.Input.Component
 
         public override int GetHashCode()
         {
-            return this.IsPressed.GetHashCode() + this.Key.GetHashCode();
+            return IsPressed.GetHashCode() + Key.GetHashCode();
         }
 
         public bool Equals(KeyboardUpdate other)
         {
-            return other.Key == this.Key && other.IsPressed == this.IsPressed;
+            return other.Key == Key && other.IsPressed == IsPressed;
         }
     }
 }

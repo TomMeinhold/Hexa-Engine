@@ -12,33 +12,33 @@ namespace HexaEngine.Core.Input.Component
 
         public bool KeyIsPressed(Keys keys)
         {
-            if (this.Keys.ContainsKey(keys))
+            if (Keys.ContainsKey(keys))
             {
-                return this.Keys[keys];
+                return Keys[keys];
             }
             else
             {
-                this.Keys[keys] = false;
-                return this.Keys[keys];
+                Keys[keys] = false;
+                return Keys[keys];
             }
         }
 
         public bool KeyIsReleased(Keys keys)
         {
-            if (this.Keys.ContainsKey(keys))
+            if (Keys.ContainsKey(keys))
             {
-                return !this.Keys[keys];
+                return !Keys[keys];
             }
             else
             {
-                this.Keys[keys] = false;
-                return !this.Keys[keys];
+                Keys[keys] = false;
+                return !Keys[keys];
             }
         }
 
         public void Update(KeyboardUpdate update)
         {
-            this.Keys[update.Key] = update.IsPressed;
+            Keys[update.Key] = update.IsPressed;
         }
     }
 }

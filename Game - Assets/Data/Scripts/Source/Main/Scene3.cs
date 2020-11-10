@@ -1,4 +1,5 @@
-﻿using HexaEngine.Core;
+﻿using HexaEngine.Core.Common;
+using HexaEngine.Core.Generation;
 using HexaEngine.Core.Physics.Structs;
 using HexaEngine.Core.Ressources;
 using HexaEngine.Core.Scenes;
@@ -8,21 +9,39 @@ namespace Main
 {
     public class Scene3 : Scene
     {
-        public Scene3(Engine engine)
+        public Scene3()
         {
-            PhysicsObjectDiscription walle = new PhysicsObjectDiscription
+            PhysicsObjectDiscription wall = new PhysicsObjectDiscription
             {
-                Mass = 1000,
+                Mass = 100,
                 Static = true
             };
-            Add(new Planet(engine, RessouceManager.GetSprite("planet"), new Vector3(100, 100, 0), walle));
 
-            PhysicsObjectDiscription planetPhysicsObject = new PhysicsObjectDiscription
+            NoiseRule[] rules = new NoiseRule[]
             {
-                Mass = 1000,
-                Velocity = new Vector3(0, -1000000, 0),
+                new NoiseRule(new Range(0,50),new Range(0,20), new Range(0,1)),
+                new NoiseRule(new Range(0,50),new Range(20,50), new Range(2,3))
             };
-            Add(new Planet(engine, RessouceManager.GetSprite("wall"), new Vector3(100, 400, 0), planetPhysicsObject));
+
+            ObjectGenerator generator = new ObjectGenerator(50, 50, 4, 0, rules);
+            generator.Generate((v, x, y) =>
+            {
+                Vector3 pos = new Vector3(x * 16, y * 16, 0);
+                switch (v)
+                {
+                    case 0:
+                        Add(new Planet(RessourceManager.GetSprite("planet"), pos, wall));
+                        break;
+
+                    case 1:
+                        Add(new Planet(RessourceManager.GetSprite("planet1"), pos, wall));
+                        break;
+
+                    case 2:
+                        Add(new Planet(RessourceManager.GetSprite("planet2"), pos, wall));
+                        break;
+                }
+            });
         }
     }
 }

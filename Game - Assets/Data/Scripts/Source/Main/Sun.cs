@@ -1,5 +1,4 @@
-﻿using HexaEngine.Core;
-using HexaEngine.Core.Input.Component;
+﻿using HexaEngine.Core.Input.Component;
 using HexaEngine.Core.Input.Modules;
 using HexaEngine.Core.Objects.BaseTypes;
 using HexaEngine.Core.Objects.Components;
@@ -33,9 +32,8 @@ namespace Main
             keyboardController.KeyUp += KeyboardController_KeyUp;
         }
 
-        public Sun(Engine engine, Sprite sprite, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription) : this()
+        public Sun(Sprite sprite, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription) : this()
         {
-            Engine = engine;
             Sprite = sprite;
             Size = sprite.Size;
             physicsObjectDiscription.SetValues(this);
@@ -44,9 +42,8 @@ namespace Main
             OnCollision += Sun_OnCollision;
         }
 
-        public Sun(Engine engine, Sprite sprite, PhysicsObjectDiscription physicsObjectDiscription) : this()
+        public Sun(Sprite sprite, PhysicsObjectDiscription physicsObjectDiscription) : this()
         {
-            Engine = engine;
             Sprite = sprite;
             Size = sprite.Size;
             physicsObjectDiscription.SetValues(this);
@@ -54,13 +51,13 @@ namespace Main
             OnCollision += Sun_OnCollision;
         }
 
-        public Sun(Engine engine, Sprite sprite, PhysicsObjectDiscription physicsObjectDiscription, RayCastDiscription rayCastDiscription) : this(engine, sprite, physicsObjectDiscription)
+        public Sun(Sprite sprite, PhysicsObjectDiscription physicsObjectDiscription, RayCastDiscription rayCastDiscription) : this(sprite, physicsObjectDiscription)
         {
             RayCastingModule = new RayCastingModule(this);
             this.RayCastDiscription = rayCastDiscription;
         }
 
-        public Sun(Engine engine, Sprite sprite, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription, RayCastDiscription rayCastDiscription) : this(engine, sprite, position, physicsObjectDiscription)
+        public Sun(Sprite sprite, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription, RayCastDiscription rayCastDiscription) : this(sprite, position, physicsObjectDiscription)
         {
             RayCastingModule = new RayCastingModule(this);
             this.RayCastDiscription = rayCastDiscription;
@@ -88,18 +85,6 @@ namespace Main
 
         private void KeyboardController_KeyUp(object sender, KeyboardUpdatePackage e)
         {
-            if (e.KeyboardUpdate.Key == Keys.B)
-            {
-                if (RayCastingModule.Blur.StandardDeviation > 0)
-                {
-                    RayCastingModule.Blur.StandardDeviation = 0;
-                }
-                else
-                {
-                    RayCastingModule.Blur.StandardDeviation = 10;
-                }
-            }
-
             if (e.KeyboardUpdate.Key == Keys.R)
             {
                 rotateRaysMode = !rotateRaysMode;

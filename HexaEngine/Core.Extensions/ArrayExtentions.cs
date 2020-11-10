@@ -6,6 +6,7 @@ namespace HexaEngine.Core.Extensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using SharpDX.Mathematics.Interop;
 
     public static class ArrayExtentions
@@ -77,5 +78,46 @@ namespace HexaEngine.Core.Extensions
 
             return closest;
         }
+
+        public static T[] Slice<T>(this T[] source, int start, int end)
+        {
+            // Handles negative ends.
+            if (end < 0)
+            {
+                end = source.Length + end;
+            }
+            int len = end - start;
+
+            // Return new array.
+            T[] res = new T[len];
+            for (int i = 0; i < len; i++)
+            {
+                res[i] = source[i + start];
+            }
+            return res;
+        }
+
+        public static T[] Add<T>(this T[] array, T value)
+        {
+            T[] newArray = new T[array.Length + 1];
+            array.CopyTo(newArray, 0);
+            newArray[array.Length] = value;
+            return newArray;
+        }
+
+        public static T[] AddToStart<T>(this T[] array, T value)
+        {
+            T[] newArray = new T[array.Length + 1];
+            array.CopyTo(newArray, 1);
+            newArray[0] = value;
+            return newArray;
+        }
+
+        public static string ArrayToString(this byte[] data)
+        {
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public static byte[] ToBytes(this string str) => Encoding.UTF8.GetBytes(str);
     }
 }

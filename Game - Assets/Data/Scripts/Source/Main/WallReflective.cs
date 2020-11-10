@@ -1,5 +1,4 @@
-﻿using HexaEngine.Core;
-using HexaEngine.Core.Extensions;
+﻿using HexaEngine.Core.Extensions;
 using HexaEngine.Core.Objects.BaseTypes;
 using HexaEngine.Core.Objects.Interfaces;
 using HexaEngine.Core.Physics.Interfaces;
@@ -25,18 +24,16 @@ namespace Main
 
         public bool Bottom { get; set; }
 
-        public WallReflective(Engine engine, Sprite sprite, PhysicsObjectDiscription physicsObjectDiscription)
+        public WallReflective(Sprite sprite, PhysicsObjectDiscription physicsObjectDiscription)
         {
-            Engine = engine;
             Sprite = sprite;
             Size = sprite.Size;
             physicsObjectDiscription.SetValues(this);
             MassCenter = BoundingBox.Center;
         }
 
-        public WallReflective(Engine engine, Sprite sprite, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription)
+        public WallReflective(Sprite sprite, RawVector3 position, PhysicsObjectDiscription physicsObjectDiscription)
         {
-            Engine = engine;
             Sprite = sprite;
             Size = sprite.Size;
             physicsObjectDiscription.SetValues(this);

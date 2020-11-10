@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace HexaEngine.Core.Ressources
 {
-    public class Sprite : IDisposable
+    public class Sprite
     {
         private readonly Stopwatch stopwatch = new Stopwatch();
         private bool disposedValue;
@@ -23,23 +24,62 @@ namespace HexaEngine.Core.Ressources
             Dispose(disposing: false);
         }
 
-        public static Sprite Load(Engine engine, TimeSpan time, params string[] names)
+        public static Sprite Load(TimeSpan time, params string[] names)
         {
             List<Texture> textures = new List<Texture>();
             foreach (string name in names)
             {
-                textures.Add(Texture.Load(engine, name, true));
+                textures.Add(Texture.LoadUnmanaged(name));
             }
 
             Sprite sprite = new Sprite
             {
-                Engine = engine,
                 Name = Path.GetFileNameWithoutExtension(names[0]),
                 Textures = textures,
                 TimeSpan = time
             };
-            RessouceManager.Sprites.Add(sprite);
+            RessourceManager.Sprites.Add(sprite);
             return sprite;
+        }
+
+        public static Sprite LoadUnmanaged(TimeSpan time, params string[] names)
+        {
+            List<Texture> textures = new List<Texture>();
+            foreach (string name in names)
+            {
+                textures.Add(Texture.LoadUnmanaged(name));
+            }
+
+            Sprite sprite = new Sprite
+            {
+                Name = Path.GetFileNameWithoutExtension(names[0]),
+                Textures = textures,
+                TimeSpan = time
+            };
+
+            return sprite;
+        }
+
+        public static Sprite LoadUnmanaged(TimeSpan time, params Texture[] textures)
+        {
+            Sprite sprite = new Sprite
+            {
+                Name = textures[0].Name,
+                Textures = textures.ToList(),
+                TimeSpan = time
+            };
+
+            return sprite;
+        }
+
+        public static Sprite Get(string file)
+        {
+            return RessourceManager.GetSprite(file);
+        }
+
+        public void Unload()
+        {
+            RessourceManager.Unload(Name, RessourceType.Sprite);
         }
 
         public string Name { get; internal set; }
@@ -47,8 +87,6 @@ namespace HexaEngine.Core.Ressources
         public List<Texture> Textures { get; private set; } = new List<Texture>();
 
         public TimeSpan TimeSpan { get; set; }
-
-        public Engine Engine { get; private set; }
 
         public Size2F Size { get => Textures[SpriteIndex].Bitmap.Size; }
 

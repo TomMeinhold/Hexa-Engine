@@ -1,5 +1,4 @@
-﻿using HexaEngine.Core;
-using HexaEngine.Core.Physics.Structs;
+﻿using HexaEngine.Core.Physics.Structs;
 using HexaEngine.Core.Ressources;
 using HexaEngine.Core.Scenes;
 using SharpDX;
@@ -8,12 +7,12 @@ namespace Main
 {
     public class Scene2 : Scene
     {
-        public Scene2(Engine engine)
+        public Scene2()
         {
             RayCastDiscription whiteCastDiscription = new RayCastDiscription
             {
                 RayRange = 2000,
-                RayDensity = 5,
+                RayDensity = 1,
                 RayColor = new Color(200, 200, 200, 100)
             };
 
@@ -37,9 +36,9 @@ namespace Main
                 Position = new Vector3(750, 466, 0)
             };
 
-            Add(new Sun(engine, RessouceManager.GetSprite("sun"), sunPhysicsObjectS, whiteCastDiscription));
-            Add(new Planet(engine, RessouceManager.GetSprite("planet"), planetPhysicsObject));
-            Add(new Planet(engine, RessouceManager.GetSprite("planet"), planetPhysicsObject1));
+            Add(new Sun(RessourceManager.GetSprite("sun"), sunPhysicsObjectS, whiteCastDiscription));
+            Add(new Planet(RessourceManager.GetSprite("planet"), planetPhysicsObject));
+            Add(new Planet(RessourceManager.GetSprite("planet"), planetPhysicsObject1));
         }
     }
 }

@@ -128,11 +128,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core.Common\Range.cs" />
+    <Compile Include="Core.Generation\NoiseRule.cs" />
+    <Compile Include="Core.Generation\NoiseReducer.cs" />
+    <Compile Include="Core.Generation\ObjectGenerator.cs" />
+    <Compile Include="Core.Generation\Perlin.cs" />
+    <Compile Include="Core.Generation\NoiseGenerator.cs" />
     <Compile Include="Core.IO\Components\FileTable.cs" />
     <Compile Include="Core.IO\Components\FileTableEntry.cs" />
     <Compile Include="Core.IO\HexaEngineArchive.cs" />
+    <Compile Include="Core.Network\Client.cs" />
+    <Compile Include="Core.Network\Components\SocketHandler.cs" />
+    <Compile Include="Core.Network\Components\StateObject.cs" />
+    <Compile Include="Core.Network\Enums\Command.cs" />
+    <Compile Include="Core.Network\Enums\SocketHandlerMode.cs" />
+    <Compile Include="Core.Network\Structs\Package.cs" />
+    <Compile Include="Core.Network\Server.cs" />
+    <Compile Include="Core.Objects\EventArguments\PreDestroyEventArgs.cs" />
+    <Compile Include="Core.Particle\ParticleSystem.cs" />
+    <Compile Include="Core.Particle\ParticleSystems.cs" />
+    <Compile Include="Core.Particle\Structs\RandomPhysicsDescription.cs" />
+    <Compile Include="Core.Particle\Structs\Range.cs" />
+    <Compile Include="Core.Particle\Structs\Range2.cs" />
+    <Compile Include="Core.Particle\Structs\Range3.cs" />
     <Compile Include="Core.Render\Components\DriectXManager.cs" />
-    <Compile Include="Core.Ressources\RessouceType.cs" />
+    <Compile Include="Core.Ressources\Archive.cs" />
+    <Compile Include="Core.Ressources\RessourceType.cs" />
     <Compile Include="Core.Ressources\Sprite.cs" />
     <Compile Include="Core.Ressources\Texture.cs" />
     <Compile Include="Core.Sounds\SoundSystem.cs" />
@@ -179,7 +200,15 @@
     <Compile Include="Core.Timers\TimerFramework.cs" />
     <Compile Include="Core.Timers\TimerTickEventArgs.cs" />
     <Compile Include="Core.UI\BaseTypes\Button.cs" />
+    <Compile Include="Core.UI\BaseTypes\Image.cs" />
+    <Compile Include="Core.UI\BaseTypes\ProgressBar.cs" />
     <Compile Include="Core.UI\BaseTypes\Screen.cs" />
+    <Compile Include="Core.UI\BaseElement.cs" />
+    <Compile Include="Core.UI\Enum\Alignment.cs" />
+    <Compile Include="Core.UI\Events\KeyboardEventArgs.cs" />
+    <Compile Include="Core.UI\Events\MouseEventArgs.cs" />
+    <Compile Include="Core.UI\Structs\Thickness.cs" />
+    <Compile Include="Core.UI\UIElement.cs" />
     <Compile Include="Core.UI\UserInterfaceManager.cs" />
     <Compile Include="Core.UI\Interfaces\IUserInterface.cs" />
     <Compile Include="Core.Objects\BaseTypes\BaseObjectState.cs" />
@@ -220,7 +249,7 @@
     <Compile Include="Core.Render\Components\DirectWriteManagement.cs" />
     <Compile Include="Core.Render\Components\ObjectRessourceManager.cs" />
     <Compile Include="Core.Render\Components\PostProcessingManager.cs" />
-    <Compile Include="Core.Ressources\RessouceManager.cs" />
+    <Compile Include="Core.Ressources\RessourceManager.cs" />
     <Compile Include="Core.Render\Interfaces\IDrawable.cs" />
     <Compile Include="Core.Render\RenderLoop.cs" />
     <Compile Include="Core.Render\RenderSystem.cs" />
@@ -230,8 +259,10 @@
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineDefinitions.cs" />
     <Compile Include="Core\EngineEvents.cs" />
+    <Compile Include="Core\EngineInstanceManager.cs" />
     <Compile Include="Core\EngineSettings.cs" />
     <Compile Include="Core\BitmapConverter.cs" />
+    <Compile Include="Core\ServerEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>

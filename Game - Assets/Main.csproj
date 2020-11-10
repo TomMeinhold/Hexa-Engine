@@ -98,6 +98,12 @@
     <Compile Include="Data\Scripts\Source\Main\Main.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Data\Scripts\Source\Main\MainMenu.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Data\Scripts\Source\Main\MainMenuScreen.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Data\Scripts\Source\Main\Particle1.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -136,18 +142,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HexaEngine\HexaEngine.csproj">
-      <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
-      <Name>HexaEngine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Data\Sounds\music.wav">
+    <None Include="Data\Sounds\music.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Sounds\sound1.wav">
+    </None>
+    <None Include="Data\Sounds\sound1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
+    <None Include="Data\Textures\raindrops.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Textures\mainmenu.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Textures\planet2.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Textures\wall.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -181,6 +190,12 @@
     <None Include="Data\Textures\engine-logo.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HexaEngine\HexaEngine.csproj">
+      <Project>{3da98bae-a4d7-4419-ab80-5065fc4dbd32}</Project>
+      <Name>HexaEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

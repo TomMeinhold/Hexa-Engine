@@ -3,6 +3,7 @@ using HexaEngine.Core.Physics.Interfaces;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct2D1.Effects;
+using SharpDX.Mathematics.Interop;
 using System.Collections.Generic;
 
 namespace HexaEngine.Core.Objects.Components
@@ -24,20 +25,13 @@ namespace HexaEngine.Core.Objects.Components
 
         public IRayCasting RayCasting { get; }
 
-        public GaussianBlur Blur { get; private set; }
-
         private List<Ray> Rays { get; set; } = new List<Ray>();
 
         public void Render(DeviceContext context)
         {
             if (buffer is null)
             {
-                buffer = RayCasting.Engine.RessouceManager.GetNewBitmap();
-            }
-
-            if (Blur is null)
-            {
-                Blur = new GaussianBlur(context) { Optimization = GaussianBlurOptimization.Quality, StandardDeviation = 10 };
+                buffer = Engine.Current.RessouceManager.GetNewBitmap();
             }
 
             if (raybrush is null)
@@ -49,29 +43,25 @@ namespace HexaEngine.Core.Objects.Components
                 raybrush.Color = RayCasting.RayCastDiscription.RayColor;
             }
 
-            context.Target = buffer;
+            context.Target = Engine.Current.RenderSystem.DriectXManager.RayBitmap;
             context.Transform = (Matrix3x2)Matrix.Identity;
-            context.Clear(Color.Transparent);
             if (!(Rays is null) && RayCasting.RayCastDiscription.RaysEnabled)
             {
                 lock (Rays)
                 {
-                    int i = 0;
-                    foreach (Ray ray in Rays)
+                    if (Rays.Count > 0)
                     {
-                        context.DrawLine(ray.Position.Downgrade(), ray.Direction.Downgrade(), raybrush);
-                        i++;
-                        if (i == lastPointer)
-                        {
-                            break;
-                        }
+                        PathGeometry geometry = new PathGeometry(context.Factory);
+                        var sink = geometry.Open();
+                        sink.BeginFigure(Rays[0].Direction.Downgrade(), FigureBegin.Filled);
+                        sink.AddLines(Rays.ConvertAll(x => (RawVector2)x.Direction.Downgrade()).ToArray());
+                        sink.EndFigure(FigureEnd.Closed);
+                        sink.Close();
+                        context.FillGeometry(geometry, raybrush);
+                        geometry.Dispose();
                     }
                 }
             }
-
-            Blur.SetInput(0, buffer, true);
-            context.Target = RayCasting.Engine.RenderSystem.DriectXManager.RayBitmap;
-            context.DrawImage(Blur, InterpolationMode.HighQualityCubic, CompositeMode.Plus);
         }
 
         public void AddRay(Vector3 pos, Vector3 direct)

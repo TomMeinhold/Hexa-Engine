@@ -11,15 +11,12 @@ namespace HexaEngine.Core.Particle
 
         private readonly TimeSpan livetime;
 
-        public SplashEffect(Engine engine, IPhysicsObject physicsObject, int amount, TimeSpan livetime)
+        public SplashEffect(IPhysicsObject physicsObject, int amount, TimeSpan livetime)
         {
-            Engine = engine;
             PhysicsObject = physicsObject;
             this.amount = amount;
             this.livetime = livetime;
         }
-
-        public Engine Engine { get; }
 
         public float Mass { get; set; }
 
@@ -31,8 +28,8 @@ namespace HexaEngine.Core.Particle
             {
                 float x = (float)Math.Cos(Math.PI * i / 180) * 500;
                 float y = (float)Math.Sin(Math.PI * i / 180) * 500;
-                T particle = (T)Activator.CreateInstance(typeof(T), new object[] { Engine, livetime, new PhysicsObjectDiscription() { Mass = Mass, Velocity = new SharpDX.Vector3(x, y, 0), Position = PhysicsObject.BoundingBox.Center } });
-                Engine.SceneManager.SelectedScene.Add(particle);
+                T particle = (T)Activator.CreateInstance(typeof(T), new object[] { livetime, new PhysicsObjectDiscription() { Mass = Mass, Velocity = new SharpDX.Vector3(x, y, 0), Position = PhysicsObject.BoundingBox.Center } });
+                Engine.Current.SceneManager.SelectedScene.Add(particle);
                 i += 360 / amount;
             }
         }

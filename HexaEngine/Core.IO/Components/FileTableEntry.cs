@@ -33,6 +33,8 @@ namespace HexaEngine.Core.IO.Components
 
         public string VirtualPath { get; }
 
+        public string FileName { get => Path.GetFileName(VirtualPath); }
+
         public byte[] PathEncoded { get => Encoding.UTF8.GetBytes(VirtualPath); }
 
         public int EntrySize { get; }

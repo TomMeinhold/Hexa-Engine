@@ -11,9 +11,9 @@ namespace HexaEngine.Core.Input.Component
     {
         public MouseUpdate(MouseButtonUpdate mouseButton, bool isPressed, RawVector3 location)
         {
-            this.MouseButton = mouseButton;
-            this.IsPressed = isPressed;
-            this.Location = location;
+            MouseButton = mouseButton;
+            IsPressed = isPressed;
+            Location = location;
         }
 
         public MouseButtonUpdate MouseButton { get; set; }
@@ -36,7 +36,7 @@ namespace HexaEngine.Core.Input.Component
         {
             if (obj is MouseUpdate update)
             {
-                return this.Equals(update);
+                return Equals(update);
             }
 
             return false;
@@ -44,12 +44,12 @@ namespace HexaEngine.Core.Input.Component
 
         public override int GetHashCode()
         {
-            return this.MouseButton.GetHashCode() + this.Location.GetHashCode();
+            return MouseButton.GetHashCode() + Location.GetHashCode();
         }
 
         public bool Equals(MouseUpdate other)
         {
-            return this.MouseButton == other.MouseButton && this.Location.X == other.Location.X && this.Location.Y == other.Location.Y && this.Location.Z == other.Location.Z && this.IsPressed == other.IsPressed;
+            return MouseButton == other.MouseButton && Location.X == other.Location.X && Location.Y == other.Location.Y && Location.Z == other.Location.Z && IsPressed == other.IsPressed;
         }
     }
 }

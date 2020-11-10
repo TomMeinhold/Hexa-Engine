@@ -164,7 +164,7 @@
       <Name>Main</Name>
     </ProjectReference>
     <ProjectReference Include="..\HexaEngine\HexaEngine.csproj">
-      <Project>{526b3c1d-bb27-49f4-be71-1f792f2122fc}</Project>
+      <Project>{3da98bae-a4d7-4419-ab80-5065fc4dbd32}</Project>
       <Name>HexaEngine</Name>
     </ProjectReference>
   </ItemGroup>

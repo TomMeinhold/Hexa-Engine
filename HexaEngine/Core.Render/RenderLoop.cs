@@ -21,67 +21,86 @@ namespace HexaEngine.Core.Render
 
         public event EventHandler EnterMainLoop;
 
+        public SolidColorBrush Transparent;
+
+        public SolidColorBrush Black;
+
         public void MainLoop()
         {
             EnterMainLoop?.Invoke(this, null);
+            Transparent = new SolidColorBrush(DriectXManager.D2DDeviceContext, Color.Transparent);
+            Black = new SolidColorBrush(DriectXManager.D2DDeviceContext, Color.Black);
             Stopwatch stopwatch = new Stopwatch();
 
             // Main loop
-            RenderLoop.Run(this.Form, () =>
+            RenderLoop.Run(Form, () =>
             {
                 stopwatch.Restart();
-                using var brush = new SolidColorBrush(this.DriectXManager.D2DDeviceContext, Color.Red);
-                if (this.Drawing)
+                using var brush = new SolidColorBrush(DriectXManager.D2DDeviceContext, Color.Red);
+                if (Drawing)
                 {
-                    if (Engine.Settings.AntialiasMode)
+                    if (Engine.Current.Settings.AntialiasMode)
                     {
-                        this.DriectXManager.D2DDeviceContext.AntialiasMode = AntialiasMode.PerPrimitive;
+                        DriectXManager.D2DDeviceContext.AntialiasMode = AntialiasMode.PerPrimitive;
                     }
                     else
                     {
-                        this.DriectXManager.D2DDeviceContext.AntialiasMode = AntialiasMode.Aliased;
+                        DriectXManager.D2DDeviceContext.AntialiasMode = AntialiasMode.Aliased;
                     }
 
-                    this.DriectXManager.D2DDeviceContext.Target = this.DriectXManager.ObjectsBitmap;
+                    DriectXManager.D2DDeviceContext.Target = DriectXManager.ObjectsBitmap;
 
-                    this.DriectXManager.D2DDeviceContext.BeginDraw();
-                    this.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
-                    this.DrawRays();
-                    this.Engine.SceneManager.RenderScene(this.DriectXManager.D2DDeviceContext);
-                    this.Engine.SceneManager.RenderScene(this.DriectXManager.D3DDeviceContext);
-                    this.Engine.UIManager.RenderUI(this.DriectXManager.D2DDeviceContext);
-                    this.DriectXManager.D2DDeviceContext.EndDraw();
+                    DriectXManager.D2DDeviceContext.BeginDraw();
+                    DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
+                    DrawRays();
 
-                    this.PostProcessingManager.PostProcess(input: this.DriectXManager.ObjectsBitmap, output: this.DriectXManager.TargetBitmap, this.Engine.Camera.TranslationMatrix);
+                    Engine.Current.SceneManager.RenderScene(DriectXManager.D2DDeviceContext);
 
-                    if (Engine.Settings.DebugMode)
+                    DriectXManager.D2DDeviceContext.DrawImage(DriectXManager.ShadowMaskBitmap);
+                    Engine.Current.UIManager.RenderUI(DriectXManager.D2DDeviceContext);
+                    DriectXManager.D2DDeviceContext.EndDraw();
+
+                    PostProcessingManager.PostProcess(input: DriectXManager.ObjectsBitmap, output: DriectXManager.TargetBitmap, Engine.Current.Camera.TranslationMatrix);
+
+                    if (Engine.Current.Settings.DebugMode)
                     {
-                        this.DriectXManager.D2DDeviceContext.BeginDraw();
-                        this.DriectXManager.D2DDeviceContext.DrawText($"Physics: {this.Engine.PhysicsEngine.ThreadTiming.TotalMilliseconds} ms", this.DirectWrite.DefaultTextFormat, new RectangleF(0, 100, 200, 100), brush);
-                        this.DriectXManager.D2DDeviceContext.EndDraw();
+                        DriectXManager.D2DDeviceContext.BeginDraw();
+                        DriectXManager.D2DDeviceContext.DrawText($"Render: {stopwatch.Elapsed.TotalMilliseconds} ms", DirectWrite.DefaultTextFormat, new RectangleF(0, 100, 200, 100), brush);
+                        DriectXManager.D2DDeviceContext.DrawText($"Physics: {Engine.Current.PhysicsEngine.ThreadTiming.TotalMilliseconds} ms", DirectWrite.DefaultTextFormat, new RectangleF(0, 120, 200, 100), brush);
+                        DriectXManager.D2DDeviceContext.DrawText($"Scence: {Engine.Current.SceneManager.SelectedScene?.Objects.Count ?? 0} objects", DirectWrite.DefaultTextFormat, new RectangleF(0, 140, 200, 100), brush);
+                        DriectXManager.D2DDeviceContext.DrawLine(new Vector2(0, Form.Height / 2), new Vector2(Form.Width, Form.Height / 2), brush);
+                        DriectXManager.D2DDeviceContext.DrawLine(new Vector2(Form.Width / 2, 0), new Vector2(Form.Width / 2, Form.Height), brush);
+                        DriectXManager.D2DDeviceContext.EndDraw();
                     }
 
-                    this.DriectXManager.SwapChain.Present(Engine.Settings.VSync, PresentFlags.None);
-                    this.Engine.ThreadSyncTiming = stopwatch.ElapsedTicks;
+                    DriectXManager.SwapChain.Present(Engine.Current.Settings.VSync, PresentFlags.None);
+                    Engine.Current.ThreadSyncTiming = stopwatch.ElapsedTicks;
                 }
 
-                if (this.ReloadDirectX)
+                if (ReloadDirectX)
                 {
-                    this.ReloadDirectX = false;
-                    this.Resize();
+                    ReloadDirectX = false;
+                    Resize();
                     GC.Collect();
-                    this.WaitHandle.Set();
+                    WaitHandle.Set();
                 }
             });
         }
 
+        private void DrawShadows()
+        {
+            DriectXManager.D2DDeviceContext.Target = DriectXManager.ShadowMaskBitmap;
+            DriectXManager.D2DDeviceContext.Clear(Color.White);
+            DriectXManager.D2DDeviceContext.Target = DriectXManager.ObjectsBitmap;
+        }
+
         private void DrawRays()
         {
-            this.DriectXManager.D2DDeviceContext.DrawImage(this.DriectXManager.RayBitmap);
-            this.DriectXManager.D2DDeviceContext.Target = this.DriectXManager.RayBitmap;
+            DriectXManager.D2DDeviceContext.DrawImage(DriectXManager.RayBitmap);
+            DriectXManager.D2DDeviceContext.Target = DriectXManager.RayBitmap;
 
-            this.DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
-            this.DriectXManager.D2DDeviceContext.Target = this.DriectXManager.ObjectsBitmap;
+            DriectXManager.D2DDeviceContext.Clear(Color.Transparent);
+            DriectXManager.D2DDeviceContext.Target = DriectXManager.ObjectsBitmap;
         }
     }
 }

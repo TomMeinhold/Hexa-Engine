@@ -7,6 +7,8 @@ namespace HexaEngine.Core.Physics.Interfaces
 {
     public interface IPhysicsObject : IBaseObject
     {
+        public bool Colliding { get; set; }
+
         public BoundingBox BoundingBox { get; set; }
 
         public BoundingBox BoundingBoxBefore { get; set; }
@@ -28,6 +30,8 @@ namespace HexaEngine.Core.Physics.Interfaces
         public Vector3 RotationAcceleration { get; set; }
 
         public Vector3 Force { get; set; }
+
+        public Matrix3x2 ObjectViewMatrix { get; set; }
 
         public float ForceAbsorbtion { get; set; }
 

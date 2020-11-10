@@ -10,24 +10,25 @@ namespace HexaEngine.Core.Render.Components
     {
         public DriectXManager(DeviceManager manager)
         {
-            this.DeviceManager = manager ?? throw new ArgumentNullException(nameof(manager));
-            this.SwapChain = this.DeviceManager.SwapChain;
-            this.RenderForm = this.DeviceManager.Form;
-            this.DefaultPixelFormat = this.DeviceManager.PixelFormat;
-            this.Buffercount = this.DeviceManager.SwapChain.Description.BufferCount;
-            this.D2DDeviceContext = new DeviceContext(manager.D2DDevice, DeviceContextOptions.EnableMultithreadedOptimizations);
-            this.D3DDeviceContext = new SharpDX.Direct3D11.DeviceContext(manager.Device);
-            this.TargetBitmapProperties = new BitmapProperties1(this.DefaultPixelFormat, this.RenderForm.DeviceDpi, this.RenderForm.DeviceDpi, BitmapOptions.Target | BitmapOptions.CannotDraw);
-            this.DefaultBitmapProperties = new BitmapProperties1(this.DefaultPixelFormat, this.RenderForm.DeviceDpi, this.RenderForm.DeviceDpi, BitmapOptions.Target);
-            this.SwapChainBackbuffer = Surface.FromSwapChain(this.SwapChain, 0);
-            this.TargetBitmap = new Bitmap1(this.D2DDeviceContext, this.SwapChainBackbuffer, this.TargetBitmapProperties);
-            this.ObjectsBitmap = new Bitmap1(this.D2DDeviceContext, new SharpDX.Size2(this.RenderForm.ClientSize.Width, this.RenderForm.ClientSize.Height), this.DefaultBitmapProperties);
-            this.RayBitmap = new Bitmap1(this.D2DDeviceContext, new SharpDX.Size2(this.RenderForm.ClientSize.Width, this.RenderForm.ClientSize.Height), this.DefaultBitmapProperties);
+            DeviceManager = manager ?? throw new ArgumentNullException(nameof(manager));
+            SwapChain = DeviceManager.SwapChain;
+            RenderForm = DeviceManager.Form;
+            DefaultPixelFormat = DeviceManager.PixelFormat;
+            Buffercount = DeviceManager.SwapChain.Description.BufferCount;
+            D2DDeviceContext = new DeviceContext(manager.D2DDevice, DeviceContextOptions.EnableMultithreadedOptimizations);
+            D3DDeviceContext = new SharpDX.Direct3D11.DeviceContext(manager.Device);
+            TargetBitmapProperties = new BitmapProperties1(DefaultPixelFormat, RenderForm.DeviceDpi, RenderForm.DeviceDpi, BitmapOptions.Target | BitmapOptions.CannotDraw);
+            DefaultBitmapProperties = new BitmapProperties1(DefaultPixelFormat, RenderForm.DeviceDpi, RenderForm.DeviceDpi, BitmapOptions.Target);
+            SwapChainBackbuffer = Surface.FromSwapChain(SwapChain, 0);
+            TargetBitmap = new Bitmap1(D2DDeviceContext, SwapChainBackbuffer, TargetBitmapProperties);
+            ObjectsBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
+            RayBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
+            ShadowMaskBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
         }
 
         ~DriectXManager()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public bool IsDisposed { get; private set; } = false;
@@ -43,6 +44,8 @@ namespace HexaEngine.Core.Render.Components
         public Bitmap1 TargetBitmap { get; private set; }
 
         public Bitmap1 RayBitmap { get; private set; }
+
+        public Bitmap1 ShadowMaskBitmap { get; private set; }
 
         public Bitmap1 ObjectsBitmap { get; private set; }
 
@@ -60,43 +63,44 @@ namespace HexaEngine.Core.Render.Components
 
         public void Resize(float width, float height)
         {
-            this.D2DDeviceContext.Target = null;
-            this.SwapChainBackbuffer?.Dispose();
-            this.TargetBitmap?.Dispose();
-            this.ObjectsBitmap?.Dispose();
+            D2DDeviceContext.Target = null;
+            SwapChainBackbuffer?.Dispose();
+            TargetBitmap?.Dispose();
+            ObjectsBitmap?.Dispose();
 
-            foreach (Bitmap1 bitmap in RessouceManager.Bitmaps)
+            foreach (Bitmap1 bitmap in RessourceManager.Bitmaps)
             {
                 bitmap.Dispose();
             }
 
-            this.SwapChain.ResizeBuffers(this.Buffercount, (int)width, (int)height, this.DefaultPixelFormat.Format, SwapChainFlags.AllowModeSwitch);
+            SwapChain.ResizeBuffers(Buffercount, (int)width, (int)height, DefaultPixelFormat.Format, SwapChainFlags.AllowModeSwitch);
 
-            this.SwapChainBackbuffer = Surface.FromSwapChain(this.SwapChain, 0);
-            this.TargetBitmap = new Bitmap1(this.D2DDeviceContext, this.SwapChainBackbuffer, this.TargetBitmapProperties);
-            this.ObjectsBitmap = new Bitmap1(this.D2DDeviceContext, new SharpDX.Size2(this.RenderForm.ClientSize.Width, this.RenderForm.ClientSize.Height), this.DefaultBitmapProperties);
-            this.RayBitmap = new Bitmap1(this.D2DDeviceContext, new SharpDX.Size2(this.RenderForm.ClientSize.Width, this.RenderForm.ClientSize.Height), this.DefaultBitmapProperties);
+            SwapChainBackbuffer = Surface.FromSwapChain(SwapChain, 0);
+            TargetBitmap = new Bitmap1(D2DDeviceContext, SwapChainBackbuffer, TargetBitmapProperties);
+            ObjectsBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
+            RayBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
+            ShadowMaskBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
         }
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.IsDisposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
-                    this.SwapChainBackbuffer.Dispose();
-                    this.TargetBitmap.Dispose();
-                    this.ObjectsBitmap.Dispose();
-                    this.D2DDeviceContext.Dispose();
+                    SwapChainBackbuffer.Dispose();
+                    TargetBitmap.Dispose();
+                    ObjectsBitmap.Dispose();
+                    D2DDeviceContext.Dispose();
                 }
 
-                this.IsDisposed = true;
+                IsDisposed = true;
             }
         }
     }

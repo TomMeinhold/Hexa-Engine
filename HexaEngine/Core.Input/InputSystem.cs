@@ -17,22 +17,22 @@ namespace HexaEngine.Core.Input
 
         public InputSystem(Form form)
         {
-            this.Form = form ?? throw new ArgumentNullException(nameof(form));
-            this.Form.Activated += this.MainWindow_Activated;
-            this.Form.Deactivate += this.MainWindow_Deactivate;
-            this.Form.MouseWheel += this.Form_MouseWheel;
-            this.Form.MouseMove += this.Form_MouseMove;
-            this.Form.MouseDown += this.Form_MouseDown;
-            this.Form.MouseUp += this.Form_MouseUp;
-            this.Form.KeyDown += this.Form_KeyDown;
-            this.Form.KeyUp += this.Form_KeyUp;
+            Form = form ?? throw new ArgumentNullException(nameof(form));
+            Form.Activated += MainWindow_Activated;
+            Form.Deactivate += MainWindow_Deactivate;
+            Form.MouseWheel += Form_MouseWheel;
+            Form.MouseMove += Form_MouseMove;
+            Form.MouseDown += Form_MouseDown;
+            Form.MouseUp += Form_MouseUp;
+            Form.KeyDown += Form_KeyDown;
+            Form.KeyUp += Form_KeyUp;
         }
 
         ~InputSystem()
         {
             // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing)
             // weiter oben ein.
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public bool Active { get; set; }
@@ -54,30 +54,30 @@ namespace HexaEngine.Core.Input
         {
             // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing)
             // weiter oben ein.
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposedValue)
+            if (!disposedValue)
             {
                 if (disposing)
                 {
                 }
 
-                this.disposedValue = true;
+                disposedValue = true;
             }
         }
 
         private void MainWindow_Activated(object sender, EventArgs e)
         {
-            this.Active = true;
+            Active = true;
         }
 
         private void MainWindow_Deactivate(object sender, EventArgs e)
         {
-            this.Active = false;
+            Active = false;
         }
     }
 }

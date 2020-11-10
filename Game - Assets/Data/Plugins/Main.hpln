@@ -3,6 +3,8 @@
   <References />
   <Scripts>
     <string>Main</string>
+    <string>MainMenu</string>
+    <string>MainMenuScreen</string>
     <string>Scene1</string>
     <string>Scene2</string>
     <string>Scene3</string>

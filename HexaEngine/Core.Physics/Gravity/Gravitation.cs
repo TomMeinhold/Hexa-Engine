@@ -7,9 +7,9 @@ namespace HexaEngine.Core.Physics.Gravity
 {
     public static class Gravitation
     {
-        public static void Process(IPhysicsObject a, IPhysicsObject b, PhysicsEngine engine)
+        public static void Process(IPhysicsObject a, IPhysicsObject b, PhysicsEngine physicsEngine)
         {
-            var mulitplier = engine.ScalingMode switch
+            var mulitplier = physicsEngine.ScalingMode switch
             {
                 ScalingMode.Meters => 1,
                 ScalingMode.Kilometers => 1000,

@@ -12,9 +12,8 @@ namespace HexaEngine.Core.Physics
 {
     public partial class PhysicsEngine : IDisposable
     {
-        public PhysicsEngine(Engine engine)
+        public PhysicsEngine()
         {
-            Engine = engine ?? throw new ArgumentNullException(nameof(engine));
             Thread = new Thread(ThreadVoid);
             Thread.Start();
         }
@@ -23,8 +22,6 @@ namespace HexaEngine.Core.Physics
         {
             Dispose(disposing: false);
         }
-
-        public Engine Engine { get; }
 
         public Thread Thread { get; }
 
@@ -56,11 +53,11 @@ namespace HexaEngine.Core.Physics
                 DoCycle = false;
                 stopwatch.Restart();
                 List<IPhysicsObject> physicsObjects;
-                if (this.Engine.SceneManager.SelectedScene != null)
+                if (Engine.Current.SceneManager.SelectedScene != null)
                 {
-                    lock (this.Engine.SceneManager.SelectedScene.Objects)
+                    lock (Engine.Current.SceneManager.SelectedScene.Objects)
                     {
-                        physicsObjects = GetOnlyIPhysicsObject(this.Engine.SceneManager.SelectedScene.Objects).ToList();
+                        physicsObjects = GetOnlyIPhysicsObject(Engine.Current.SceneManager.SelectedScene.Objects).ToList();
                     }
 
                     if (ThreadTiming.Milliseconds < 1)
@@ -96,18 +93,18 @@ namespace HexaEngine.Core.Physics
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.IsDisposed)
+            if (!IsDisposed)
             {
                 if (disposing)
                 {
-                    this.IsDisposing = true;
+                    IsDisposing = true;
                     while (Thread.IsAlive)
                     {
                         Thread.Sleep(1);
                     }
                 }
 
-                this.IsDisposed = true;
+                IsDisposed = true;
             }
         }
     }

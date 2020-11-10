@@ -14,32 +14,33 @@ namespace Game
         public MainWindow()
         {
             InitializeComponent();
-            Engine = new Engine(this);
+            Engine.Create(this);
             keyboardController = new KeyboardController(this);
             keyboardController.KeyUp += KeyboardController_KeyUp;
-            Engine.RenderSystem.MainLoop();
+            Engine.Current.Settings.AntialiasMode = true;
+            Engine.Current.RenderSystem.MainLoop();
         }
 
         private void KeyboardController_KeyUp(object sender, KeyboardUpdatePackage e)
         {
             if (e.KeyboardUpdate.Key == Keys.F1)
             {
-                Engine.RenderSystem.FlipFullscreen();
+                Engine.Current.RenderSystem.FlipFullscreen();
             }
 
             if (e.KeyboardUpdate.Key == Keys.F3)
             {
-                Engine.Settings.DebugMode = !Engine.Settings.DebugMode;
+                Engine.Current.Settings.DebugMode = !Engine.Current.Settings.DebugMode;
             }
 
             if (e.KeyboardUpdate.Key == Keys.P)
             {
-                Engine.PhysicsEngine.Paused = !Engine.PhysicsEngine.Paused;
+                Engine.Current.PhysicsEngine.Paused = !Engine.Current.PhysicsEngine.Paused;
             }
 
             if (e.KeyboardUpdate.Key == Keys.O)
             {
-                Engine.PhysicsEngine.DoCycle = !Engine.PhysicsEngine.DoCycle;
+                Engine.Current.PhysicsEngine.DoCycle = !Engine.Current.PhysicsEngine.DoCycle;
             }
         }
 

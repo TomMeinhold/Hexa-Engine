@@ -21,14 +21,14 @@ namespace HexaEngine.Core.Input
         private void Form_MouseMove(object sender, MouseEventArgs e)
         {
             Vector2 tmp = new Vector2(Control.MousePosition.X, Control.MousePosition.Y);
-            Vector2 res = new Vector2(this.firstpoint.X - tmp.X, this.firstpoint.Y - tmp.Y);
-            this.firstpoint = tmp;
+            Vector2 res = new Vector2(firstpoint.X - tmp.X, firstpoint.Y - tmp.Y);
+            firstpoint = tmp;
 
             var update = new MouseUpdate(e.Button.ToMouseButtonUpdate(true), false, new Vector3(res.X * -1, res.Y * -1, 0));
             MouseState.UpdateLocation(update);
             PointF p = Form.PointToClient(Cursor.Position);
             MouseState.UpdateRawLocation(new Vector3(p.X, p.Y, 0));
-            if (this.Active)
+            if (Active)
             {
                 MouseUpdate?.Invoke(this, new MouseUpdatePackage(MouseState, update));
             }
@@ -50,7 +50,7 @@ namespace HexaEngine.Core.Input
 
             var update = new MouseUpdate(e.Button.ToMouseButtonUpdate(true), false, tmp3);
             MouseState.UpdateLocation(update);
-            if (this.Active)
+            if (Active)
             {
                 MouseUpdate?.Invoke(this, new MouseUpdatePackage(MouseState, update));
             }
@@ -60,7 +60,7 @@ namespace HexaEngine.Core.Input
         {
             var update = new MouseUpdate(e.Button.ToMouseButtonUpdate(), true, MouseState.Location);
             MouseState.UpdateButton(update);
-            if (this.Active)
+            if (Active)
             {
                 MouseUpdate?.Invoke(this, new MouseUpdatePackage(MouseState, update));
             }
@@ -70,7 +70,7 @@ namespace HexaEngine.Core.Input
         {
             var update = new MouseUpdate(e.Button.ToMouseButtonUpdate(), false, MouseState.Location);
             MouseState.UpdateButton(update);
-            if (this.Active)
+            if (Active)
             {
                 MouseUpdate?.Invoke(this, new MouseUpdatePackage(MouseState, update));
             }
@@ -80,7 +80,7 @@ namespace HexaEngine.Core.Input
         {
             var update = new KeyboardUpdate(true, (Keys)(int)e.KeyCode);
             KeyboardState.Update(update);
-            if (this.Active)
+            if (Active)
             {
                 KeyboardUpdate?.Invoke(this, new KeyboardUpdatePackage(KeyboardState, update));
             }
@@ -90,7 +90,7 @@ namespace HexaEngine.Core.Input
         {
             var update = new KeyboardUpdate(false, (Keys)(int)e.KeyCode);
             KeyboardState.Update(update);
-            if (this.Active)
+            if (Active)
             {
                 KeyboardUpdate?.Invoke(this, new KeyboardUpdatePackage(KeyboardState, update));
             }
