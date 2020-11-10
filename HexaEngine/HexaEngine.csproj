@@ -55,9 +55,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cudafy.NET, Version=1.29.5576.13786, Culture=neutral, PublicKeyToken=63a4c9931616906b, processorArchitecture=MSIL">
-      <HintPath>..\packages\CUDAfy.NET.1.29.5576.13786\lib\net40\Cudafy.NET.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -204,7 +201,9 @@
     <Compile Include="Core.UI\BaseTypes\ProgressBar.cs" />
     <Compile Include="Core.UI\BaseTypes\Screen.cs" />
     <Compile Include="Core.UI\BaseElement.cs" />
+    <Compile Include="Core.UI\BaseTypes\TextBox.cs" />
     <Compile Include="Core.UI\Enum\Alignment.cs" />
+    <Compile Include="Core.UI\Events\FocusEventArgs.cs" />
     <Compile Include="Core.UI\Events\KeyboardEventArgs.cs" />
     <Compile Include="Core.UI\Events\MouseEventArgs.cs" />
     <Compile Include="Core.UI\Structs\Thickness.cs" />

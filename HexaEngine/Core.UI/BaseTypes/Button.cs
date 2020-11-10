@@ -28,7 +28,7 @@ namespace HexaEngine.Core.UI.BaseTypes
 
         public void UpdateContent()
         {
-            textLayout = Engine.Current.RenderSystem.DirectWrite.GetTextLayout(Content, Engine.Current.RenderSystem.DirectWrite.DefaultTextFormat, float.MaxValue);
+            textLayout = Engine.Current.RenderSystem.DirectWrite.GetTextLayout(content, Engine.Current.RenderSystem.DirectWrite.DefaultTextFormat, float.MaxValue);
         }
 
         public override Thickness GetContentSize()

@@ -12,6 +12,7 @@ namespace Main
         public Button Button1;
         public Button Button2;
         public Button Button3;
+        public TextBox TextBox;
         public Image Background;
 
         public MainMenuScreen()
@@ -19,15 +20,18 @@ namespace Main
             Button1 = new Button() { Content = "Scene 1", Margin = new Thickness(0, 0, 0, 200) };
             Button2 = new Button() { Content = "Scene 2", Margin = new Thickness(0, 0, 0, 170) };
             Button3 = new Button() { Content = "Scene 3", Margin = new Thickness(0, 0, 0, 140) };
+            TextBox = new TextBox();
             SetDefaults(Button1);
             SetDefaults(Button2);
             SetDefaults(Button3);
+            SetDefaults(TextBox);
             Button1.Click += Button1_Click;
             Button2.Click += Button2_Click;
             Button3.Click += Button3_Click;
             UserInterfaces.Add(Button1);
             UserInterfaces.Add(Button2);
             UserInterfaces.Add(Button3);
+            UserInterfaces.Add(TextBox);
         }
 
         private void SetDefaults(UIElement element)

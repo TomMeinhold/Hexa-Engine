@@ -163,8 +163,8 @@ namespace HexaEngine.Core.UI
             }
             else
             {
-                AbsolutePosition.Y -= AbsoluteThickness.Top;
-                AbsolutePositionExtented.Y += AbsoluteThickness.Bottom;
+                AbsolutePosition.Y -= (AbsoluteThickness.Top / 2) + (AbsoluteThickness.Bottom / 2);
+                AbsolutePositionExtented.Y += (AbsoluteThickness.Bottom / 2) + (AbsoluteThickness.Top / 2);
             }
 
             if (!float.IsNaN(Width))
@@ -174,8 +174,8 @@ namespace HexaEngine.Core.UI
             }
             else
             {
-                AbsolutePosition.X -= AbsoluteThickness.Left;
-                AbsolutePositionExtented.X += AbsoluteThickness.Right;
+                AbsolutePosition.X -= (AbsoluteThickness.Left / 2) + (AbsoluteThickness.Right / 2);
+                AbsolutePositionExtented.X += (AbsoluteThickness.Right / 2) + (AbsoluteThickness.Left / 2);
             }
 
             ActualWidth = AbsolutePositionExtented.X - AbsolutePosition.X;

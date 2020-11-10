@@ -8,6 +8,8 @@ namespace HexaEngine.Core.UI
 {
     public class UIElement : BaseElement
     {
+        private bool focus;
+
         public event EventHandler<KeyboardEventArgs> OnKeyDown;
 
         public event EventHandler<KeyboardEventArgs> OnKeyUp;
@@ -24,7 +26,30 @@ namespace HexaEngine.Core.UI
 
         public event EventHandler<MouseEventArgs> Click;
 
+        public event EventHandler<FocusEventArgs> GotFocus;
+
+        public event EventHandler<FocusEventArgs> LostFocus;
+
+        public bool Focus { get => focus; set => TriggerFocusEvents(value); }
+
         public bool MouseHover { get; private set; }
+
+        private void TriggerFocusEvents(bool val)
+        {
+            if (val != focus)
+            {
+                if (val)
+                {
+                    GotFocus?.Invoke(this, new FocusEventArgs());
+                }
+                else
+                {
+                    LostFocus?.Invoke(this, new FocusEventArgs());
+                }
+
+                focus = val;
+            }
+        }
 
         public override void KeyboardInput(KeyboardState state, KeyboardUpdate update)
         {
@@ -64,6 +89,7 @@ namespace HexaEngine.Core.UI
                 if (update.MouseButton == MouseButtonUpdate.Left && !update.IsPressed)
                 {
                     Click?.Invoke(this, null);
+                    Focus = true;
                 }
                 if (update.IsPressed && update.MouseButton != MouseButtonUpdate.None)
                 {
@@ -72,6 +98,13 @@ namespace HexaEngine.Core.UI
                 else
                 {
                     OnMouseButtonUp?.Invoke(this, new MouseEventArgs(state, update, update.MouseButton));
+                }
+            }
+            else
+            {
+                if (update.MouseButton == MouseButtonUpdate.Left && !update.IsPressed)
+                {
+                    Focus = false;
                 }
             }
         }
