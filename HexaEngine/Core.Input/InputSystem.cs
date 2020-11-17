@@ -5,6 +5,7 @@
 namespace HexaEngine.Core.Input
 {
     using HexaEngine.Core.Input.Component;
+    using HexaEngine.Core.Windows;
     using System;
     using System.Windows.Forms;
 
@@ -15,17 +16,15 @@ namespace HexaEngine.Core.Input
     {
         private bool disposedValue = false; // Dient zur Erkennung redundanter Aufrufe.
 
-        public InputSystem(Form form)
+        public InputSystem(IRenderable renderable)
         {
-            Form = form ?? throw new ArgumentNullException(nameof(form));
-            Form.Activated += MainWindow_Activated;
-            Form.Deactivate += MainWindow_Deactivate;
-            Form.MouseWheel += Form_MouseWheel;
-            Form.MouseMove += Form_MouseMove;
-            Form.MouseDown += Form_MouseDown;
-            Form.MouseUp += Form_MouseUp;
-            Form.KeyDown += Form_KeyDown;
-            Form.KeyUp += Form_KeyUp;
+            Control = renderable as Control ?? throw new ArgumentNullException(nameof(renderable));
+            Control.MouseWheel += Form_MouseWheel;
+            Control.MouseMove += Form_MouseMove;
+            Control.MouseDown += Form_MouseDown;
+            Control.MouseUp += Form_MouseUp;
+            Control.KeyDown += Form_KeyDown;
+            Control.KeyUp += Form_KeyUp;
         }
 
         ~InputSystem()
@@ -45,7 +44,7 @@ namespace HexaEngine.Core.Input
 
         public static event EventHandler<MouseUpdatePackage> MouseUpdate;
 
-        public Form Form { get; }
+        public Control Control { get; }
 
         /// <summary>
         /// Dieser Code wird hinzugefügt, um das Dispose-Muster richtig zu implementieren.

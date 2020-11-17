@@ -13,7 +13,7 @@ namespace HexaEngine.Core.Render.Components
         public DirectWriteManagement()
         {
             Factory = new Factory();
-            DefaultTextFormat = new TextFormat(Factory, "Arial", 12);
+            DefaultTextFormat = new TextFormat(Factory, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Condensed, 12);
         }
 
         ~DirectWriteManagement()

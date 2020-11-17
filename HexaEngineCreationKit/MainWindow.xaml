@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="#FF303030">
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel x:Name="NavPanel" Orientation="Horizontal">
+            <Button x:Name="Plugin" Content="Plugins" Click="Plugin_Click" />
+            <Button x:Name="Archive" Content="Archives" Click="Archive_Click" />
+        </StackPanel>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1" />
     </Grid>
 </Window>

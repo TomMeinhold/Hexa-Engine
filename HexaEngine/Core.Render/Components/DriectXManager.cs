@@ -1,7 +1,7 @@
 ﻿using HexaEngine.Core.Ressources;
+using HexaEngine.Core.Windows;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
-using SharpDX.Windows;
 using System;
 
 namespace HexaEngine.Core.Render.Components
@@ -12,18 +12,18 @@ namespace HexaEngine.Core.Render.Components
         {
             DeviceManager = manager ?? throw new ArgumentNullException(nameof(manager));
             SwapChain = DeviceManager.SwapChain;
-            RenderForm = DeviceManager.Form;
+            Renderable = DeviceManager.Renderable;
             DefaultPixelFormat = DeviceManager.PixelFormat;
             Buffercount = DeviceManager.SwapChain.Description.BufferCount;
             D2DDeviceContext = new DeviceContext(manager.D2DDevice, DeviceContextOptions.EnableMultithreadedOptimizations);
             D3DDeviceContext = new SharpDX.Direct3D11.DeviceContext(manager.Device);
-            TargetBitmapProperties = new BitmapProperties1(DefaultPixelFormat, RenderForm.DeviceDpi, RenderForm.DeviceDpi, BitmapOptions.Target | BitmapOptions.CannotDraw);
-            DefaultBitmapProperties = new BitmapProperties1(DefaultPixelFormat, RenderForm.DeviceDpi, RenderForm.DeviceDpi, BitmapOptions.Target);
+            TargetBitmapProperties = new BitmapProperties1(DefaultPixelFormat, Renderable.DeviceDpi, Renderable.DeviceDpi, BitmapOptions.Target | BitmapOptions.CannotDraw);
+            DefaultBitmapProperties = new BitmapProperties1(DefaultPixelFormat, Renderable.DeviceDpi, Renderable.DeviceDpi, BitmapOptions.Target);
             SwapChainBackbuffer = Surface.FromSwapChain(SwapChain, 0);
             TargetBitmap = new Bitmap1(D2DDeviceContext, SwapChainBackbuffer, TargetBitmapProperties);
-            ObjectsBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
-            RayBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
-            ShadowMaskBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
+            ObjectsBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(Renderable.ClientSize.Width, Renderable.ClientSize.Height), DefaultBitmapProperties);
+            RayBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(Renderable.ClientSize.Width, Renderable.ClientSize.Height), DefaultBitmapProperties);
+            ShadowMaskBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(Renderable.ClientSize.Width, Renderable.ClientSize.Height), DefaultBitmapProperties);
         }
 
         ~DriectXManager()
@@ -35,7 +35,7 @@ namespace HexaEngine.Core.Render.Components
 
         public DeviceManager DeviceManager { get; }
 
-        public RenderForm RenderForm { get; private set; }
+        public IRenderable Renderable { get; private set; }
 
         public SwapChain1 SwapChain { get; private set; }
 
@@ -77,9 +77,9 @@ namespace HexaEngine.Core.Render.Components
 
             SwapChainBackbuffer = Surface.FromSwapChain(SwapChain, 0);
             TargetBitmap = new Bitmap1(D2DDeviceContext, SwapChainBackbuffer, TargetBitmapProperties);
-            ObjectsBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
-            RayBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
-            ShadowMaskBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height), DefaultBitmapProperties);
+            ObjectsBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(Renderable.ClientSize.Width, Renderable.ClientSize.Height), DefaultBitmapProperties);
+            RayBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(Renderable.ClientSize.Width, Renderable.ClientSize.Height), DefaultBitmapProperties);
+            ShadowMaskBitmap = new Bitmap1(D2DDeviceContext, new SharpDX.Size2(Renderable.ClientSize.Width, Renderable.ClientSize.Height), DefaultBitmapProperties);
         }
 
         public void Dispose()

@@ -31,7 +31,7 @@ namespace HexaEngine.Core.Ressources
 
         public Bitmap1 GetNewBitmap()
         {
-            var tmp = new Bitmap1(Engine.Current.RenderSystem.DriectXManager.D2DDeviceContext, new SharpDX.Size2(Engine.Current.RenderSystem.DriectXManager.RenderForm.ClientSize.Width, Engine.Current.RenderSystem.DriectXManager.RenderForm.ClientSize.Height), Engine.Current.RenderSystem.DriectXManager.DefaultBitmapProperties);
+            var tmp = new Bitmap1(Engine.Current.RenderSystem.DriectXManager.D2DDeviceContext, new SharpDX.Size2(Engine.Current.Renderable.ClientSize.Width, Engine.Current.Renderable.ClientSize.Height), Engine.Current.RenderSystem.DriectXManager.DefaultBitmapProperties);
             Bitmaps.Add(tmp);
             return tmp;
         }

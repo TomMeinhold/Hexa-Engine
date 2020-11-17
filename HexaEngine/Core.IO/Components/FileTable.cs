@@ -33,8 +33,17 @@ namespace HexaEngine.Core.IO.Components
             TableEndPointer += entry.EntrySize;
         }
 
-        public void Remove(FileTableEntry entry)
+        public void Remove(FileTableEntry entry, long size)
         {
+            var index = TableEntries.IndexOf(entry);
+            for (int i = 0; i < TableEntries.Count;)
+            {
+                if (i > index)
+                {
+                    TableEntries[i].Pointer -= size;
+                }
+                i++;
+            }
             TableEntries.Remove(entry);
             TableEndPointer -= entry.EntrySize;
         }

@@ -60,6 +60,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -69,17 +71,31 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="UIElements\Controls\VirtualPathFileControl.xaml.cs">
+      <DependentUpon>VirtualPathFileControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\Pages\ArchiveCreator.xaml.cs">
+      <DependentUpon>ArchiveCreator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UIElements\Pages\PluginCreator.xaml.cs">
       <DependentUpon>PluginCreator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\Pages\SceneCreator.xaml.cs">
+      <DependentUpon>SceneCreator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIElements\Windows\VirtualPathWindow.xaml.cs">
+      <DependentUpon>VirtualPathWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -93,7 +109,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UIElements\Controls\VirtualPathFileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\Pages\ArchiveCreator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UIElements\Pages\PluginCreator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\Pages\SceneCreator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIElements\Windows\VirtualPathWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

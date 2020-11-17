@@ -128,11 +128,11 @@ namespace HexaEngine.Core.UI
                     break;
 
                 case HorizontalAlignment.Center:
-                    AbsoluteCenteredPosition.X = Margin.Left + (Engine.Current.RenderSystem.Form.Width / 2) - Margin.Right;
+                    AbsoluteCenteredPosition.X = Margin.Left + (Engine.Current.Renderable.Width / 2) - Margin.Right;
                     break;
 
                 case HorizontalAlignment.Right:
-                    AbsoluteCenteredPosition.X = Engine.Current.RenderSystem.Form.Width - Margin.Right;
+                    AbsoluteCenteredPosition.X = Engine.Current.Renderable.Width - Margin.Right;
                     break;
             }
 
@@ -143,11 +143,11 @@ namespace HexaEngine.Core.UI
                     break;
 
                 case VerticalAlignment.Center:
-                    AbsoluteCenteredPosition.Y = Margin.Top + (Engine.Current.RenderSystem.Form.Height / 2) - Margin.Bottom;
+                    AbsoluteCenteredPosition.Y = Margin.Top + (Engine.Current.Renderable.Height / 2) - Margin.Bottom;
                     break;
 
                 case VerticalAlignment.Bottom:
-                    AbsoluteCenteredPosition.Y = Engine.Current.RenderSystem.Form.Height - Margin.Bottom;
+                    AbsoluteCenteredPosition.Y = Engine.Current.Renderable.Height - Margin.Bottom;
                     break;
             }
         }

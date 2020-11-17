@@ -1,4 +1,4 @@
-﻿using SharpDX.Windows;
+﻿using HexaEngine.Core.Windows;
 using System;
 using System.Collections.Generic;
 
@@ -27,9 +27,9 @@ namespace HexaEngine.Core
             new Engine();
         }
 
-        public static void Create(RenderForm renderForm)
+        public static void Create(IRenderable renderable)
         {
-            new Engine(renderForm);
+            new Engine(renderable);
         }
     }
 }

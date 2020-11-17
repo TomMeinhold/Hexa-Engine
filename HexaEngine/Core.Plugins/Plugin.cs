@@ -69,6 +69,8 @@ namespace HexaEngine.Core.Plugins
 
         public List<string> Scripts { get; set; } = new List<string>();
 
+        public List<string> Archives { get; set; } = new List<string>();
+
         [XmlIgnore]
         public List<Script> GetScripts { get => Scripts.ConvertAll((x) => new Script(this, new FileInfo(Engine.ScriptSourcePath.FullName + "\\" + Name + "\\" + x + ".cs"))); }
 

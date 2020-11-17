@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HexaEngine.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,6 +19,7 @@ namespace HexaEngine.Core.IO.Components
         public FileTableEntry(FileTable table, Stream stream)
         {
             Table = table;
+            TablePointer = stream.Position;
             Pointer = BitConverter.ToInt64(ReadStream(stream, PointerSize), 0);
             VirtualPath = Encoding.UTF8.GetString(ReadToControlSymbol(stream, 3));
             EntrySize = VirtualPath.Length + PointerSize + 1;
@@ -27,7 +29,9 @@ namespace HexaEngine.Core.IO.Components
 
         public const int PointerSize = 8;
 
-        public long Pointer { get; }
+        public long TablePointer { get; }
+
+        public long Pointer { get; internal set; }
 
         public long AbsolutePointer { get => Pointer + Table.AbsoluteTableEndPointer; }
 

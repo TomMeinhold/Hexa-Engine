@@ -4,10 +4,10 @@
 
 namespace HexaEngine.Core.Render
 {
+    using HexaEngine.Core.Windows;
     using SharpDX;
     using SharpDX.Direct2D1;
     using SharpDX.DXGI;
-    using SharpDX.Windows;
     using System;
     using System.Diagnostics;
     using System.Windows.Forms;
@@ -31,9 +31,9 @@ namespace HexaEngine.Core.Render
             Transparent = new SolidColorBrush(DriectXManager.D2DDeviceContext, Color.Transparent);
             Black = new SolidColorBrush(DriectXManager.D2DDeviceContext, Color.Black);
             Stopwatch stopwatch = new Stopwatch();
-
+            Control control = (Control)Renderable;
             // Main loop
-            RenderLoop.Run(Form, () =>
+            RenderLoop.Run(control, () =>
             {
                 stopwatch.Restart();
                 using var brush = new SolidColorBrush(DriectXManager.D2DDeviceContext, Color.Red);
@@ -68,8 +68,8 @@ namespace HexaEngine.Core.Render
                         DriectXManager.D2DDeviceContext.DrawText($"Render: {stopwatch.Elapsed.TotalMilliseconds} ms", DirectWrite.DefaultTextFormat, new RectangleF(0, 100, 200, 100), brush);
                         DriectXManager.D2DDeviceContext.DrawText($"Physics: {Engine.Current.PhysicsEngine.ThreadTiming.TotalMilliseconds} ms", DirectWrite.DefaultTextFormat, new RectangleF(0, 120, 200, 100), brush);
                         DriectXManager.D2DDeviceContext.DrawText($"Scence: {Engine.Current.SceneManager.SelectedScene?.Objects.Count ?? 0} objects", DirectWrite.DefaultTextFormat, new RectangleF(0, 140, 200, 100), brush);
-                        DriectXManager.D2DDeviceContext.DrawLine(new Vector2(0, Form.Height / 2), new Vector2(Form.Width, Form.Height / 2), brush);
-                        DriectXManager.D2DDeviceContext.DrawLine(new Vector2(Form.Width / 2, 0), new Vector2(Form.Width / 2, Form.Height), brush);
+                        DriectXManager.D2DDeviceContext.DrawLine(new Vector2(0, Renderable.Height / 2), new Vector2(Renderable.Width, Renderable.Height / 2), brush);
+                        DriectXManager.D2DDeviceContext.DrawLine(new Vector2(Renderable.Width / 2, 0), new Vector2(Renderable.Width / 2, Renderable.Height), brush);
                         DriectXManager.D2DDeviceContext.EndDraw();
                     }
 

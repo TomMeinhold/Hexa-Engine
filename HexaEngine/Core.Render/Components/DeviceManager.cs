@@ -4,18 +4,18 @@
 
 namespace HexaEngine.Core.Render.Components
 {
+    using HexaEngine.Core.Windows;
     using System;
     using D2D1 = SharpDX.Direct2D1;
     using D3D = SharpDX.Direct3D;
     using D3D11 = SharpDX.Direct3D11;
     using DXGI = SharpDX.DXGI;
-    using Win = SharpDX.Windows;
 
     public class DeviceManager : IDisposable
     {
-        public DeviceManager(Win.RenderForm form, D3D.FeatureLevel[] featureLevels, int buffercount, D2D1.PixelFormat pixelFormat)
+        public DeviceManager(IRenderable renderable, D3D.FeatureLevel[] featureLevels, int buffercount, D2D1.PixelFormat pixelFormat)
         {
-            Form = form ?? throw new ArgumentNullException(nameof(form));
+            Renderable = renderable ?? throw new ArgumentNullException(nameof(renderable));
             Buffercount = buffercount;
             PixelFormat = pixelFormat;
 
@@ -31,8 +31,8 @@ namespace HexaEngine.Core.Render.Components
             var desc1 = new DXGI.SwapChainDescription1()
             {
                 SampleDescription = new DXGI.SampleDescription(1, 0),
-                Width = Form.ClientSize.Width,
-                Height = Form.ClientSize.Height,
+                Width = Renderable.ClientSize.Width,
+                Height = Renderable.ClientSize.Height,
                 SwapEffect = DXGI.SwapEffect.Discard,
                 Usage = DXGI.Usage.RenderTargetOutput,
                 Flags = DXGI.SwapChainFlags.AllowModeSwitch,
@@ -49,7 +49,7 @@ namespace HexaEngine.Core.Render.Components
                 Windowed = true,
             };
 
-            SwapChain = new DXGI.SwapChain1(factory, Device1, Form.Handle, ref desc1, descFullSc, null);
+            SwapChain = new DXGI.SwapChain1(factory, Device1, Renderable.Handle, ref desc1, descFullSc, null);
         }
 
         ~DeviceManager()
@@ -71,7 +71,7 @@ namespace HexaEngine.Core.Render.Components
 
         public D2D1.PixelFormat PixelFormat { get; private set; }
 
-        public Win.RenderForm Form { get; }
+        public IRenderable Renderable { get; }
 
         public D3D.FeatureLevel FeatureLevel { get; private set; }
 

@@ -1,9 +1,15 @@
 ﻿using HexaEngine.Core.Input.Component;
+using HexaEngine.Core.Timers;
 using HexaEngine.Core.UI.Structs;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Keys = HexaEngine.Core.Input.Component.Keys;
+using Timer = HexaEngine.Core.Timers.Timer;
 
 namespace HexaEngine.Core.UI.BaseTypes
 {
@@ -11,7 +17,8 @@ namespace HexaEngine.Core.UI.BaseTypes
     {
         private TextLayout textLayout;
         private string text = string.Empty;
-        private bool upper;
+        private bool upper = false;
+        private bool cursorshow;
 
         public TextBox()
         {
@@ -19,6 +26,14 @@ namespace HexaEngine.Core.UI.BaseTypes
             BackgroundBrush = new SolidColorBrush(Context, Color.White);
             BorderBrush = new SolidColorBrush(Context, Color.DarkGray);
             HighlightBrush = new SolidColorBrush(Context, Color.LightGray);
+            Timer timer = new Timer(new System.TimeSpan(0, 0, 0, 0, 500));
+            timer.Start();
+            timer.TimerTick += Timer_TimerTick;
+        }
+
+        private void Timer_TimerTick(object sender, TimerTickEventArgs e)
+        {
+            cursorshow = !cursorshow;
         }
 
         public Brush ForegroundBrush { get; set; }
@@ -26,6 +41,16 @@ namespace HexaEngine.Core.UI.BaseTypes
         public Brush HighlightBrush { get; set; }
 
         public string Text { get => text; set { text = value; UpdateContent(); RecalculateBoundings(); } }
+
+        public Thickness GetThickness(string str, float width)
+        {
+            // measure text width including white spaces
+            using var tl = Engine.Current.RenderSystem.DirectWrite.GetTextLayout(str, Engine.Current.RenderSystem.DirectWrite.DefaultTextFormat, width);
+            using var tl0 = Engine.Current.RenderSystem.DirectWrite.GetTextLayout("A", Engine.Current.RenderSystem.DirectWrite.DefaultTextFormat, width);
+            using var tl1 = Engine.Current.RenderSystem.DirectWrite.GetTextLayout(str + "A", Engine.Current.RenderSystem.DirectWrite.DefaultTextFormat, width);
+            int result = (int)(tl1.Metrics.Width - tl0.Metrics.Width);
+            return new Thickness(0, result > width ? width : result, 0, tl.Metrics.Height);
+        }
 
         public void UpdateContent()
         {
@@ -35,7 +60,7 @@ namespace HexaEngine.Core.UI.BaseTypes
         public override Thickness GetContentSize()
         {
             UpdateContent();
-            return new Thickness(textLayout.Metrics.Height, 0, textLayout.Metrics.Width, 0);
+            return GetThickness(Text, float.MaxValue);
         }
 
         public override void RenderContent(DeviceContext context)
@@ -43,7 +68,7 @@ namespace HexaEngine.Core.UI.BaseTypes
             if (textLayout != null)
             {
                 context.DrawTextLayout(Vector2.Zero, textLayout, ForegroundBrush);
-                if (Focus)
+                if (Focus && cursorshow)
                 {
                     context.DrawLine(new Vector2(textLayout.Metrics.Width, textLayout.Metrics.Height), new Vector2(textLayout.Metrics.Width, 0), ForegroundBrush);
                 }
@@ -56,7 +81,7 @@ namespace HexaEngine.Core.UI.BaseTypes
             {
                 if (update.Key == Keys.ShiftKey)
                 {
-                    upper = !update.IsPressed;
+                    upper = update.IsPressed;
                     return;
                 }
 
@@ -66,23 +91,32 @@ namespace HexaEngine.Core.UI.BaseTypes
                     return;
                 }
 
+                if (update.IsPressed && update.Key == Keys.Enter)
+                {
+                    Text += "\n";
+                    return;
+                }
+
                 if (update.IsPressed && update.Key == Keys.Back)
                 {
-                    var text = Text.ToList();
-                    text.RemoveAt(text.Count - 1);
-                    Text = string.Join("", text);
+                    if (Text.Length > 0)
+                    {
+                        Text = Text.Remove(Text.Length - 1);
+                    }
+
                     return;
                 }
 
                 if (update.IsPressed)
                 {
+                    KeysConverter converter = new KeysConverter();
                     if (upper)
                     {
-                        Text += update.Key.ToString().ToLower();
+                        Text += converter.ConvertToString(update.Key);
                     }
                     else
                     {
-                        Text += update.Key.ToString();
+                        Text += converter.ConvertToString(update.Key).ToLower();
                     }
                 }
             }

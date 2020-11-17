@@ -26,7 +26,7 @@ namespace HexaEngine.Core.Input
 
             var update = new MouseUpdate(e.Button.ToMouseButtonUpdate(true), false, new Vector3(res.X * -1, res.Y * -1, 0));
             MouseState.UpdateLocation(update);
-            PointF p = Form.PointToClient(Cursor.Position);
+            PointF p = Control.PointToClient(Cursor.Position);
             MouseState.UpdateRawLocation(new Vector3(p.X, p.Y, 0));
             if (Active)
             {

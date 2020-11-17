@@ -70,9 +70,6 @@
     <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
@@ -187,9 +184,6 @@
     <Compile Include="Core.Physics\Structs\RayCastDiscription.cs" />
     <Compile Include="Core.Plugins\Plugin.cs" />
     <Compile Include="Core.Plugins\PluginManager.cs" />
-    <Compile Include="Core.Render\HexaForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core.Render\Interfaces\IDrawable3D.cs" />
     <Compile Include="Core.Scripts\Script.cs" />
     <Compile Include="Core.Scripts\ScriptCompiler.cs" />
@@ -255,6 +249,17 @@
     <Compile Include="Core.Scenes\Scene.cs" />
     <Compile Include="Core.Scenes\SceneManager.cs" />
     <Compile Include="Core.Shaders\Shader.cs" />
+    <Compile Include="Core.Windows\EqualityComparer.cs" />
+    <Compile Include="Core.Windows\IRenderable.cs" />
+    <Compile Include="Core.Windows\MessageFilterHook.cs" />
+    <Compile Include="Core.Windows\RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core.Windows\RenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core.Windows\RenderLoop.cs" />
+    <Compile Include="Core.Windows\Win32Native.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EngineDefinitions.cs" />
     <Compile Include="Core\EngineEvents.cs" />
@@ -273,7 +278,9 @@
   <ItemGroup>
     <Content Include="Core.Common\engine-logo.bmp" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core.UI\Helper\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.3.6.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

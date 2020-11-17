@@ -10,28 +10,31 @@ using HexaEngine.Core.Scripts;
 using HexaEngine.Core.Sounds;
 using HexaEngine.Core.Timers;
 using HexaEngine.Core.UI;
-using SharpDX.Windows;
+using HexaEngine.Core.Windows;
 using System;
 
 namespace HexaEngine.Core
 {
     public partial class Engine
     {
-        public Engine(RenderForm renderForm)
+        public IRenderable Renderable { get; }
+
+        public Engine(IRenderable renderable)
         {
+            Renderable = renderable;
             Instances[AppDomain.CurrentDomain.Id] = this;
             Settings = new EngineSettings
             {
-                Width = renderForm.Width,
-                Height = renderForm.Height
+                Width = renderable.Width,
+                Height = renderable.Height
             };
             BitmapConverter = new BitmapConverter();
-            InputSystem = new InputSystem(renderForm);
+            InputSystem = new InputSystem(renderable);
             Camera = new Camera();
             SceneManager = new SceneManager();
             SoundSystem = new SoundSystem();
             UIManager = new UserInterfaceManager();
-            RenderSystem = new RenderSystem(renderForm);
+            RenderSystem = new RenderSystem(renderable);
             RessouceManager = new RessourceManager();
             Compiler = new ScriptCompiler();
             PluginManager = new PluginManager();

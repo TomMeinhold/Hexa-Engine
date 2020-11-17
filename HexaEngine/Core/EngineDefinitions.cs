@@ -60,5 +60,7 @@ namespace HexaEngine.Core
         public static DirectoryInfo SoundsPath { get; set; } = new DirectoryInfo("Data\\Sounds");
 
         public static DirectoryInfo TexturePath { get; set; } = new DirectoryInfo("Data\\Textures\\");
+
+        public static DirectoryInfo ArchivesPath { get; set; } = new DirectoryInfo("Data\\Archives\\");
     }
 }

@@ -1,22 +1,20 @@
-using HexaEngine.Core.Windows;
 using System;
 
-namespace EngineApplication
+namespace Application
 {
     internal static class Program
     {
         /// <summary>
-        ///  The main entry point for the application.
+        /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
         private static void Main()
         {
-            using var app = new MainApplication();
-            app.Run();
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+            MainWindow window = new MainWindow();
+            System.Windows.Forms.Application.Run(window);
+            window.Dispose();
         }
-    }
-
-    internal class MainApplication : Application
-    {
     }
 }

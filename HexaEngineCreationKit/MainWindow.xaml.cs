@@ -1,9 +1,5 @@
-﻿using HexaEngine.Core.Plugins;
-using Microsoft.Win32;
-using System;
-using System.IO;
+﻿using HexaEngineCreationKit.UIElements.Pages;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace HexaEngineCreationKit
 {
@@ -15,6 +11,16 @@ namespace HexaEngineCreationKit
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Plugin_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new PluginCreator());
+        }
+
+        private void Archive_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ArchiveCreator());
         }
     }
 }

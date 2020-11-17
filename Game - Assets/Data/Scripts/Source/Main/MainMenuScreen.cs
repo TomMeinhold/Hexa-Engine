@@ -36,8 +36,8 @@ namespace Main
 
         private void SetDefaults(UIElement element)
         {
-            element.Border = new Thickness(5, 5, 5, 5);
-            element.Padding = new Thickness(0, 0, 0, 0);
+            element.Border = new Thickness(2, 2, 2, 2);
+            element.Padding = new Thickness(0, 5, 5, 0);
             element.HorizontalAlignment = HorizontalAlignment.Center;
             element.VerticalAlignment = VerticalAlignment.Center;
         }

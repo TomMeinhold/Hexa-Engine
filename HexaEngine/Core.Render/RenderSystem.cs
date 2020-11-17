@@ -5,9 +5,9 @@
 namespace HexaEngine.Core.Render
 {
     using HexaEngine.Core.Render.Components;
+    using HexaEngine.Core.Windows;
     using SharpDX.Direct2D1;
     using SharpDX.DXGI;
-    using SharpDX.Windows;
     using System;
     using System.Threading;
     using AlphaMode = SharpDX.Direct2D1.AlphaMode;
@@ -20,10 +20,10 @@ namespace HexaEngine.Core.Render
     {
         private bool disposedValue = false; // Dient zur Erkennung redundanter Aufrufe.
 
-        public RenderSystem(RenderForm form)
+        public RenderSystem(IRenderable renderable)
         {
-            Form = form ?? throw new ArgumentNullException(nameof(form));
-            DefaultContextMenuStrip = form.ContextMenuStrip;
+            Renderable = renderable ?? throw new ArgumentNullException(nameof(renderable));
+            DefaultContextMenuStrip = renderable.ContextMenuStrip;
             InitializeDirectX();
         }
 
@@ -44,7 +44,7 @@ namespace HexaEngine.Core.Render
 
         public bool Drawing { get; set; } = true;
 
-        public RenderForm Form { get; }
+        public IRenderable Renderable { get; }
 
         public bool ReloadDirectX { get; private set; }
 
@@ -54,7 +54,7 @@ namespace HexaEngine.Core.Render
         {
             var featureLevels = new FeatureLevel[] { FeatureLevel.Level_12_1, FeatureLevel.Level_12_0, FeatureLevel.Level_11_1, FeatureLevel.Level_11_0, FeatureLevel.Level_10_1, FeatureLevel.Level_10_0 };
             var pixelFormat = new PixelFormat(Format.R8G8B8A8_UNorm, AlphaMode.Premultiplied);
-            DeviceManager = new DeviceManager(Form, featureLevels, 3, pixelFormat);
+            DeviceManager = new DeviceManager(Renderable, featureLevels, 3, pixelFormat);
             DriectXManager = new DriectXManager(DeviceManager);
             PostProcessingManager = new PostProcessingManager(this);
         }
