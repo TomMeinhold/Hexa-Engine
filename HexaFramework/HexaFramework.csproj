@@ -2,11 +2,13 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
-		<DefineConstants>NETSTANDARD2_0</DefineConstants>
+		<DefineConstants></DefineConstants>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Platforms>x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="PhysX.Net" Version="3.0.0-alpha1" GeneratePathProperty="true" />
 		<PackageReference Include="System.Drawing.Common" Version="5.0.2" />
 		<PackageReference Include="Vortice.D3DCompiler" Version="1.9.80" />
 		<PackageReference Include="Vortice.Direct2D1" Version="1.9.80" />
@@ -19,7 +21,7 @@
 		<PackageReference Include="Vortice.XInput" Version="1.9.80" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Input\" />
-	</ItemGroup>
+	<ImportGroup>
+		<Import Project="$(PkgPhysX_Net)\lib\RuntimeFiles.targets" />
+	</ImportGroup>
 </Project>

@@ -1,5 +1,5 @@
 ﻿using HexaFramework.Windows;
-using HexaFramework.Windows.Input;
+using HexaFramework.Input;
 using System;
 using System.Collections.Generic;
 using Vortice.XAudio2;

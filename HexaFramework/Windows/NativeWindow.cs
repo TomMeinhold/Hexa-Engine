@@ -1,5 +1,5 @@
-﻿using HexaFramework.Windows.Input;
-using HexaFramework.Windows.Input.Events;
+﻿using HexaFramework.Input;
+using HexaFramework.Input.Events;
 using HexaFramework.Windows.Native;
 using System;
 using System.Runtime.CompilerServices;

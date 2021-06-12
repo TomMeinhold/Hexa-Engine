@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace HexaFramework.Windows.Input.Events
+namespace HexaFramework.Input.Events
 {
     public class CharEventArgs
     {

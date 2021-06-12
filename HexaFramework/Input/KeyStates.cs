@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HexaFramework.Windows.Input
+namespace HexaFramework.Input
 {
     [Flags]
     public enum KeyStates

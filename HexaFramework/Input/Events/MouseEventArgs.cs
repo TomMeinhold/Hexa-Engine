@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace HexaFramework.Windows.Input.Events
+namespace HexaFramework.Input.Events
 {
     public class MouseEventArgs : EventArgs
     {

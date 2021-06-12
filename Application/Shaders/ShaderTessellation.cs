@@ -2,12 +2,9 @@
 using HexaFramework.Resources.Buffers;
 using HexaFramework.Scenes;
 using HexaFramework.Windows;
-using HexaFramework.Windows.Native;
 using System.Drawing;
-using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
 using Vortice;
 using Vortice.D3DCompiler;
 using Vortice.Direct3D;
@@ -18,7 +15,7 @@ namespace App.Shaders
 {
     public class ShaderTessellation : Shader
     {
-        public ShaderTessellation(DeviceManager manager, Scene scene, Camera camera,
+        public ShaderTessellation(DeviceManager manager, Camera camera,
             string vertexShaderPath,
             string hullShaderPath,
             string domainShaderPath,
@@ -34,7 +31,6 @@ namespace App.Shaders
             )
         {
             Manager = manager;
-            Scene = scene;
             Camera = camera;
             var fef = new BufferDescription(Marshal.SizeOf<BufferMatrixType>(), BindFlags.ConstantBuffer, Vortice.Direct3D11.Usage.Dynamic) { CpuAccessFlags = CpuAccessFlags.Write };
             MatrixBuffer = Manager.ID3D11Device.CreateBuffer(ref ViewProjectionConstantBuffer, fef);
@@ -116,13 +112,11 @@ namespace App.Shaders
             new InputElementDescription("BINORMAL", 0, Format.R32G32B32_Float, InputElementDescription.AppendAligned, 0, InputClassification.PerVertexData, 0)
         };
 
-        public Scene Scene { get; }
-
         public void SetParameters(SceneObject sceneObject)
         {
             {
                 var mapped = Manager.ID3D11DeviceContext.Map(MatrixBuffer, MapMode.WriteDiscard);
-                ViewProjectionConstantBuffer = new() { Projection = Camera.ProjectionMatrix, View = Camera.ViewMatrix, World = Scene.WorldMatrix, CameraPosition = new Vector4(Camera.Position, 0) };
+                ViewProjectionConstantBuffer = new() { Projection = Camera.ProjectionMatrix, View = Camera.ViewMatrix, World = Matrix4x4.Identity, CameraPosition = new Vector4(Camera.Position, 0) };
                 DataStream stream = new(mapped.DataPointer, mapped.DepthPitch * mapped.RowPitch, false, true);
                 stream.Write(ViewProjectionConstantBuffer);
                 stream.Close();

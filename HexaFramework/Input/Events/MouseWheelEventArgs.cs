@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HexaFramework.Windows.Input.Events
+namespace HexaFramework.Input.Events
 {
     public class MouseWheelEventArgs : EventArgs
     {

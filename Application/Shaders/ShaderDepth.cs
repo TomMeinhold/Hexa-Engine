@@ -22,15 +22,13 @@ namespace App.Shaders
         public ID3D11Buffer ConstantMatrixBuffer { get; set; }
         public ID3D11Buffer ConstantModelBuffer { get; set; }
         public DeviceManager Manager { get; }
-        public Scene Scene { get; }
         public Camera Camera { get; }
 
         // Methods.
 
-        public ShaderDepth(DeviceManager manager, Scene scene, Camera camera, string vsFileName, string psFileName)
+        public ShaderDepth(DeviceManager manager, Camera camera, string vsFileName, string psFileName)
         {
             Manager = manager;
-            Scene = scene;
             Camera = camera;
 
             // Compile the vertex shader code.
@@ -113,7 +111,7 @@ namespace App.Shaders
         private void SetShaderParameters(SceneObject sceneObject)
         {
             {
-                var buffer = new BufferMatrixType() { Projection = Camera.ProjectionMatrix, View = Camera.ViewMatrix, World = Scene.WorldMatrix, CameraPosition = new Vector4(Camera.Position, 0) };
+                var buffer = new BufferMatrixType() { Projection = Camera.ProjectionMatrix, View = Camera.ViewMatrix, World = Matrix4x4.Identity, CameraPosition = new Vector4(Camera.Position, 0) };
                 Write(buffer, Manager, ConstantMatrixBuffer);
                 Manager.ID3D11DeviceContext.VSSetConstantBuffer(0, ConstantMatrixBuffer);
             }

@@ -5,11 +5,11 @@ using System.Numerics;
 
 namespace HexaFramework.Scenes
 {
-    public class Scene
+    public class RenderScene
     {
         private bool firstFrame = true;
 
-        public Scene(RenderWindow window)
+        public RenderScene(RenderWindow window)
         {
             Window = window;
         }

@@ -1,4 +1,4 @@
-﻿namespace HexaFramework.Windows.Input
+﻿namespace HexaFramework.Input
 {
     public enum MouseButton
     {

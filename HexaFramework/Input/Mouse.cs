@@ -1,10 +1,10 @@
-﻿using HexaFramework.Windows.Input.Events;
+﻿using HexaFramework.Input.Events;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 
-namespace HexaFramework.Windows.Input
+namespace HexaFramework.Input
 {
     public class Mouse
     {

@@ -1,7 +1,7 @@
-﻿using HexaFramework.Resources;
+﻿using HexaFramework.Input;
+using HexaFramework.Resources;
 using HexaFramework.Scenes;
 using HexaFramework.Scripts;
-using HexaFramework.Windows.Input;
 using System.Numerics;
 
 namespace App.Scripts

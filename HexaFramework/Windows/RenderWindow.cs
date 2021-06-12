@@ -1,9 +1,13 @@
-﻿using HexaFramework.Resources;
+﻿using HexaFramework.PhysX;
+using HexaFramework.Resources;
 using HexaFramework.Scenes;
 using HexaFramework.Windows.Native;
+using PhysX;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 using System.Threading;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
@@ -11,7 +15,7 @@ using static HexaFramework.Windows.Native.Helper;
 
 namespace HexaFramework.Windows
 {
-    public abstract partial class RenderWindow : NativeWindow, IDisposable
+    public abstract partial class RenderWindow : NativeWindow, System.IDisposable
     {
         private Thread renderThread;
         private bool disposedValue;
@@ -32,7 +36,21 @@ namespace HexaFramework.Windows
 
         public Scene Scene { get; set; }
 
+        public Foundation Foundation { get; set; }
+
+        public Physics Physics { get; set; }
+
         public Time Time { get; set; } = new Time();
+
+        public List<Camera> Cameras { get; } = new();
+
+        public Camera Add(Camera camera)
+        {
+            camera.Script?.Initialize();
+            camera.AttachMouseAndKeyboardFromWindow(this);
+            Cameras.Add(camera);
+            return camera;
+        }
 
         public RenderWindow(string title, int width, int height)
         {
@@ -53,9 +71,39 @@ namespace HexaFramework.Windows
         {
             DeviceManager = new DeviceManager(this);
             ResourceManager = new ResourceManager(DeviceManager);
-            Scene = new(this);
+            Foundation = new Foundation();
+            Physics = new Physics(Foundation);
+            Scene = Physics.CreateScene(CreateSceneDesc(Foundation));
+            Scene.SetVisualizationParameter(VisualizationParameter.Scale, 2.0f);
+            Scene.SetVisualizationParameter(VisualizationParameter.CollisionShapes, true);
+            Scene.SetVisualizationParameter(VisualizationParameter.JointLocalFrames, true);
+            Scene.SetVisualizationParameter(VisualizationParameter.JointLimits, true);
+            Scene.SetVisualizationParameter(VisualizationParameter.ActorAxes, true);
             renderThread = new Thread(TickInternal);
             renderThread.Start();
+        }
+
+        protected virtual SceneDesc CreateSceneDesc(Foundation foundation)
+        {
+#if GPU
+			var cudaContext = new CudaContextManager(foundation);
+#endif
+
+            var sceneDesc = new SceneDesc
+            {
+                Gravity = new Vector3(0, -9.81f, 0),
+#if GPU
+				GpuDispatcher = cudaContext.GpuDispatcher,
+#endif
+                FilterShader = new FilterShader()
+            };
+
+#if GPU
+			sceneDesc.Flags |= SceneFlag.EnableGpuDynamics;
+			sceneDesc.BroadPhaseType |= BroadPhaseType.Gpu;
+#endif
+
+            return sceneDesc;
         }
 
         protected override IntPtr ProcessWindowMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -102,7 +150,19 @@ namespace HexaFramework.Windows
 
         protected virtual void Render()
         {
-            Scene.Render();
+            Cameras.ForEach(x => x.Script?.Update());
+            Cameras.ForEach(x => x?.UpdateView());
+            Scene.Simulate(Time.Delta);
+            Scene.FetchResults(block: true);
+            var actors = Scene.GetActors(ActorTypeFlag.RigidDynamic | ActorTypeFlag.RigidStatic);
+            foreach (var actor in actors)
+            {
+                if (actor.UserData is SceneObject sceneObject)
+                {
+                    sceneObject.Transform = (actor as RigidActor).GlobalPose;
+                    sceneObject.Render();
+                }
+            }
         }
 
         protected virtual void EndRender()
@@ -120,6 +180,7 @@ namespace HexaFramework.Windows
                     Initialized?.Invoke(this, null);
                     first = true;
                     InitializeComponent();
+                    Cameras.ForEach(x => x.Script?.Initialize());
                 }
 
                 Time.FrameUpdate();

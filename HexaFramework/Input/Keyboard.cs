@@ -1,9 +1,9 @@
-﻿using HexaFramework.Windows.Input.Events;
+﻿using HexaFramework.Input.Events;
 using HexaFramework.Windows.Native;
 using System;
 using System.Collections.Generic;
 
-namespace HexaFramework.Windows.Input
+namespace HexaFramework.Input
 {
     public class Keyboard
     {
