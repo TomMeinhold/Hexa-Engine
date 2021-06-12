@@ -1,7 +1,5 @@
-﻿using HexaFramework.Resources;
-using System;
+﻿using System;
 using System.Numerics;
-using Quaternion = HexaFramework.Resources.Quaternion;
 
 namespace HexaFramework.Extensions
 {
@@ -9,7 +7,7 @@ namespace HexaFramework.Extensions
     {
         public static Matrix4x4 RotationYawPitchRoll(float yaw, float pitch, float roll)
         {
-            Quaternion.RotationYawPitchRoll(yaw, pitch, roll, out Quaternion quaternion);
+            var quaternion = Quaternion.CreateFromYawPitchRoll(yaw, pitch, roll);
             return RotationQuaternion(quaternion);
         }
 
@@ -126,78 +124,6 @@ namespace HexaFramework.Extensions
             result.M41 = -result.M41;
             result.M42 = -result.M42;
             result.M43 = -result.M43;
-            return result;
-        }
-
-        public static Matrix4x4 BillboardLH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
-        {
-            Vector3 crossed;
-            Vector3 final;
-            Vector3 difference = cameraPosition - objectPosition;
-
-            float lengthSq = difference.LengthSquared();
-            if (MathUtil.IsZero(lengthSq))
-                difference = -cameraForwardVector;
-            else
-                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
-
-            crossed = Vector3.Cross(cameraUpVector, difference);
-            crossed = Vector3.Normalize(crossed);
-            final = Vector3.Cross(difference, crossed);
-
-            Matrix4x4 result = Matrix4x4.Identity;
-            result.M11 = crossed.X;
-            result.M12 = crossed.Y;
-            result.M13 = crossed.Z;
-            result.M14 = 0.0f;
-            result.M21 = final.X;
-            result.M22 = final.Y;
-            result.M23 = final.Z;
-            result.M24 = 0.0f;
-            result.M31 = difference.X;
-            result.M32 = difference.Y;
-            result.M33 = difference.Z;
-            result.M34 = 0.0f;
-            result.M41 = objectPosition.X;
-            result.M42 = objectPosition.Y;
-            result.M43 = objectPosition.Z;
-            result.M44 = 1.0f;
-            return result;
-        }
-
-        public static Matrix4x4 BillboardRH(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, Vector3 cameraForwardVector)
-        {
-            Vector3 crossed;
-            Vector3 final;
-            Vector3 difference = objectPosition - cameraPosition;
-
-            float lengthSq = difference.LengthSquared();
-            if (MathUtil.IsZero(lengthSq))
-                difference = -cameraForwardVector;
-            else
-                difference *= (float)(1.0 / Math.Sqrt(lengthSq));
-
-            crossed = Vector3.Cross(cameraUpVector, difference);
-            crossed = Vector3.Normalize(crossed);
-            final = Vector3.Cross(difference, crossed);
-
-            Matrix4x4 result = Matrix4x4.Identity;
-            result.M11 = crossed.X;
-            result.M12 = crossed.Y;
-            result.M13 = crossed.Z;
-            result.M14 = 0.0f;
-            result.M21 = final.X;
-            result.M22 = final.Y;
-            result.M23 = final.Z;
-            result.M24 = 0.0f;
-            result.M31 = difference.X;
-            result.M32 = difference.Y;
-            result.M33 = difference.Z;
-            result.M34 = 0.0f;
-            result.M41 = objectPosition.X;
-            result.M42 = objectPosition.Y;
-            result.M43 = objectPosition.Z;
-            result.M44 = 1.0f;
             return result;
         }
     }

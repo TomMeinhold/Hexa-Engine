@@ -38,10 +38,11 @@ namespace HexaFramework.Resources
             }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             TextureResource?.Dispose();
             TextureResource = null;
+            base.Dispose(disposing);
         }
 
         private ID3D11Texture2D CreateTexture2DFromBitmap(ID3D11Device device, string bitmapSource, float resolutionScale)
