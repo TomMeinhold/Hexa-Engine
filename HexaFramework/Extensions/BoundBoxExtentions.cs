@@ -1,0 +1,17 @@
+﻿using HexaFramework.Windows;
+using System.Drawing;
+using System.Numerics;
+
+namespace HexaFramework.Extensions
+{
+    public static class BoundBoxExtentions
+    {
+        public static bool ContainsVector(this RectangleF box, Vector3 vector) => box.Contains(vector.X, vector.Y);
+
+        public static RectangleF BoundingBoxToRect(this RectangleF box) => new(box.X, box.Y, box.Width, box.Height);
+
+        public static RectangleF ToRectNoPos(this RectangleF box) => new(0, 0, box.Width, box.Height);
+
+        public static RectangleF ToRectRMPos(this RectangleF box) => new(0, 0, box.Width, box.Height);
+    }
+}

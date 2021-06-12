@@ -1,59 +1,81 @@
-﻿using HexaEngine.Core;
-using HexaEngine.Core.Input.Component;
-using HexaEngine.Core.Input.Modules;
-using HexaEngine.Core.Windows;
-using System;
-using System.Windows.Forms;
-using Keys = HexaEngine.Core.Input.Component.Keys;
+﻿using App.Scripts;
+using App.Shaders;
+using HexaFramework.Resources;
+using HexaFramework.Scenes;
+using HexaFramework.Windows;
+using System.Numerics;
 
-namespace Application
+namespace App
 {
-    public partial class MainWindow : RenderForm
+    public class MainWindow : RenderWindow
     {
-        private readonly KeyboardController keyboardController;
+        private Camera Camera;
+        private readonly SceneObject sceneObject = new();
+        private readonly SceneObject sceneObject1 = new();
+        private ShaderTessellation Shader;
 
-        public MainWindow()
+        public MainWindow() : base("Test", 1280, 720)
         {
-            InitializeComponent();
-            keyboardController = new KeyboardController(this);
-            keyboardController.KeyUp += KeyboardController_KeyUp;
+            LimitFPS = true;
         }
 
-        protected override void OnShown(EventArgs e)
+        protected override void InitializeComponent()
         {
-            base.OnShown(e);
-            Engine.Create(this);
-            Engine.Current.Settings.AntialiasMode = true;
-            Engine.Current.InputSystem.Active = true;
-            Engine.Current.RenderSystem.MainLoop();
-        }
-
-        private void KeyboardController_KeyUp(object sender, KeyboardUpdatePackage e)
-        {
-            if (e.KeyboardUpdate.Key == Keys.F1)
+            Camera = new Camera(DeviceManager)
             {
-                Engine.Current.RenderSystem.FlipFullscreen();
-            }
-
-            if (e.KeyboardUpdate.Key == Keys.F3)
+                Fov = 90,
+                FarPlane = 100f,
+                PositionZ = -10
+            };
+            Camera.AttachScript<CameraScript>();
+            var sound = Sound.Load(ResourceManager, "Resources/sound.wav");
+            Camera.AddResource("Sound1", sound);
+            Scene.Add(Camera);
+            Shader = new ShaderTessellation(DeviceManager, Scene, Camera,
+                "Shaders/vertexShader.hlsl",
+                "Shaders/hullShader.hlsl",
+                "Shaders/domainShader.hlsl",
+                "Shaders/pixelShader.hlsl",
+                "main",
+                "ColorHullShader",
+                "ColorDomainShader",
+                "main",
+                "vs_5_0",
+                "hs_5_0",
+                "ds_5_0",
+                "ps_5_0"
+                )
             {
-                Engine.Current.Settings.DebugMode = !Engine.Current.Settings.DebugMode;
-            }
+                Light = new LightDirectional()
+                {
+                    DiffuseColour = new Vector4(1, 1, 1, 1),
+                    Direction = new Vector3(0, -1, 0),
+                    AmbientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f),
+                    SpecularColor = new Vector4(1, 1, 1, 1),
+                    SpecularPower = 8
+                }
+            };
+            //Model.AttachScript<TriagleMoveScript>();
 
-            if (e.KeyboardUpdate.Key == Keys.P)
-            {
-                Engine.Current.PhysicsEngine.Paused = !Engine.Current.PhysicsEngine.Paused;
-            }
+            Shader.TessellationAmount = 1;
+            sceneObject.Shader = Shader;
+            sceneObject.InitializeModelObj(ResourceManager, "Models/Cube.obj");
+            sceneObject.InitializeTextures(ResourceManager, "Resources/d.png", "Resources/n.png", "Resources/s.png", "Resources/h.png");
+            sceneObject.Transform = Matrix4x4.CreateTranslation(0, 1, 0);
+            Scene.Add(sceneObject);
+            sceneObject1.Shader = Shader;
+            sceneObject1.InitializeModelObj(ResourceManager, "Models/Plane.obj");
+            sceneObject1.InitializeTextures(ResourceManager, "Resources/d.png", "Resources/n.png", "Resources/s.png");
+            Scene.Add(sceneObject1);
 
-            if (e.KeyboardUpdate.Key == Keys.O)
-            {
-                Engine.Current.PhysicsEngine.DoCycle = !Engine.Current.PhysicsEngine.DoCycle;
-            }
-        }
-
-        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Properties.Settings.Default.Save();
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(0, 0, 2)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(0, 0, -2)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(2, 0, 0)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(-2, 0, 0)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(-2, 0, 2)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(-2, 0, -2)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(2, 0, 2)));
+            //Scene.Add(sceneObject.Clone(Matrix4x4.CreateTranslation(2, 0, -2)));
         }
     }
 }

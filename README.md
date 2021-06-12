@@ -1,4 +1,2 @@
-# Hexa-Engine
-
-This engine is 2D Raytracing-Game-Engine.<br>
-Progress >5%
+# HexaFramework
+A GUI-Framework for C# based on Native bindings and Vortice (D2D1)

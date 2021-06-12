@@ -1,20 +1,13 @@
-using System;
+ï»¿using HexaFramework.Windows;
 
-namespace Application
+namespace App
 {
-    internal static class Program
+    internal class Program
     {
-        /// <summary>
-        /// Der Haupteinstiegspunkt für die Anwendung.
-        /// </summary>
-        [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
-            System.Windows.Forms.Application.EnableVisualStyles();
-            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-            MainWindow window = new MainWindow();
-            System.Windows.Forms.Application.Run(window);
-            window.Dispose();
+            var window = new MainWindow();
+            Application.Run(window);
         }
     }
 }
