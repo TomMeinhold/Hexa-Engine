@@ -22,6 +22,8 @@ namespace HexaFramework.Scripts
         {
         }
 
+        public RenderWindow Window { get; internal set; }
+
         public Keyboard Keyboard { get; internal set; }
 
         public Cursor Cursor { get; internal set; }

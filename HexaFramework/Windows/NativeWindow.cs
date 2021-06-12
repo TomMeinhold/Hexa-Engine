@@ -229,19 +229,19 @@ namespace HexaFramework.Windows
                     break;
 
                 case WindowMessage.KeyDown:
-                    Keyboard.Update((Keys)wParam, KeyStates.Pressed);
+                    OnKeyDown(Keyboard.Update((Keys)wParam, KeyStates.Pressed));
                     break;
 
                 case WindowMessage.KeyUp:
-                    Keyboard.Update((Keys)wParam, KeyStates.Released);
+                    OnKeyUp(Keyboard.Update((Keys)wParam, KeyStates.Released));
                     break;
 
                 case WindowMessage.SysKeyDown:
-                    Keyboard.Update((Keys)wParam, KeyStates.Pressed);
+                    OnKeyDown(Keyboard.Update((Keys)wParam, KeyStates.Pressed));
                     break;
 
                 case WindowMessage.SysKeyUp:
-                    Keyboard.Update((Keys)wParam, KeyStates.Released);
+                    OnKeyUp(Keyboard.Update((Keys)wParam, KeyStates.Released));
                     break;
             }
             return User32.DefWindowProc(hWnd, msg, wParam, lParam);
@@ -282,6 +282,12 @@ namespace HexaFramework.Windows
 
         public event EventHandler<EventArgs> Deactivated;
 
+        public event EventHandler<MouseEventArgs> MouseMove;
+
+        public event EventHandler<KeyboardEventArgs> KeyDown;
+
+        public event EventHandler<KeyboardEventArgs> KeyUp;
+
         protected virtual void OnActivated()
         {
             Activated?.Invoke(this, null);
@@ -318,6 +324,7 @@ namespace HexaFramework.Windows
 
         protected virtual void OnMouseMove(MouseEventArgs mouseEventArgs)
         {
+            MouseMove?.Invoke(this, mouseEventArgs);
         }
 
         protected virtual void OnMouseLeave(MouseEventArgs mouseEventArgs)
@@ -338,6 +345,16 @@ namespace HexaFramework.Windows
 
         protected virtual void OnDoubleClick(MouseEventArgs mouseEventArgs)
         {
+        }
+
+        protected virtual void OnKeyDown(KeyboardEventArgs keyboardEventArgs)
+        {
+            KeyDown?.Invoke(this, keyboardEventArgs);
+        }
+
+        protected virtual void OnKeyUp(KeyboardEventArgs keyboardEventArgs)
+        {
+            KeyUp?.Invoke(this, keyboardEventArgs);
         }
 
         #endregion Events

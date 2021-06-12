@@ -22,7 +22,7 @@ namespace HexaFramework.Input
 
         public event EventHandler<KeyboardEventArgs> OnKeyUp;
 
-        public void Update(Keys key, KeyStates state)
+        public KeyboardEventArgs Update(Keys key, KeyStates state)
         {
             KeyStates[key] = state;
             var args = new KeyboardEventArgs(key, state);
@@ -34,6 +34,7 @@ namespace HexaFramework.Input
             {
                 OnKeyUp?.Invoke(this, args);
             }
+            return args;
         }
 
         public bool IsDown(Keys n)

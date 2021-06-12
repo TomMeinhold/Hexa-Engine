@@ -1,4 +1,5 @@
 ﻿using HexaFramework.Audio;
+using PhysX;
 using System;
 using Vortice.Direct2D1;
 using Vortice.Direct3D;
@@ -13,7 +14,7 @@ using Usage = Vortice.DXGI.Usage;
 
 namespace HexaFramework.Windows
 {
-    public class DeviceManager : IDisposable
+    public class DeviceManager : System.IDisposable
     {
         private static readonly Vortice.Direct3D.FeatureLevel[] FeatureLevels =
         {
@@ -171,6 +172,9 @@ namespace HexaFramework.Windows
             _id2D1Device = D2D1.D2D1CreateDevice(IDXGIDevice, creationOptions);
             ID2D1DeviceContext = ID2D1Device.CreateDeviceContext(DeviceContextOptions.EnableMultithreadedOptimizations);
             ID2D1DeviceContext.AntialiasMode = AntialiasMode.PerPrimitive;
+
+            Foundation = new Foundation();
+            Physics = new Physics(Foundation);
         }
 
         private readonly ID2D1Device _id2D1Device;
@@ -180,6 +184,10 @@ namespace HexaFramework.Windows
         public RenderWindow Window { get; }
 
         public AudioManager AudioManager { get; } = new();
+
+        public Foundation Foundation { get; set; }
+
+        public Physics Physics { get; set; }
 
         public ID2D1Device ID2D1Device => _id2D1Device;
 
@@ -225,7 +233,7 @@ namespace HexaFramework.Windows
 
         public float AspectRatio { get; private set; }
 
-        public event EventHandler<float> AspectRatioChanged;
+        public event EventHandler OnBufferResize;
 
         public void Resize(int width, int height)
         {
@@ -233,7 +241,6 @@ namespace HexaFramework.Windows
             SurfaceWidth = width;
             SurfaceHeight = height;
             AspectRatio = (float)SurfaceWidth / SurfaceHeight;
-            AspectRatioChanged?.Invoke(this, AspectRatio);
 
             // Delete all references to SwapChainBuffers.
             ID3D11DeviceContext.OMSetDepthStencilState(null);
@@ -286,6 +293,8 @@ namespace HexaFramework.Windows
             ID3D11DeviceContext.OMSetRenderTargets(RenderTargetView, DepthStencilView);
 
             ID3D11DeviceContext.RSSetState(RasterStateSolid);
+
+            OnBufferResize?.Invoke(this, null);
         }
 
         public void SwitchWireframe(bool state)

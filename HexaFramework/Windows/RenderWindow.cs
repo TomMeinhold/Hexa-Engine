@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
@@ -36,19 +37,15 @@ namespace HexaFramework.Windows
 
         public Scene Scene { get; set; }
 
-        public Foundation Foundation { get; set; }
-
-        public Physics Physics { get; set; }
-
         public Time Time { get; set; } = new Time();
 
-        public List<Camera> Cameras { get; } = new();
+        public IReadOnlyList<Camera> Cameras => cameras;
 
         public Camera Add(Camera camera)
         {
+            camera.AttachWindow(this);
             camera.Script?.Initialize();
-            camera.AttachMouseAndKeyboardFromWindow(this);
-            Cameras.Add(camera);
+            cameras.Add(camera);
             return camera;
         }
 
@@ -71,10 +68,8 @@ namespace HexaFramework.Windows
         {
             DeviceManager = new DeviceManager(this);
             ResourceManager = new ResourceManager(DeviceManager);
-            Foundation = new Foundation();
-            Physics = new Physics(Foundation);
-            Scene = Physics.CreateScene(CreateSceneDesc(Foundation));
-            Scene.SetVisualizationParameter(VisualizationParameter.Scale, 2.0f);
+            Scene = DeviceManager.Physics.CreateScene(CreateSceneDesc(DeviceManager.Foundation));
+            Scene.SetVisualizationParameter(VisualizationParameter.Scale, 1.0f);
             Scene.SetVisualizationParameter(VisualizationParameter.CollisionShapes, true);
             Scene.SetVisualizationParameter(VisualizationParameter.JointLocalFrames, true);
             Scene.SetVisualizationParameter(VisualizationParameter.JointLimits, true);
@@ -155,8 +150,8 @@ namespace HexaFramework.Windows
 
         protected virtual void Render()
         {
-            Cameras.ForEach(x => x.Script?.Update());
-            Cameras.ForEach(x => x?.UpdateView());
+            cameras.ForEach(x => x.Script?.Update());
+            cameras.ForEach(x => x?.UpdateView());
             Scene.Simulate(Time.Delta);
             Scene.FetchResults(block: true);
             var actors = Scene.GetActors(ActorTypeFlag.RigidDynamic | ActorTypeFlag.RigidStatic);
@@ -185,13 +180,14 @@ namespace HexaFramework.Windows
                     Initialized?.Invoke(this, null);
                     first = true;
                     InitializeComponent();
-                    Cameras.ForEach(x => x.Script?.Initialize());
+                    cameras.ForEach(x => x.Script?.Initialize());
                 }
 
                 Time.FrameUpdate();
                 BeginRender();
                 Render();
                 EndRender();
+                Mouse.ClearDelta();
                 LimitFrameRate();
             }
         }
@@ -213,6 +209,7 @@ namespace HexaFramework.Windows
         public int FPSTarget = 60;
         private long fpsFrameCount;
         private long fpsStartTime;
+        private readonly List<Camera> cameras = new();
 
         private void LimitFrameRate()
         {

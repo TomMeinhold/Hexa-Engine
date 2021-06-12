@@ -39,14 +39,10 @@ namespace HexaFramework.Windows
             }
         }
 
-        private int tick;
-
         internal void Tick()
         {
-            tick++;
-            if (lockState & window.IsActive & window.Mouse.Hover & tick > 10)
+            if (lockState & window.IsActive & window.Mouse.Hover)
             {
-                tick = 0;
                 var centerX = window.X + (window.Width / 2);
                 var centerY = window.Y + (window.Height / 2);
                 User32.SetCursorPos(centerX, centerY);

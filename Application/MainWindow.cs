@@ -1,6 +1,5 @@
 ﻿using App.Scripts;
 using App.Shaders;
-using HexaFramework.Input;
 using HexaFramework.Resources;
 using HexaFramework.Scenes;
 using HexaFramework.Windows;

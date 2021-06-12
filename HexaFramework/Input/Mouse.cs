@@ -20,6 +20,11 @@ namespace HexaFramework.Input
             }
         }
 
+        public bool IsDown(MouseButton button)
+        {
+            return buttons[button] == MouseButtonState.Pressed;
+        }
+
         public IReadOnlyDictionary<MouseButton, MouseButtonState> Buttons => buttons;
 
         public Vector2 PositionVector { get; private set; }
@@ -56,7 +61,7 @@ namespace HexaFramework.Input
             return new MouseEventArgs(MouseButton.None, MouseButtonState.Released, Position);
         }
 
-        public void ClearDelta()
+        internal void ClearDelta()
         {
             Delta = Vector2.Zero;
         }

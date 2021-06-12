@@ -25,18 +25,14 @@ namespace HexaFramework.Scripts
             Resources.Add(name, data);
         }
 
-        internal void AttachMouseAndKeyboardFromWindow(RenderWindow window)
-        {
-            AttachMouseAndKeyboard(window.Mouse, window.Keyboard, window.Cursor, window.Time);
-        }
-
-        internal void AttachMouseAndKeyboard(Mouse mouse, Keyboard keyboard, Cursor cursor, Time time)
+        internal void AttachWindow(RenderWindow window)
         {
             if (Script is null) return;
-            Script.Mouse = mouse;
-            Script.Keyboard = keyboard;
-            Script.Cursor = cursor;
-            Script.Time = time;
+            Script.Mouse = window.Mouse;
+            Script.Keyboard = window.Keyboard;
+            Script.Cursor = window.Cursor;
+            Script.Time = window.Time;
+            Script.Window = window;
         }
 
         private static T CreateInstance<T>()

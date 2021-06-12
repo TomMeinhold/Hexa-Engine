@@ -1,7 +1,6 @@
 ﻿using HexaFramework.Extensions;
 using HexaFramework.Scripts;
 using HexaFramework.Windows;
-using System;
 using System.Numerics;
 using Vortice.XAudio2;
 
@@ -13,6 +12,7 @@ namespace HexaFramework.Scenes
         private float fov;
         private float near = .0001f;
         private float far = 100f;
+        private CameraType type = CameraType.Perspective;
         private float positionX;
         private float positionY;
         private float positionZ;
@@ -23,7 +23,7 @@ namespace HexaFramework.Scenes
         public Camera(DeviceManager manager)
         {
             Manager = manager;
-            Manager.AspectRatioChanged += (_, _) => UpdateProjection();
+            Manager.OnBufferResize += (_, _) => UpdateProjection();
         }
 
         public float PositionX { get => positionX; set { positionX = value; } }
@@ -62,15 +62,24 @@ namespace HexaFramework.Scenes
 
         public float FarPlane { get => far; set { far = value; UpdateProjection(); } }
 
+        public CameraType Type { get => type; set { type = value; UpdateProjection(); } }
+
         public DeviceManager Manager { get; }
 
         public Listener Listener { get; set; }
 
         public void UpdateProjection()
         {
-            //ProjectionMatrix = OrthoLH(1280, 720, near, far);
-            ProjectionMatrix = MatrixExtensions.PerspectiveFovLH(fov * DegToRadFactor, Manager.AspectRatio, near, far);
-            //ProjectionMatrix = Matrix4x4.Identity;
+            switch (type)
+            {
+                case CameraType.Perspective:
+                    ProjectionMatrix = MatrixExtensions.PerspectiveFovLH(fov * DegToRadFactor, Manager.AspectRatio, near, far);
+                    break;
+
+                case CameraType.Orthographic:
+                    ProjectionMatrix = MatrixExtensions.OrthoLH(Manager.SurfaceWidth, Manager.SurfaceHeight, near, far);
+                    break;
+            }
         }
 
         public void UpdateView()
@@ -79,7 +88,7 @@ namespace HexaFramework.Scenes
             float pitch = RotationX * DegToRadFactor;
             float yaw = RotationY * DegToRadFactor;
             float roll = RotationZ * DegToRadFactor;
-            Matrix4x4 rotationMatrix = Matrix4x4.CreateFromYawPitchRoll(yaw, pitch, roll);
+            Matrix4x4 rotationMatrix = MatrixExtensions.RotationYawPitchRoll(yaw, pitch, roll);
             Vector3 up = Vector3.Transform(Vector3.UnitY, rotationMatrix);
             Vector3 target = Vector3.Add(Vector3.Transform(Vector3.UnitZ, rotationMatrix), Position);
             ViewMatrix = MatrixExtensions.LookAtLH(Position, target, up);
