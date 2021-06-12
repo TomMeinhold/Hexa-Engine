@@ -16,13 +16,13 @@ namespace App.Scripts
 
         public override void Update()
         {
-            var camera = GetInstance<Camera>();
+            var camera = GetComponent<Camera>();
 
             if (!state & Keyboard.IsDown(Keys.L))
             {
                 state = true;
                 GetResource<Sound>().Play(1);
-                Cursor.Lock(!Cursor.IsLocked);
+                //Cursor.Lock(!Cursor.IsLocked);
             }
             if (!Keyboard.IsDown(Keys.L))
                 state = false;

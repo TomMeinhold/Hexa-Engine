@@ -12,7 +12,7 @@ using Vortice.Direct3D11;
 
 namespace HexaFramework.Resources
 {
-    public class Model
+    public class Model : Resource
     {
         public Vertex[] Vertices { get; private set; }
 

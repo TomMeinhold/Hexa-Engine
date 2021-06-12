@@ -18,18 +18,24 @@ namespace HexaFramework.Resources
 
         public DeviceManager Manager { get; }
 
+        public void Unload()
+        {
+        }
+
         public Texture LoadTexture(string path)
         {
             var path1 = new FileInfo(path).FullName;
-            if (textures.Any(x => x.Key.Path == path1))
+            var resource = textures.FirstOrDefault(x => x.Key.Path == path1);
+            if (resource.Value is not null)
             {
-                return textures.First(x => x.Key.Path == path1).Value;
+                resource.Key.Instances++;
+                return resource.Value;
             }
             else
             {
                 Texture texture = new();
                 texture.Load(Manager.ID3D11Device, path1);
-                textures.Add(new ResourceState() { Loaded = true, Path = path1 }, texture);
+                textures.Add(new ResourceState() { Instances = 1, Path = path1 }, texture);
                 return texture;
             }
         }
@@ -37,15 +43,17 @@ namespace HexaFramework.Resources
         public Model LoadModel(string path)
         {
             var path1 = new FileInfo(path).FullName;
-            if (models.Any(x => x.Key.Path == path1))
+            var resource = models.FirstOrDefault(x => x.Key.Path == path1);
+            if (resource.Value is not null)
             {
-                return models.First(x => x.Key.Path == path1).Value;
+                resource.Key.Instances++;
+                return resource.Value;
             }
             else
             {
                 Model model = new();
                 model.Load(Manager, path1);
-                models.Add(new ResourceState() { Loaded = true, Path = path1 }, model);
+                models.Add(new ResourceState() { Instances = 1, Path = path1 }, model);
                 return model;
             }
         }
@@ -53,15 +61,17 @@ namespace HexaFramework.Resources
         public Model LoadModelObj(string path)
         {
             var path1 = new FileInfo(path).FullName;
-            if (models.Any(x => x.Key.Path == path1))
+            var resource = models.FirstOrDefault(x => x.Key.Path == path1);
+            if (resource.Value is not null)
             {
-                return models.First(x => x.Key.Path == path1).Value;
+                resource.Key.Instances++;
+                return resource.Value;
             }
             else
             {
                 Model model = new();
                 model.LoadObj(Manager, path1);
-                models.Add(new ResourceState() { Loaded = true, Path = path1 }, model);
+                models.Add(new ResourceState() { Instances = 1, Path = path1 }, model);
                 return model;
             }
         }
@@ -69,15 +79,17 @@ namespace HexaFramework.Resources
         public Sound LoadSound(string path)
         {
             var path1 = new FileInfo(path).FullName;
-            if (sounds.Any(x => x.Key.Path == path1))
+            var resource = sounds.FirstOrDefault(x => x.Key.Path == path1);
+            if (resource.Value is not null)
             {
-                return sounds.First(x => x.Key.Path == path1).Value;
+                resource.Key.Instances++;
+                return resource.Value;
             }
             else
             {
                 Sound sound = new();
                 sound.LoadAudioFile(Manager.AudioManager, path1);
-                sounds.Add(new ResourceState() { Loaded = true, Path = path1 }, sound);
+                sounds.Add(new ResourceState() { Instances = 1, Path = path1 }, sound);
                 return sound;
             }
         }

@@ -1,5 +1,6 @@
 ﻿using HexaFramework.Resources;
 using HexaFramework.Scripts;
+using PhysX;
 using System.Numerics;
 using Vortice.Direct3D11;
 
@@ -17,14 +18,11 @@ namespace HexaFramework.Scenes
 
         public Matrix4x4 Transform { get; set; } = Matrix4x4.Identity;
 
+        public RigidActor RigidActor { get; set; }
+
         public void Render()
         {
             Shader.Render(this);
-        }
-
-        public void InitializeModel(ResourceManager manager, string path)
-        {
-            Model = manager.LoadModel(path);
         }
 
         public void InitializeModelObj(ResourceManager manager, string path)
@@ -40,28 +38,6 @@ namespace HexaFramework.Scenes
             {
                 ResourceViews[i] = Textures[i] = manager.LoadTexture(paths[i]);
             }
-        }
-
-        public SceneObject Clone()
-        {
-            SceneObject sceneObject = new();
-            sceneObject.Model = Model;
-            sceneObject.Textures = Textures;
-            sceneObject.ResourceViews = ResourceViews;
-            sceneObject.Shader = Shader;
-            sceneObject.Transform = Transform;
-            return sceneObject;
-        }
-
-        public SceneObject Clone(Matrix4x4 transform)
-        {
-            SceneObject sceneObject = new();
-            sceneObject.Model = Model;
-            sceneObject.Textures = Textures;
-            sceneObject.ResourceViews = ResourceViews;
-            sceneObject.Shader = Shader;
-            sceneObject.Transform = transform;
-            return sceneObject;
         }
     }
 }

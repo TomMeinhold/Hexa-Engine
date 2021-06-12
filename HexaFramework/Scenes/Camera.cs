@@ -23,6 +23,7 @@ namespace HexaFramework.Scenes
         public Camera(DeviceManager manager)
         {
             Manager = manager;
+            Manager.AspectRatioChanged += (_, _) => UpdateProjection();
         }
 
         public float PositionX { get => positionX; set { positionX = value; } }
@@ -68,7 +69,7 @@ namespace HexaFramework.Scenes
         public void UpdateProjection()
         {
             //ProjectionMatrix = OrthoLH(1280, 720, near, far);
-            ProjectionMatrix = MatrixExtensions.PerspectiveFovLH(fov * DegToRadFactor, 16F / 9, near, far);
+            ProjectionMatrix = MatrixExtensions.PerspectiveFovLH(fov * DegToRadFactor, Manager.AspectRatio, near, far);
             //ProjectionMatrix = Matrix4x4.Identity;
         }
 

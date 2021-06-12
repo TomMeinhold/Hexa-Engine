@@ -5,7 +5,7 @@ using Vortice.Mathematics;
 
 namespace HexaFramework.Resources
 {
-    public class RenderTexture
+    public class RenderTexture : Resource
     {
         private ID3D11Texture2D RenderTargetTexture { get; set; }
         private ID3D11RenderTargetView RenderTargetView { get; set; }

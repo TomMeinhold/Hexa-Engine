@@ -6,7 +6,7 @@ using Vortice.XAudio2;
 
 namespace HexaFramework.Resources
 {
-    public class Sound
+    public class Sound : Resource
     {
         // Variables
         private string chunkId;

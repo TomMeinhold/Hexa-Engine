@@ -29,6 +29,12 @@
 		<None Update="Models\Cube.obj">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="Models\Grid.mtl">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Models\Grid.obj">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="Models\Plane.mtl">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

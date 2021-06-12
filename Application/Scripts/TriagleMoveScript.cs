@@ -11,7 +11,7 @@ namespace App.Scripts
 
         public override void Update()
         {
-            var model = GetInstance<SceneObject>();
+            var model = GetComponent<SceneObject>();
             angle = NormalizeEulerAngle(angle + 0.1f);
             model.Transform = Matrix4x4.CreateRotationY(angle * DegToRadFactor, Vector3.Zero);
         }

@@ -1,5 +1,6 @@
 ﻿using App.Scripts;
 using App.Shaders;
+using HexaFramework.Input;
 using HexaFramework.Resources;
 using HexaFramework.Scenes;
 using HexaFramework.Windows;
@@ -62,7 +63,7 @@ namespace App
             Shader.TessellationAmount = 1;
 
             sceneObject.Shader = Shader;
-            sceneObject.InitializeModelObj(ResourceManager, "Models/Plane.obj");
+            sceneObject.InitializeModelObj(ResourceManager, "Models/Grid.obj");
             sceneObject.InitializeTextures(ResourceManager, "Resources/d.png", "Resources/n.png", "Resources/s.png");
             CreateGroundPlane(sceneObject);
             sceneObject1.Shader = Shader;
@@ -93,7 +94,6 @@ namespace App
             rigidActor.SetMassAndUpdateInertia(100);
             rigidActor.UserData = sceneObject;
             Scene.AddActor(rigidActor);
-            rigidActor.AddForceAtLocalPosition(Vector3.UnitY * 100f, Vector3.Zero, ForceMode.Impulse, true);
         }
     }
 }

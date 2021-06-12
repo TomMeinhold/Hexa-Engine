@@ -33,7 +33,7 @@ namespace HexaFramework.Windows
             Window = window;
             SurfaceWidth = window.Width;
             SurfaceHeight = window.Height;
-
+            AspectRatio = (float)SurfaceWidth / SurfaceHeight;
             var swapChainDescription = new SwapChainDescription1
             {
                 Width = window.Width,
@@ -57,7 +57,7 @@ namespace HexaFramework.Windows
 
             DXGI.CreateDXGIFactory1(out _idxgiFactory);
             var adapter = GetHardwareAdapter();
-            D3D11.D3D11CreateDevice(adapter, DriverType.Unknown, DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug, FeatureLevels, out var tempDevice, out _featureLevel, out var tempContext);
+            D3D11.D3D11CreateDevice(adapter, DriverType.Unknown, DeviceCreationFlags.BgraSupport, FeatureLevels, out var tempDevice, out _featureLevel, out var tempContext);
             ID3D11Device = tempDevice.QueryInterface<ID3D11Device1>();
             ID3D11DeviceContext = tempContext.QueryInterface<ID3D11DeviceContext1>();
             tempContext.Dispose();
@@ -209,7 +209,7 @@ namespace HexaFramework.Windows
 
         public ID3D11Texture2D BackBuffer { get; private set; }
 
-        public ID3D11Texture2D DepthStencilBuffer { get; }
+        public ID3D11Texture2D DepthStencilBuffer { get; private set; }
 
         public ID3D11DepthStencilState DepthStencilState { get; }
 
@@ -223,11 +223,17 @@ namespace HexaFramework.Windows
 
         public int BufferCount { get; set; } = 1;
 
+        public float AspectRatio { get; private set; }
+
+        public event EventHandler<float> AspectRatioChanged;
+
         public void Resize(int width, int height)
         {
             // Buffering values for reasons.
             SurfaceWidth = width;
             SurfaceHeight = height;
+            AspectRatio = (float)SurfaceWidth / SurfaceHeight;
+            AspectRatioChanged?.Invoke(this, AspectRatio);
 
             // Delete all references to SwapChainBuffers.
             ID3D11DeviceContext.OMSetDepthStencilState(null);
@@ -242,12 +248,29 @@ namespace HexaFramework.Windows
 
             // Resize Targets and SwapChainBuffers.
             SwapChain.ResizeTarget(new ModeDescription(SurfaceWidth, SurfaceHeight));
-            var res = SwapChain.ResizeBuffers(BufferCount, SurfaceWidth, SurfaceHeight, Format.B8G8R8A8_UNorm, SwapChainFlags.AllowModeSwitch);
+            SwapChain.ResizeBuffers(BufferCount, SurfaceWidth, SurfaceHeight, Format.B8G8R8A8_UNorm, SwapChainFlags.AllowModeSwitch);
 
             // Recreate SwapChainBuffer all references.
             BackBuffer = SwapChain.GetBuffer<ID3D11Texture2D>(0);
             RenderTargetView = ID3D11Device.CreateRenderTargetView(BackBuffer);
             BackBuffer.Dispose();
+
+            Texture2DDescription depthBufferDesc = new()
+            {
+                Width = SurfaceWidth,
+                Height = SurfaceHeight,
+                MipLevels = 1,
+                ArraySize = 1,
+                Format = Format.D32_Float_S8X24_UInt,
+                SampleDescription = new SampleDescription(2, 0),
+                Usage = Vortice.Direct3D11.Usage.Default,
+                BindFlags = BindFlags.DepthStencil,
+                CpuAccessFlags = CpuAccessFlags.None,
+                OptionFlags = ResourceOptionFlags.None
+            };
+
+            DepthStencilBuffer?.Dispose();
+            DepthStencilBuffer = ID3D11Device.CreateTexture2D(depthBufferDesc);
 
             DepthStencilViewDescription depthStencilViewDesc = new()
             {

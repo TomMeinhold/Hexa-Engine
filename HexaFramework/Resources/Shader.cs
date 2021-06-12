@@ -10,7 +10,7 @@ using Vortice.Direct3D11;
 
 namespace HexaFramework.Resources
 {
-    public abstract class Shader
+    public abstract class Shader : Resource
     {
         protected void CompileShader(DeviceManager manager, string shaderPath, string entry, string version, out Blob blob)
         {

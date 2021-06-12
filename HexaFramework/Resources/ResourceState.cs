@@ -1,8 +1,8 @@
 ﻿namespace HexaFramework.Resources
 {
-    internal struct ResourceState
+    internal class ResourceState
     {
-        public bool Loaded;
+        public int Instances;
         public string Path;
     }
 }

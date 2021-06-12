@@ -123,6 +123,11 @@ namespace HexaFramework.Windows
                 return base.ProcessWindowMessage(hWnd, msg, wParam, lParam);
             }
 
+            if (msg == 0x0232)
+            {
+                DeviceManager.Resize(Width, Height);
+            }
+
             Cursor?.Tick();
             return base.ProcessWindowMessage(hWnd, msg, wParam, lParam);
         }

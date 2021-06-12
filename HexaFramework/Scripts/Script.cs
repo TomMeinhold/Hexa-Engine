@@ -32,7 +32,7 @@ namespace HexaFramework.Scripts
 
         public ScriptableElement Instance { get; internal set; }
 
-        public T GetInstance<T>() where T : ScriptableElement
+        public T GetComponent<T>() where T : ScriptableElement
         {
             if (Instance is T t)
             {
