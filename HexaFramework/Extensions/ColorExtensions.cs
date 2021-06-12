@@ -1,4 +1,4 @@
-﻿// <copyright file="ColorExtentions.cs" company="PlaceholderCompany">
+﻿// <copyright file="ColorExtensions.cs" company="PlaceholderCompany">
 //     Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -6,7 +6,7 @@ namespace HexaFramework.Extensions
 {
     using System.Drawing;
 
-    public static class ColorExtentions
+    public static class ColorExtensions
     {
         public static Color Blend(this Color color, Color backColor)
         {

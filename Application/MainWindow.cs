@@ -89,7 +89,7 @@ namespace App
             var rigidActor = Scene.Physics.CreateRigidDynamic();
             var boxGeometry = new BoxGeometry(1, 1, 1);
             var boxShape = RigidActorExt.CreateExclusiveShape(rigidActor, boxGeometry, material, null);
-            rigidActor.GlobalPose = Matrix4x4.CreateTranslation(new Vector3(0, 3, 0));
+            rigidActor.GlobalPose = Matrix4x4.CreateTranslation(new Vector3(0, 10, 0));
             rigidActor.SetMassAndUpdateInertia(100);
             rigidActor.UserData = sceneObject;
             Scene.AddActor(rigidActor);

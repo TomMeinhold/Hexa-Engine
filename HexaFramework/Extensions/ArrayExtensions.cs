@@ -1,4 +1,4 @@
-﻿// <copyright file="ArrayExtentions.cs" company="PlaceholderCompany">
+﻿// <copyright file="ArrayExtensions.cs" company="PlaceholderCompany">
 //     Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ namespace HexaFramework.Extensions
     using System.Numerics;
     using System.Text;
 
-    public static class ArrayExtentions
+    public static class ArrayExtensions
     {
         public static int GetIndexOfFirst<T>(this T[] ts, T state)
             where T : struct

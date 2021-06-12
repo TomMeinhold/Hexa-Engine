@@ -1,10 +1,9 @@
-﻿using HexaFramework.Windows;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Numerics;
 
 namespace HexaFramework.Extensions
 {
-    public static class BoundBoxExtentions
+    public static class BoundBoxExtensions
     {
         public static bool ContainsVector(this RectangleF box, Vector3 vector) => box.Contains(vector.X, vector.Y);
 
