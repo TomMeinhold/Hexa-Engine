@@ -1,6 +1,6 @@
 ﻿using PhysX;
 
-namespace HexaFramework.PhysX
+namespace HexaFramework.NvPhysX
 {
     public class FilterShader : SimulationFilterShader
     {

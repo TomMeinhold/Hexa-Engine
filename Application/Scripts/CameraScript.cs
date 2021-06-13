@@ -2,6 +2,7 @@
 using HexaFramework.Input.Events;
 using HexaFramework.Scenes;
 using HexaFramework.Scripts;
+using PhysX;
 using System.Numerics;
 
 namespace App.Scripts
@@ -54,6 +55,26 @@ namespace App.Scripts
         public override void Update()
         {
             var camera = GetComponent<Camera>();
+            Window.Scene.Raycast(camera.Position, camera.Forward, 1000, 2,
+                hits =>
+            {
+                foreach (var hit in hits)
+                {
+                    if (hit.Actor.Name == "Cube")
+                    {
+                        if (Mouse.IsDown(MouseButton.MButton))
+                        {
+                            if (!Keyboard.IsDown(Keys.F))
+                                (hit.Actor as RigidDynamic).AddForce(camera.Forward * 100, ForceMode.Impulse, true);
+                            else
+                                (hit.Actor as RigidDynamic).AddForce(camera.Backward * 100, ForceMode.Impulse, true);
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            });
             if (Keyboard.IsDown(Keys.W))
             {
                 camera.AdjustPosition(camera.Forward * Speed * Time.Delta);

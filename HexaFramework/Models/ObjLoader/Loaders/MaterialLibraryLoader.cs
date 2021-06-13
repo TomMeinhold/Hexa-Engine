@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using HexaFramework.Models.ObjLoader.Loader.Common;
 using HexaFramework.Models.ObjLoader.Loader.Data;
 using HexaFramework.Models.ObjLoader.Loader.Data.DataStore;
@@ -35,7 +36,7 @@ namespace HexaFramework.Models.ObjLoader.Loader.Loaders
 
             AddParseAction("map_Ks", m => CurrentMaterial.SpecularTextureMap = m);
             AddParseAction("map_Ns", m => CurrentMaterial.SpecularHighlightTextureMap = m);
-            
+
             AddParseAction("map_d", m => CurrentMaterial.AlphaTextureMap = m);
 
             AddParseAction("map_bump", m => CurrentMaterial.BumpMap = m);
@@ -80,7 +81,7 @@ namespace HexaFramework.Models.ObjLoader.Loader.Loaders
             _materialLibrary.Push(_currentMaterial);
         }
 
-        private Vec3 ParseVec3(string data)
+        private Vector3 ParseVec3(string data)
         {
             string[] parts = data.Split(' ');
 
@@ -88,7 +89,7 @@ namespace HexaFramework.Models.ObjLoader.Loader.Loaders
             float y = parts[1].ParseInvariantFloat();
             float z = parts[2].ParseInvariantFloat();
 
-            return new Vec3(x, y, z);
+            return new Vector3(x, y, z);
         }
 
         public void Load(Stream lineStream)

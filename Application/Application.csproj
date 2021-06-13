@@ -7,12 +7,16 @@
 		<Platforms>x64</Platforms>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="PhysX.Net" Version="3.0.0-alpha1" GeneratePathProperty="true" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Shaders\pixelShader.hlsl" />
+		<PackageReference Include="PhysX.Net" Version="3.0.0-alpha1" GeneratePathProperty="true" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -20,9 +24,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="Shaders\pixelShader.hlsl">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
 		<None Update="Models\Cube.mtl">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
@@ -77,14 +78,11 @@
 		<None Update="Resources\sound.wav">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="Shaders\domainShader.hlsl">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<None Update="Shaders\defaultShader.hlsl">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="Shaders\hullShader.hlsl">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Shaders\vertexShader.hlsl">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		<None Update="Shaders\debugShader.hlsl">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

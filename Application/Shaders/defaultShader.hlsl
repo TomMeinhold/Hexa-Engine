@@ -1,7 +1,20 @@
 Texture2D shaderTextures[4];
 SamplerState SampleType;
 
-cbuffer LightBuffer : register(b0)
+cbuffer MatrixBuffer : register(b0)
+{
+	matrix worldMatrix;
+	matrix viewMatrix;
+	matrix projectionMatrix;
+	float4 cameraPosition;
+};
+
+cbuffer ModelConstantBuffer : register(b1)
+{
+	matrix model;
+};
+
+cbuffer LightBuffer : register(b2)
 {
 	float4 ambientColor;
 	float4 diffuseColor;
@@ -10,7 +23,16 @@ cbuffer LightBuffer : register(b0)
 	float4 specularColor;
 };
 
-struct PixelInputType
+struct VertexInput
+{
+	float4 position : POSITION;
+	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 binormal : BINORMAL;
+};
+
+struct VertexOutput
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
@@ -20,7 +42,38 @@ struct PixelInputType
 	float3 viewDirection : TEXCOORD1;
 };
 
-float4 main(PixelInputType input) : SV_Target
+VertexOutput RenderSceneVS(VertexInput input)
+{
+	VertexOutput output;
+	float4 worldPosition;
+
+	output.position = mul(input.position, transpose(model));
+	output.position = mul(output.position, transpose(worldMatrix));
+	output.position = mul(output.position, transpose(viewMatrix));
+	output.position = mul(output.position, transpose(projectionMatrix));
+
+	output.tex = input.tex;
+
+	output.normal = mul(input.normal, (float3x3)transpose(model));
+	output.normal = mul(output.normal, (float3x3)transpose(worldMatrix));
+	output.normal = normalize(output.normal);
+
+	output.tangent = mul(input.tangent, (float3x3)transpose(model));
+	output.tangent = mul(output.tangent, (float3x3)transpose(worldMatrix));
+	output.tangent = normalize(output.tangent);
+
+	output.binormal = mul(input.binormal, (float3x3)transpose(model));
+	output.binormal = mul(output.binormal, (float3x3)transpose(worldMatrix));
+	output.binormal = normalize(output.binormal);
+
+	worldPosition = mul(input.position, transpose(model));
+	worldPosition = mul(output.position, transpose(worldMatrix));
+	output.viewDirection = normalize(cameraPosition.xyz - worldPosition.xyz);
+
+	return output;
+}
+
+float4 RenderScenePS(VertexOutput input) : SV_TARGET
 {
 	float4 textureColor;
 	float4 bumpMap;

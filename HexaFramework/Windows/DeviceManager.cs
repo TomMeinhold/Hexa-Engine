@@ -1,5 +1,6 @@
 ﻿using HexaFramework.Audio;
 using PhysX;
+using PhysX.VisualDebugger;
 using System;
 using Vortice.Direct2D1;
 using Vortice.Direct3D;
@@ -174,7 +175,9 @@ namespace HexaFramework.Windows
             ID2D1DeviceContext.AntialiasMode = AntialiasMode.PerPrimitive;
 
             Foundation = new Foundation();
-            Physics = new Physics(Foundation);
+            Pvd = new Pvd(Foundation);
+            Physics = new Physics(Foundation, true, Pvd);
+            Physics.Pvd.Connect("localhost");
         }
 
         private readonly ID2D1Device _id2D1Device;
@@ -186,6 +189,8 @@ namespace HexaFramework.Windows
         public AudioManager AudioManager { get; } = new();
 
         public Foundation Foundation { get; set; }
+
+        public Pvd Pvd { get; set; }
 
         public Physics Physics { get; set; }
 

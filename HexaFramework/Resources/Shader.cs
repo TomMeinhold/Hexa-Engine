@@ -12,6 +12,8 @@ namespace HexaFramework.Resources
 {
     public abstract class Shader : Resource
     {
+#pragma warning disable CA1822 // Member als statisch markieren
+
         protected void CompileShader(DeviceManager manager, string shaderPath, string entry, string version, out Blob blob)
         {
             _ = Compiler.CompileFromFile(new FileInfo(shaderPath).FullName, entry, version, out blob, out var error);
@@ -26,14 +28,21 @@ namespace HexaFramework.Resources
             }
         }
 
-        protected static void Write<T>(T t, DeviceManager manager, ID3D11Buffer buffer) where T : unmanaged
+        protected void Write<T>(DeviceManager manager, ID3D11Buffer buffer, T t) where T : unmanaged
         {
             var mapped = manager.ID3D11DeviceContext.Map(buffer, MapMode.WriteDiscard);
-            DataStream stream = new(mapped.DataPointer, mapped.DepthPitch * mapped.RowPitch, false, true);
-            stream.Write(t);
-            stream.Close();
+            UnsafeUtilities.Write(mapped.DataPointer, ref t);
             manager.ID3D11DeviceContext.Unmap(buffer);
         }
+
+        protected void Write<T>(DeviceManager manager, ID3D11Buffer buffer, T[] t) where T : unmanaged
+        {
+            var mapped = manager.ID3D11DeviceContext.Map(buffer, MapMode.WriteDiscard);
+            UnsafeUtilities.Write(mapped.DataPointer, t);
+            manager.ID3D11DeviceContext.Unmap(buffer);
+        }
+
+#pragma warning restore CA1822 // Member als statisch markieren
 
         public abstract void Render(SceneObject sceneObject);
     }

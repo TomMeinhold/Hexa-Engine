@@ -1,4 +1,4 @@
-﻿using HexaFramework.PhysX;
+﻿using HexaFramework.NvPhysX;
 using HexaFramework.Resources;
 using HexaFramework.Scenes;
 using HexaFramework.Windows.Native;
@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using System.Threading;
+using Vortice.Direct3D;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
 using static HexaFramework.Windows.Native.Helper;
@@ -69,7 +69,7 @@ namespace HexaFramework.Windows
             DeviceManager = new DeviceManager(this);
             ResourceManager = new ResourceManager(DeviceManager);
             Scene = DeviceManager.Physics.CreateScene(CreateSceneDesc(DeviceManager.Foundation));
-            Scene.SetVisualizationParameter(VisualizationParameter.Scale, 1.0f);
+            Scene.SetVisualizationParameter(VisualizationParameter.Scale, 2.0f);
             Scene.SetVisualizationParameter(VisualizationParameter.CollisionShapes, true);
             Scene.SetVisualizationParameter(VisualizationParameter.JointLocalFrames, true);
             Scene.SetVisualizationParameter(VisualizationParameter.JointLimits, true);
@@ -81,21 +81,23 @@ namespace HexaFramework.Windows
         protected virtual SceneDesc CreateSceneDesc(Foundation foundation)
         {
 #if GPU
-			var cudaContext = new CudaContextManager(foundation);
+            var cudaContext = new CudaContextManager(foundation);
 #endif
 
             var sceneDesc = new SceneDesc
             {
                 Gravity = new Vector3(0, -9.81f, 0),
+
 #if GPU
-				GpuDispatcher = cudaContext.GpuDispatcher,
+                CudaContextManager = cudaContext,
 #endif
+                Flags = SceneFlag.EnableCcd,
                 FilterShader = new FilterShader()
             };
 
 #if GPU
-			sceneDesc.Flags |= SceneFlag.EnableGpuDynamics;
-			sceneDesc.BroadPhaseType |= BroadPhaseType.Gpu;
+            sceneDesc.Flags |= SceneFlag.EnableGpuDynamics;
+            sceneDesc.BroadPhaseType |= BroadPhaseType.Gpu;
 #endif
 
             return sceneDesc;
@@ -139,6 +141,8 @@ namespace HexaFramework.Windows
 
         public bool IsInitialized { get; set; }
 
+        public IDebugShader DebugShader { get; set; }
+
         protected abstract void InitializeComponent();
 
         protected virtual void BeginRender()
@@ -163,11 +167,58 @@ namespace HexaFramework.Windows
                     sceneObject.Render();
                 }
             }
+            if (DebugShader is not null)
+                DrawDebug(Scene.GetRenderBuffer());
         }
 
         protected virtual void EndRender()
         {
             DeviceManager.SwapChain.Present(0, PresentFlags.None);
+        }
+
+        protected virtual void DrawDebug(RenderBuffer data)
+        {
+            if (data.NumberOfPoints > 0)
+            {
+                var vertices = new VertexPositionColor[data.Points.Length];
+                for (int i = 0; i < data.Points.Length; i++)
+                {
+                    var point = data.Points[i];
+
+                    vertices[i * 2 + 0] = new VertexPositionColor(point.Point, Color.FromArgb(point.Color));
+                }
+
+                DebugShader.Render(vertices, PrimitiveTopology.PointList);
+            }
+
+            if (data.NumberOfLines > 0)
+            {
+                var vertices = new VertexPositionColor[data.Lines.Length * 2];
+                for (int x = 0; x < data.Lines.Length; x++)
+                {
+                    DebugLine line = data.Lines[x];
+
+                    vertices[x * 2 + 0] = new VertexPositionColor(line.Point0, Color.FromArgb(line.Color0));
+                    vertices[x * 2 + 1] = new VertexPositionColor(line.Point1, Color.FromArgb(line.Color1));
+                }
+
+                DebugShader.Render(vertices, PrimitiveTopology.LineList);
+            }
+
+            if (data.NumberOfTriangles > 0)
+            {
+                var vertices = new VertexPositionColor[data.Triangles.Length * 3];
+                for (int x = 0; x < data.Triangles.Length; x++)
+                {
+                    DebugTriangle triangle = data.Triangles[x];
+
+                    vertices[x * 3 + 0] = new VertexPositionColor(triangle.Point0, Color.FromArgb(triangle.Color0));
+                    vertices[x * 3 + 1] = new VertexPositionColor(triangle.Point1, Color.FromArgb(triangle.Color1));
+                    vertices[x * 3 + 2] = new VertexPositionColor(triangle.Point2, Color.FromArgb(triangle.Color2));
+                }
+
+                DebugShader.Render(vertices, PrimitiveTopology.TriangleList);
+            }
         }
 
         internal void TickInternal()

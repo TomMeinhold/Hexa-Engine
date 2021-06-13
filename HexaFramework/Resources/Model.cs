@@ -18,6 +18,8 @@ namespace HexaFramework.Resources
 
         public int[] Indices { get; private set; }
 
+        public LoadResult ModelResult { get; private set; }
+
         public VertexBufferView VertexBufferView { get; private set; }
 
         public ID3D11Buffer VertexBuffer { get; private set; }
@@ -91,18 +93,19 @@ namespace HexaFramework.Resources
             using var fs = file.OpenRead();
             ObjLoaderFactory factory = new();
             var loader = factory.Create();
-            var result = loader.Load(fs);
+            ModelResult = loader.Load(fs);
             List<Vertex> vertices = new();
-            for (int i = 0; i < result.Groups.Count; i++)
+
+            for (int i = 0; i < ModelResult.Groups.Count; i++)
             {
-                for (int j = 0; j < result.Groups[i].Faces.Count; j++)
+                for (int j = 0; j < ModelResult.Groups[i].Faces.Count; j++)
                 {
-                    for (int jj = 0; jj < result.Groups[i].Faces[j].Count; jj++)
+                    for (int jj = 0; jj < ModelResult.Groups[i].Faces[j].Count; jj++)
                     {
-                        var vertexIndex = result.Groups[i].Faces[j][jj].VertexIndex - 1;
-                        var textureIndex = result.Groups[i].Faces[j][jj].TextureIndex - 1;
-                        var normalIndex = result.Groups[i].Faces[j][jj].NormalIndex - 1;
-                        vertices.Add(new Vertex(result.Vertices[vertexIndex], result.Textures[textureIndex], result.Normals[normalIndex]));
+                        var vertexIndex = ModelResult.Groups[i].Faces[j][jj].VertexIndex - 1;
+                        var textureIndex = ModelResult.Groups[i].Faces[j][jj].TextureIndex - 1;
+                        var normalIndex = ModelResult.Groups[i].Faces[j][jj].NormalIndex - 1;
+                        vertices.Add(new Vertex(ModelResult.Vertices[vertexIndex], ModelResult.Textures[textureIndex], ModelResult.Normals[normalIndex]));
                     }
                 }
             }
@@ -113,6 +116,7 @@ namespace HexaFramework.Resources
             {
                 Indices[i] = i;
             }
+
             CalculateModelVectors();
             IndexBuffer = manager.ID3D11Device.CreateBuffer(Indices, new BufferDescription(Marshal.SizeOf<int>() * Indices.Length, BindFlags.IndexBuffer));
             VertexBuffer = manager.ID3D11Device.CreateBuffer(Vertices, new BufferDescription(Marshal.SizeOf<Vertex>() * Vertices.Length, BindFlags.VertexBuffer));

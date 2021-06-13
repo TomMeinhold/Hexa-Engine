@@ -1,4 +1,6 @@
-﻿namespace HexaFramework.Models.ObjLoader.Loader.Data
+﻿using System.Numerics;
+
+namespace HexaFramework.Models.ObjLoader.Loader.Data
 {
     public class Material
     {
@@ -9,9 +11,9 @@
 
         public string Name { get; set; }
 
-        public Vec3 AmbientColor { get; set; }
-        public Vec3 DiffuseColor { get; set; }
-        public Vec3 SpecularColor { get; set; }
+        public Vector3 AmbientColor { get; set; }
+        public Vector3 DiffuseColor { get; set; }
+        public Vector3 SpecularColor { get; set; }
         public float SpecularCoefficient { get; set; }
 
         public float Transparency { get; set; }
@@ -20,10 +22,10 @@
 
         public string AmbientTextureMap { get; set; }
         public string DiffuseTextureMap { get; set; }
-        
+
         public string SpecularTextureMap { get; set; }
         public string SpecularHighlightTextureMap { get; set; }
-        
+
         public string BumpMap { get; set; }
         public string DisplacementMap { get; set; }
         public string StencilDecalMap { get; set; }
